@@ -12,11 +12,12 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { AuthContext } from '../components/context';
+import { AuthContext } from '../../components/context';
 import { useTheme } from 'react-native-paper';
 import { createAnimatableComponent } from 'react-native-animatable';
 import Toaster, { ToastStyles } from 'react-native-toaster';
 import { ScrollView } from 'react-native-gesture-handler';
+import {Server_URL} from '../../components/Parameter';
 //import Users from '../model/users';
 const SignInScreen = ({navigation}) => {
 
@@ -119,7 +120,8 @@ const SignInScreen = ({navigation}) => {
         }
         else
         {
-            fetch('http://192.168.0.9/help_1/user_login.php',{
+			let API_URL = `${Server_URL}/user_login.php`;
+            fetch(API_URL,{
                 method:'post',
                 header:{
                     'Accept': 'application/json',
@@ -276,15 +278,16 @@ export const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         paddingHorizontal: "5%",
-        paddingBottom: "8%",
+        paddingBottom: "30%",
+        alignItems:'center',
     },
     footer: {
         flex: 3,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingVertical: 30
+        paddingHorizontal: "5%",
+        paddingVertical: '7%'
     },
     title: {
         color: '#fff',

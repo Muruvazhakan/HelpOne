@@ -1,4 +1,6 @@
 package com.awesomeproject;
+import android.content.Intent; // <-- include if not already there
+import com.tkporter.sendsms.SendSMSPackage;
 
 import com.facebook.react.ReactActivity;
 
@@ -12,4 +14,9 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "AwesomeProject";
   }
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    //probably some other stuff here
+    SendSMSPackage.getInstance().onActivityResult(requestCode, resultCode, data);
+}
 }

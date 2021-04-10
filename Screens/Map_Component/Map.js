@@ -9,9 +9,9 @@ import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 import {PERMISSIONS, request} from 'react-native-permissions';
-import { mapDarkStyle,manpStandardStyle} from '../mapStyle';
+import { mapDarkStyle,manpStandardStyle} from '../Blood_Request/mapStyle';
 import {connect,useSelector,useDispatch,useCallback} from 'react-redux';
-import {styles as signupstyles} from '../SignUpScreen';
+import {styles as signupstyles} from '../SignIn/SignUpScreen';
 import Share, {ShareSheet, 
   //Button
 }
@@ -20,21 +20,20 @@ import Share, {ShareSheet,
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionics from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {styles as requestListstyle} from  '../Blood_Request_List_Screen';
+import {styles as requestListstyle} from  '../Blood_Request/Blood_Request_List_Screen';
 import {styles as Editprofilestyle} from '../ProfileScreen/EditProfileScreen';
 // import Autocomplete from 'react-google-autocomplete';
 // import Geocode from "react-geocode";
 // Geocode.setApiKey( "AIzaSyDGe5vjL8wBmilLzoJ0jNIwe9SAuH2xS_0" );
 // Geocode.enableDebug();
 import * as toggledata  from '../../Store/actions/HelpOne';
-import { fromAddress } from 'react-geocode';
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=[AIzaSyDGe5vjL8wBmilLzoJ0jNIwe9SAuH2xS_0]&libraries=places"></script> 
+import {Server_URL} from '../../components/Parameter';
 
 const{width,height} = Dimensions.get('window');
 const CARD_HEIGHT =177;
 const CARD_WIDTH = width*0.9;
 const SPACING_FOR_CARD= width*0.1 -10;
-
+import ENV from '../../env';
 const Map = (props) => {
 
 const user_data_user_latitude=useSelector(state =>
@@ -106,7 +105,7 @@ const initialMapState={
     area:user_data_user_area,
     statename:user_data_user_state_name,
     pincode: user_data_user_pincode,
-    screenname:props.loactionAddress.data,
+    screenname:'data',
 };
 const dispatch = useDispatch();
 const [state,setState] = React.useState(initialMapState);
@@ -159,15 +158,45 @@ const [state,setState] = React.useState(initialMapState);
    }
    const onMapPress =(e) => {
     // alert("coordinates:"+ JSON.stringify(e.nativeEvent.coordinate))
-    console.log("screenname"+state.screenname);
-    //console.log("coordinate: "+e.nativeEvent.coordinate)
+    //console.log("screenname"+state.screenname);
+    console.log("coordinate: "+e.nativeEvent.coordinate.latitude+
+    e.nativeEvent.coordinate.longitude)
     setState({  ...state,
       markers: e.nativeEvent.coordinate,  address:'ssf' 
     });
     setData({
       ...data,isMapvisible:true,
-    })
-    }
+    });
+    //MapaddressHandler(e);
+    Handle_send_data_back(e)
+    };
+
+const Handle_send_data_back=(e)=>{
+  props.getloactionAddress({
+  latitude: e.nativeEvent.coordinate.latitude,
+  longitude: e.nativeEvent.coordinate.longitude})
+}
+
+const MapaddressHandler=async(e) =>{
+  const response = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+      e.nativeEvent.coordinate.latitude
+    },${e.nativeEvent.coordinate.longitude}&key=${ENV.googleApiKey}`
+  );
+
+  if (!response.ok) {
+    throw new Error('Something went wrong!');
+  }
+  
+  const resData = await response.json();
+  console.log(resData);
+  // if (!resData.results) {
+  //   throw new Error('Something went wrong!');
+  // }
+
+  // const address = resData.results[0].formatted_address;
+};
+
 const handleMarkerPress=(event)=> {
         const markerID = event.nativeEvent.identifier
         alert(markerID)
@@ -199,8 +228,6 @@ const onRegionChange=(e)=> {
 }
 
 const sentbackdata=() =>{
-    
-
     props.getloactionAddress({address:'muru',
         city:state.city,
         area:state.area,
@@ -219,24 +246,18 @@ const dipatchHandler=async() =>{
   // dispatch(toggleuser_city(profiledata.user_city));
   // dispatch(toggleuser_address_line1(profiledata.user_address_line1));
   console.log("state.markers.address"+state.address);
-  
- 
   dispatch(toggledata.toggleuser_latitude(state.markers.latitude));
   dispatch(toggledata.toggleuser_longitude(state.markers.longitude));
   dispatch(toggledata.toggleuser_pincode(state.pincode));
   dispatch(toggledata.toggleuser_state_name(state.statename));
   dispatch(toggledata.toggleuser_area(state.area));
   dispatch(toggledata.toggleuser_city(state.city));
-  dispatch(toggledata.toggleuser_address_line1(state.address));
- 
-   
-  
- 
+  dispatch(toggledata.toggleuser_address_line1(state.address)); 
 }
 
 const user_data_upload=async() =>{
-
-  fetch('http://192.168.0.9/help_1/user_personal_details_upload.php',{
+let API_URL = `${Server_URL}/user_personal_details_upload.php`;
+  fetch(API_URL,{
 			method:'post',
 			header:{
 				'Accept': 'application/json',
@@ -420,6 +441,7 @@ setState({
 })
 };
 
+
 const _map=React.useRef(null);
 
     return (
@@ -457,54 +479,75 @@ const _map=React.useRef(null);
        >
          {data.isMapvisible ?
        <Marker 
-       draggable={true}
-       onDrag={(event)=> onRegionChange(event)}
-       onDragEnd={(event)=> onRegionChange(event)}
-          coordinate = {{
-            latitude:state.markers.latitude,
-            longitude: state.markers.longitude,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }} 
+          draggable={true}
+          onDrag={(event)=> onRegionChange(event)}
+          onDragEnd={(event)=> onRegionChange(event)}
+            coordinate = {{
+              latitude:state.markers.latitude,
+              longitude: state.markers.longitude,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }} 
           //image={require('../assets/map_marker.png')}
           title="Your Location"
           >
             <Callout tooltip>
+           
               <View>
                 <View style ={styles.bubble}>
-                  <Text style ={styles.name}>Drop the Location</Text> 
+                <ScrollView>                 
+              <Text style ={styles.name}>Your Location: latitude:{state.markers.latitude}, longitude:{state.markers.longitude}</Text>               
+           </ScrollView>
                 </View>
                 <View style={styles.arrowBorder} />
                 <View style={styles.arrow}/>
                 <TouchableOpacity  onPress= {(event)=> onMapPress(event)}/> 
               </View>
+             
             </Callout>
-            
-          </Marker>
+           
+        </Marker>
            :null}           
            </MapView>
+
+            <View style={requestListstyle.searchBox}>
+             <TextInput 
+             placeholder="Search here"
+             placeholderTextColor="#000"
+              autoCapitalize="none"
+              style={{flex:2,padding:0}}
+              contentInset={{
+                top:0,
+                left:0,
+                bottom:0,
+                right:20
+              }}
+              />
+              <Ionics name="ios-search" size ={20} />
+           </View>
+            
           
            <View style={styles.refreshbox}> 
 
-        <TouchableOpacity onPress= {()=> requestLocationPermission()}>
-        <Ionics name="md-locate" size ={60} />
-        {/* <Animated.Image
-                          source={require('../assets/target1.png')}
-                          resizeMode='cover'
-                          style={[styles.makerWrap]}
-                          /> */}
+              <TouchableOpacity onPress= {()=> requestLocationPermission()}>
+              <Ionics name="md-locate" size ={50} />
+              {/* <Animated.Image
+                                source={require('../assets/target1.png')}
+                                resizeMode='cover'
+                                style={[styles.makerWrap]}
+                                /> */}
            </TouchableOpacity>
       </View>
       <View>
-        {screen.valuesfrom ==='getLocation'?          
+        {screen.valuesfrom ==='getLocation' && props.addressdiplay.address ?          
           <View  style={styles.scrollView}>
                
               <View style={requestListstyle.card}>
                <ScrollView> 
                   <View style={{padding:'5%'}}>    
-                     <View style={requestListstyle.messageBox}>            
+                     <View style={{flexDirection:'row',marginLeft:'5%',alignContent:'flex-end'}}>            
                         <Text >Save your Location</Text>
-                       <TouchableOpacity style={styles.editIcon}
+                       <TouchableOpacity style={{marginLeft:'30%'}}
                                 onPress={() =>sentbackdata()}
                               >
                               <MaterialCommunityIcon style={{color:'green'}}name="content-save-move" size ={25} />                             
@@ -524,17 +567,30 @@ const _map=React.useRef(null);
                       /> */}
                         <View style={signupstyles.action}>
                           <FontAwesome5 style={{paddingTop:'1%',color:'green'}}name="address-card" size ={30} />
-                          <TextInput style={{paddingTop:0}} onChangeText={(val)=>textInputAddressChange(val)}>{state.address} </TextInput>
+                          {/* <TextInput style={{paddingTop:0}}
+                          
+                          onChangeText={(val)=>textInputAddressChange(val)}>{props.addressdiplay.address} </TextInput> */}
+                            <Text style={{paddingTop:0}}
+                          
+                         >{props.addressdiplay.address} </Text>
                         </View>
-
-                    <Text  >City: {state.markers.longitude}</Text>
-                    <Text style={styles.cardDesc}>state: </Text>
+                        {props.addressdiplay.city?
+                    <Text  >City: {props.addressdiplay.city}</Text>
+                    :null}
+                     {props.addressdiplay.statename?
+                    <Text style={styles.cardDesc}>State: {props.addressdiplay.statename}</Text>
+                    :null}
                     {/* <Text style={styles.cardDesc}>Urgent: {marker.urgent}</Text> */}
 
-                    
-                    <Text  >Longitude{state.markers.longitude}</Text>
-                    <Text >Latitude{state.markers.latitude}</Text>
-                   
+                    {props.addressdiplay.district?
+                    <Text >District: {props.addressdiplay.district}</Text>
+                    :null}
+                     {props.addressdiplay.pincode?
+                    <Text >Pincode: {props.addressdiplay.pincode}</Text>
+                    :null}
+                     {props.addressdiplay.countryName?
+                    <Text >Country: {props.addressdiplay.countryName}</Text>
+                    :null}
                   </View>
                 </ScrollView>
               </View>
@@ -558,12 +614,13 @@ const styles = StyleSheet.create({
 
   map: {
     height: '100%',
+    flex:1,
     ...StyleSheet.absoluteFillObject,
     },
   
     bubble: {
       flexDirection: 'column',
-      alignSelf:'flex-start',
+      alignSelf:'auto',
       backgroundColor:'#fff',
       borderRadius:6,
       borderColor:'#ccc',
@@ -600,10 +657,12 @@ const styles = StyleSheet.create({
    },
    refreshbox:{
     position:'absolute',    
-    marginTop: Platform.OS==='ios'?'3.5%':'2.5%',
-    width:'3%',
+    // bottom: Platform.OS==='ios'?'3.5%':'5.5%',
+    width:'2%',
     alignSelf:'flex-end',
-    marginLeft:'9%',
+    marginLeft:'7.5%',
+   // marginTop:'10%',
+    // marginLeft:'3%',
     padding:'4%',
   },
   

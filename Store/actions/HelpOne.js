@@ -20,6 +20,149 @@ export const Toggle_user_pincode ='Toggle_user_pincode';
 export const Toggle_user_bood_donated ='Toggle_user_bood_donated';
 export const Toggle_user_bood_request_raised ='Toggle_user_bood_request_raised';
 export const Toggle_user_Proof_Select ='Toggle_user_Proof_Select';
+export const Toggle_user_Id ='Toggle_user_Id ';
+export const Toggle_admin_comments ='Toggle_admin_comments ';
+export const Toggle_user_proof_status ='Toggle_user_proof_status ';
+export const Toggle_user_request_address_line1 ='Toggle_user_request_address_line1 ';
+export const Toggle_user_request_user_city ='Toggle_user_request_user_city ';
+export const Toggle_user_request_user_state_name ='Toggle_user_request_user_state_name ';
+
+export const Toggle_user_request_user_district ='Toggle_user_request_user_district ';
+
+export const Toggle_user_request_user_countryName ='Toggle_user_request_user_countryName ';
+
+export const Toggle_user_request_user_pincode ='Toggle_user_request_user_pincode ';
+export const Toggle_user_request_user_longitude ='Toggle_user_request_user_longitude ';
+export const Toggle_user_request_user_latitude ='Toggle_user_request_user_latitude ';
+export const Toggle_user_district ='Toggle_user_district ';
+export const Toggle_map_screen_name ='Toggle_map_screen_name ';
+export const Toggle_user_country ='Toggle_user_country ';
+
+export const Toggle_user_sos_name1 ='Toggle_user_sos_name1 ';
+export const Toggle_user_sos_name2 ='Toggle_user_sos_name2 ';
+export const Toggle_user_sos_name3 ='Toggle_user_sos_name3 ';
+export const Toggle_user_sos_name1_number ='Toggle_user_sos_name1_number ';
+export const Toggle_user_sos_name2_number ='Toggle_user_sos_name2_number ';
+export const Toggle_user_sos_name3_number ='Toggle_user_sos_name3_number ';
+export const Toggle_user_sos_msg ='Toggle_user_sos_msg ';
+
+export const toggleuser_sos_msg= (user_sos_msg) =>{
+		return {
+			type:Toggle_user_sos_msg, user_sos_msg:user_sos_msg
+		};
+}
+export const toggleuser_sos_name3_number= (user_sos_name3_number) =>{
+		return {
+			type:Toggle_user_sos_name3_number, user_sos_name3_number:user_sos_name3_number
+		};
+}
+export const toggleuser_sos_name2_number= (user_sos_name2_number) =>{
+		return {
+			type:Toggle_user_sos_name2_number, user_sos_name2_number:user_sos_name2_number
+		};
+}
+export const toggleuser_sos_name1_number= (user_sos_name1_number) =>{
+		return {
+			type:Toggle_user_sos_name1_number, user_sos_name1_number:user_sos_name1_number
+		};
+}
+export const toggleuser_sos_name3= (user_sos_name3) =>{
+		return {
+			type:Toggle_user_sos_name3, user_sos_name3:user_sos_name3
+		};
+}
+
+export const toggleuser_sos_name2= (user_sos_name2) =>{
+		return {
+			type:Toggle_user_sos_name2, user_sos_name2:user_sos_name2
+		};
+}
+export const toggleuser_sos_name1= (user_sos_name1) =>{
+		return {
+			type:Toggle_user_sos_name1, user_sos_name1:user_sos_name1
+		};
+}
+
+export const toggleuser_country= (user_country) =>{
+		return {
+			type:Toggle_user_country, user_country:user_country
+		};
+}
+export const togglemap_screen_name= (map_screen_name) =>{
+		return {
+			type:Toggle_map_screen_name, map_screen_name:map_screen_name
+		};
+}
+
+export const toggleuser_district= (user_district) =>{
+		return {
+			type:Toggle_user_district, user_district:user_district
+		};
+}
+export const toggleuser_request_user_latitude= (user_request_user_latitude) =>{
+		return {
+			type:Toggle_user_request_user_latitude, user_request_user_latitude:user_request_user_latitude
+		};
+}
+
+export const toggleuser_request_user_longitude= (user_request_user_longitude) =>{
+		return {
+			type:Toggle_user_request_user_longitude, user_request_user_longitude:user_request_user_longitude
+		};
+}
+
+export const toggleuser_request_user_pincode= (user_request_user_pincode) =>{
+		return {
+			type:Toggle_user_request_user_pincode, user_request_user_pincode:user_request_user_pincode
+		};
+}
+
+
+export const toggleuser_request_user_countryName= (user_request_user_countryName) =>{
+		return {
+			type:Toggle_user_request_user_countryName, user_request_user_countryName:user_request_user_countryName
+		};
+}
+export const toggleuser_request_user_district= (user_request_user_district) =>{
+		return {
+			type:Toggle_user_request_user_district, user_request_user_district:user_request_user_district
+		};
+}
+
+export const toggleuser_request_user_state_name= (user_request_user_state_name) =>{
+		return {
+			type:Toggle_user_request_user_state_name, user_request_user_state_name:user_request_user_state_name
+		};
+}
+
+export const toggleuser_request_user_city= (user_request_user_city) =>{
+		return {
+			type:Toggle_user_request_user_city, user_request_user_city:user_request_user_city
+		};
+}
+
+
+export const toggleuser_request_address_line1= (user_request_address_line1) =>{
+		return {
+			type:Toggle_user_request_address_line1, user_request_address_line1:user_request_address_line1
+		};
+}
+
+export const toggleuser_proof_status= (user_proof_status) =>{
+		return {
+			type:Toggle_user_proof_status, user_proof_status:user_proof_status
+		};
+}
+export const toggleadmin_comments= (admin_comments) =>{
+		return {
+			type:Toggle_admin_comments, admin_comments:admin_comments
+		};
+}
+export const toggleuser_Id= (user_Id) =>{
+    return {
+        type:Toggle_user_Id, user_Id:user_Id
+    };
+}
 
 export const toggleuser_Proof_Select= (user_Proof_Selects) =>{
 		return {

@@ -93,7 +93,7 @@ import React from 'react';
 ];
     
   
-// fetch('http://192.168.0.8/help_1/blood_request_list.php',{
+// fetch('http://192.168.0.9/help_1/blood_request_list.php',{
 //   method:'post',
 //   header:{
 //       'Accept': 'application/json',

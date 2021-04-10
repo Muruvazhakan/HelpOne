@@ -14,12 +14,12 @@ const SplashScreen = ({navigation}) => {
     return (
         
     <View style={styles.container}>
-        <ScrollView>
+        
        <View style={styles.header}>
             <Animatable.Image 
                 animation="bounceIn"
                 duraton="3000"
-            source={require('../assets/blood_logo.png')}
+            source={require('../../assets/blood_logo.png')}
             style={styles.logo}
             resizeMode="stretch"
             />
@@ -29,6 +29,8 @@ const SplashScreen = ({navigation}) => {
             backgroundColor:colors.background
         }]}
             animation="fadeInUpBig"> 
+            <ScrollView>
+
             <Text style={[styles.title,{color:colors.text}]}>Every Blood Donor is Life Saver</Text>
             <Text style={[styles.text,{color:colors.text}]}>Sign in with account</Text>
             <View style={styles.Buttonstyle}>
@@ -40,9 +42,8 @@ const SplashScreen = ({navigation}) => {
             
             </TouchableOpacity>
             </View>
-            
-        </Animatable.View>
-        </ScrollView>
+            </ScrollView>
+        </Animatable.View>       
     </View>
 
     );
@@ -59,18 +60,19 @@ const styles = StyleSheet.create({
       backgroundColor: '#009387'
     },
     header: {
-        flex: 2,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: '10%',
     },
     footer: {
         flex: 1,
-        backgroundColor: '#fff',
-               
+        backgroundColor: '#fff',               
         paddingVertical: '10%',
         paddingHorizontal: '10%',
         borderRadius:30,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
     },
     logo: {
         width: height_logo,
@@ -86,32 +88,23 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     Buttonstyle: {
-        alignItems: 'flex-end',
-        marginTop: 10,
+        alignSelf: 'stretch',
+        marginTop: '7%',
     },
 
     Button: {
-        backgroundColor:'#009387',
-        marginTop:10,
+        backgroundColor:'#009387',        
         paddingTop:15,
         paddingBottom:15,
-        margin:10,
-        marginRight:10,
-        borderRadius:10,
+        margin:10,      
+        borderRadius:30,
         borderWidth: 1,
         borderColor: '#009397'
     },
-    signIn: {
-        width: 150,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 50,
-        flexDirection: 'row'
-    },
     textSign: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        alignSelf: 'center',
     }
   });
   

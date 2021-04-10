@@ -14,7 +14,7 @@ import MainTabScreen from './Screens/MainTabScreen';
 import BookmarkScreen from './Screens/BookmarkScreen';
 import SettingsScreen from './Screens/SettingsScreen';
 import SupportScreen from './Screens/SupportScreen';
-import GetLocationmap from './Screens/GetLocationmap';
+import GetLocationmap from './Screens/Blood_Request/GetLocationmap';
 import RootStackScreen from './Screens/RootStackScreen';
 import { DrawerContent } from './Screens/DrawerContent';
 import { AuthContext } from './components/context';
@@ -24,6 +24,18 @@ import SearchMap from './Screens/Map_Component/SearchMap';
 import {createStore,combineReducers} from 'redux';
 import helponeReducer from './Store/reducers/HelpOne';
 import {Provider} from 'react-redux';
+import LottieView from 'lottie-react-native';
+
+// import {connect,useSelector,useDispatch} from 'react-redux';
+// import {toggleusername,
+//   toggleusernumber,    
+// } from './Store/actions/HelpOne';
+import {RequestDisplayStackScreen,
+  DonatedDisplayStackScreen,
+
+} from './Screens/MainTabScreen';
+
+import Main_Blood_Screen_Navigation from './Screen_Navigation/Main_Blood_Screen_Navigation';
 const Drawer = createDrawerNavigator();
 
 const rootReducer= combineReducers({
@@ -32,9 +44,10 @@ const rootReducer= combineReducers({
 
 const store = createStore(rootReducer);
 const App =() =>{
+ 
     //  const [isLoading, setIsLoading] = React.useState(true);
     // const [userToken, setUserToken] = React.useState(null); 
-
+    // const dispatchredux = useDispatch();
   const [isDarkTheme, setIsDarkTheme] = React.useState(false); 
   const initialLoginState = {
     isLoading: true,
@@ -117,8 +130,11 @@ const App =() =>{
       try {
         await AsyncStorage.setItem('userName', userName);
         await AsyncStorage.setItem('userNumber', userNumber);
+      
+        // dispatchredux(toggleusername(userName));
+        // dispatchredux(toggleusernumber(userNumber));
       } catch(e) {
-        console.log(e);
+        console.log('[App]'+e);
       }
 
       // console.log('user token: ', userToken);
@@ -130,13 +146,8 @@ const App =() =>{
         // setIsLoading(false);
         let logout='0';
       try {
-        await AsyncStorage.setItem('user_logout',logout);
-        await AsyncStorage.removeItem('userName');
-        await AsyncStorage.removeItem('userNumber');
-        await AsyncStorage.removeItem('userfirstname');
-
-        await AsyncStorage.removeItem('user_last_name');
-        console.log('user_logout logout :'+ logout);
+        clearAppData();
+        console.log('[App] user_logout logout :'+ logout);
       } catch(e) {
         console.log(e);
       }
@@ -150,6 +161,16 @@ const App =() =>{
       setIsDarkTheme( isDarkTheme => !isDarkTheme );
     }
   }), []);
+
+  const clearAppData = async() => {
+    try {
+      console.log('clearAppData in AsyncStorage ');
+        const keys = await AsyncStorage.getAllKeys();
+        await AsyncStorage.multiRemove(keys);
+    } catch (error) {
+        console.error('Error clearing app data.');
+    }
+}
   
   useEffect(() => {
     setTimeout(async() => {
@@ -161,8 +182,8 @@ const App =() =>{
       } catch(e) {
         console.log(e);
       }
-      console.log('user userName: ', userName);
-      console.log('user userNumber: ', userNumber);
+      console.log('[App] user userName: ', userName);
+      console.log('[App] user userNumber: ', userNumber);
       if(userName !==null){
         ToastAndroid.show('Welcome '+userName,ToastAndroid.LONG);
       }
@@ -170,13 +191,19 @@ const App =() =>{
       
       //console.log(foundUser[0].userName);
       dispatch({ type: 'RETRIEVE_TOKEN', userName: userName , userNumber:userNumber});
-    }, 1000);
+    }, 3500);
   }, []);
 
   if( loginState.isLoading ) {
     return(
-      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-        <ActivityIndicator size="large"/>
+      <View style={{
+         flex:1,
+        justifyContent:'center',alignItems:'center'}}>
+        {/* <ActivityIndicator size="large"/> */}
+        <Text style={{       
+        justifyContent:'center',alignItems:'center'}}>Donate Blood</Text>       
+        <LottieView source={require('./assets/blood-transfusion-kawaii.json')} autoPlay loop />
+        
       </View>
     );
   }  
@@ -187,14 +214,18 @@ const App =() =>{
     <AuthContext.Provider value={authContext}>
       <NavigationContainer theme={theme}>
       { loginState.userName !== null ? (
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} userdetails={loginState}/>}>
-          <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
-          <Drawer.Screen name="SupportScreen" component={SupportScreen} />
-          <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-          <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
-          <Drawer.Screen name="GetLocationmap" component={GetLocationmap} />
-          {/* <Drawer.Screen name="SearchMap" component={SearchMap} /> */}
-        </Drawer.Navigator>
+        // <Drawer.Navigator drawerContent={props => <DrawerContent {...props} userdetails={loginState}/>}>
+        //   <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
+        //   <Drawer.Screen name="SupportScreen" component={SupportScreen} />
+        //   <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+        //   <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
+        //   <Drawer.Screen name="GetLocationmap" component={GetLocationmap} />
+        //   <Drawer.Screen name="My_Request_Raised_Screen" component={RequestDisplayStackScreen} />
+        //   <Drawer.Screen name="My_Blood_Donated_Screen" component={DonatedDisplayStackScreen} />
+        //   {/* <Drawer.Screen name="SearchMap" component={SearchMap} /> */}
+        // </Drawer.Navigator>
+     
+      <Main_Blood_Screen_Navigation userdata={loginState} />
       )
     :
       <RootStackScreen/>

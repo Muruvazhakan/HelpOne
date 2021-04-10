@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "779520131250",
+    "firebase_url": "https://helpone-9bf33.firebaseio.com",
+    "project_id": "helpone-9bf33",
+    "storage_bucket": "helpone-9bf33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779520131250:android:3be2fffec5eafb125d49ab",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779520131250-mm630hnl4tqc650sl8r9sbi0a7bvlvkk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9u8x7NcAvBrFFB7wPZ3DfxjfgLngkC7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779520131250-mm630hnl4tqc650sl8r9sbi0a7bvlvkk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

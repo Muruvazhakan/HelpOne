@@ -10,9 +10,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Covid_Screen_India from '../Covid_Screen/Covid_Cause_India/Covid_Statewise_Data';
 import Covid_India_Contacts_Screen from '../Covid_Screen/Covid_Cause_India/Covid_India_Contacts';
+import Covid_Bed_Details from '../Covid_Screen/Covid_Cause_India/Covid_Bed_Components/Covid_Bed_Details';
+
 
 const Covid_India_Stack = createStackNavigator();
 const Covid_India_Contacts_Stack = createStackNavigator();
+const Covid_India_Bed_Stack = createStackNavigator();
 const Covid_Home_Stack = createStackNavigator();
 const Covid_Global_Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -201,3 +204,43 @@ export const MainCovidStackScreen = ({navigation}) =>(
     }} />
   </Covid_India_Contacts_Stack.Navigator>
   );
+
+  export const CovidIndiaBedStackScreen = ({navigation}) =>(
+ 
+    <Covid_India_Bed_Stack.Navigator
+     screenOptions = {{
+      headerStyle:{
+        backgroundColor :"white"
+      },
+      headerTintColor : "black",
+      headerTintStyle : "black",      
+      fontweight:'bold',
+      headerTitleAlign:'center',
+      
+    }}
+    >
+    <Covid_India_Bed_Stack.Screen name="Covid-India Bed Status" component={Covid_Bed_Details} 
+    options={{ 
+      // title:username,
+    headerLeft:() => {
+      return (
+      <View style={{flexDirection:'row'}}>
+      <Ionicons.Button name="ios-menu" size={25}
+        backgroundColor = "white" color='black'
+         onPress={() => {navigation.openDrawer();}}></Ionicons.Button>
+         
+         <FontAwesome  backgroundColor = "white" color='black'  name="user-circle-o"  size={screen_width/10}>
+           </FontAwesome>
+         </View>
+      )},
+      
+      headerRight: () => (
+        <View style={{ paddingRight: '50%' }}>
+          <SOSScreen navigation={navigation} />
+        </View>
+      )
+    
+    }} />
+  </Covid_India_Bed_Stack.Navigator>
+  );
+

@@ -17,19 +17,27 @@ const Covid_Bed_Details_Screen = (props) => {
   const user_data_user_first_name=useSelector(state =>
     state.helpone.user_first_name,
     );
-    const [selectedcontactloc, setselectedcontactloc] = useState(null);
+    const [selectedBedloc, setselectedBedloc] = useState(null);
     const initialState = {
-        contact: "",
-        location: "",  
+      bed: {}, 
+      summary:{},     
+      ruralHospitals: null,
+        ruralBeds: null,
+        urbanHospitals: null,
+        urbanBeds: null,
+        totalHospitals: null,
+        totalBeds: null,
+        asOn: null,
+      selectedbedloc:null ,       
         refreshing: false,      
     }
     let newData={};
     const [state, setState] = useState(initialState);
    
     useEffect(() => {      
-      console.log('[Covid_India_Contacts_Screen] home ');
+      console.log('[Covid_Bed_Details_Screen] home ');
       console.log(props.props);
-      console.log(props.primarycontacts);
+      console.log(props.summary);
     //   console.log(props);
     //      setState({ ...state,
     //         primarydetails:props.primarycontacts,
@@ -46,18 +54,23 @@ const Covid_Bed_Details_Screen = (props) => {
      },[]);
  
     
-   const  handleStateContactChange = (e) =>{
-    newData = props.props.filter((contact)=>{
-      return contact.location === e;
+   const  handleStateBedChange = (e) =>{
+    newData = props.props.filter((bed)=>{
+      return bed.state === e;
     })
     console.log("newData") ;
     console.log(newData) ;
-    newData.map((contact, index) => {
-      console.log("regiondata") ;
-      console.log(contact) ;
-      setState({ ...state,
-        location: contact.location,
-        contact: contact.number,       
+    newData.map((bed, index) => {
+      console.log("bed data") ;
+      console.log(bed) ;
+      setState({ ...state,       
+        ruralHospitals: bed.ruralHospitals,       
+        ruralBeds: bed.ruralBeds, 
+        urbanHospitals: bed.urbanHospitals, 
+        urbanBeds: bed.urbanBeds, 
+        totalHospitals: bed.totalHospitals, 
+        totalBeds: bed.totalBeds, 
+        asOn: bed.asOn, 
       });
     });  
     console.log("state") ;
@@ -84,44 +97,33 @@ const Covid_Bed_Details_Screen = (props) => {
   const renderHeader = () => {
       return (
           <View>
- {props.primarycontacts.number ? 
+ {props.summary.ruralHospitals ? 
             <View>  
              <View > 
             
         <View  style={[ProfileScreenStyles.cardview]}>             
             <View style={[ProfileScreenStyles.cardview,styles.buttonstyle]}>
-        <Text style={[styles.textStyle,{color:'#1DA1F2'}]}>Primary Contact Deatils</Text>
+        <Text style={[styles.textStyle,{color:'#1DA1F2'}]}>Summary</Text>
+        
         </View>
-            <TouchableOpacity style={[ProfileScreenStyles.cardview,ProfileScreenStyles.row,styles.buttonstyle]}
-            onPress={() => Linking.openURL(`tel:${props.primarycontacts.number}`)}
-            >
-            <Icon style={{ color: 'green' }} name="phone" 
-            // color={colors.text} 
-            size={20} />
-            <Text style={{color: 'green'}}>  Number: {props.primarycontacts.number}</Text>
-            </TouchableOpacity>
-            {/* <Text> {props.primarycontacts.numbertollfree}</Text> */}
-            <TouchableOpacity style={[ProfileScreenStyles.cardview,ProfileScreenStyles.row,styles.buttonstyle]}
-            onPress={() => Linking.openURL(`mailto:${props.primarycontacts.email}`)}
-            >
-                 <Icon name="email" color='#DC143C' size={20} />
-                <Text style={{color: '#8B0000'}}>  Email</Text>  
-            </TouchableOpacity>
-                     
-            <TouchableOpacity style={[ProfileScreenStyles.cardview,ProfileScreenStyles.row,styles.buttonstyle]}
-            onPress={() => Linking.openURL(`${props.primarycontacts.twitter}`)}
-            >
-                <Icon name="twitter" color='#1DA1F2' size={20} />
-            <Text style={{color: '#1DA1F2'}} >  Twitter </Text>
-              </TouchableOpacity>
+        <Text 
+        style={[styles.textStyle,{color:'#1DA1F2'}]}
+        >ruralHospitals {props.summary.ruralHospitals}</Text>
+        <Text 
+        style={[styles.textStyle,{color:'#1DA1F2'}]}
+        >ruralBeds {props.summary.ruralBeds}</Text>
+        <Text 
+        style={[styles.textStyle,{color:'#1DA1F2'}]}
+        >urbanBeds {props.summary.urbanBeds}</Text>
+        <Text 
+        style={[styles.textStyle,{color:'#1DA1F2'}]}
+        >totalHospitals {props.summary.totalHospitals}</Text>
+        <Text 
+        style={[styles.textStyle,{color:'#1DA1F2'}]}
+        >totalBeds {props.summary.totalBeds}</Text>
+       
 
-              <TouchableOpacity style={[ProfileScreenStyles.cardview,ProfileScreenStyles.row,styles.buttonstyle]}
-            onPress={() => Linking.openURL(`${props.primarycontacts.facebook}`)}
-            >
-                <Icon name="facebook" color= '#4267B2' size={20} />
-            <Text style={{color: '#4267B2'}}>  Facebook</Text>
-              </TouchableOpacity>
-            {/* <Text>facebook: {props.primarycontacts.facebook}</Text> */}
+
             </View>
            
          </View>
@@ -131,7 +133,7 @@ const Covid_Bed_Details_Screen = (props) => {
          
           <Text style={[styles.textStyle,{color:'#1DA1F2'}]}>Pick Your State</Text>
         <Picker
-              selectedValue={selectedcontactloc}
+              selectedValue={selectedBedloc}
               style={[{ height: 50, width:200,alignSelf: 'center', 
             //   color: colors.text, 
             }]}
@@ -142,36 +144,32 @@ const Covid_Bed_Details_Screen = (props) => {
               //   justifyContent: 'center', color: colors.text, }]}
               onValueChange={(e, itemIndex) => 
                 {  console.log(e);                   
-                    setselectedcontactloc(e);
-                    handleStateContactChange(e)
+                    setselectedBedloc(e);
+                    handleStateBedChange(e)
                 }
               }>
               {/* <Picker.Item label="Select" value="" /> */}
-              {props.props.map((contact, i) =>
-               <Picker.Item  key={i}  label={contact.location} value={contact.location}/>
+              {props.props.map((bed, i) =>
+               <Picker.Item  key={i}  label={bed.state} value={bed.state}/>
                )}
 
             </Picker>
             
-            {state.location ?
+            {state.ruralBeds ?
             <View 
             
-            style={[ProfileScreenStyles.cardview,{paddingBottom:0,marginTop:0}]}
+            style={[ProfileScreenStyles.cardview,styles.buttonstyle,{}]}
             
             >
-                 <TouchableOpacity 
-                 style={[styles.buttonstyle,{paddingBottom:0}]}
-            onPress={() => Linking.openURL(`tel:${state.contact}`)}
-            >
-                <Text  style={styles.textStyle}>{state.location}</Text>
-                <View style={[ProfileScreenStyles.row]}>
-                <Icon style={{ color: 'green' }} name="phone" 
-                // color={colors.text}
+               <Text  style={styles.textStyle}>Total Hospitals: {state.totalHospitals}</Text>  
+                <Text  style={styles.textStyle}>Total Beds: {state.totalBeds}</Text> 
+                <Text  style={styles.textStyle}>Rural Hospitals: {state.ruralHospitals}</Text>                      
+                <Text  style={styles.textStyle}>Rural Beds: {state.ruralBeds}</Text>  
                 
-                size={20} />
-                <Text style={{ color: 'green' }}>  {state.contact}</Text>
-                </View>
-                </TouchableOpacity>
+                <Text  style={styles.textStyle}>Urban Hospitals: {state.urbanHospitals}</Text>  
+                <Text  style={styles.textStyle}>Urban Beds: {state.urbanBeds}</Text>  
+                <Text  style={styles.textStyle}>As On: {new Date(state.asOn).toDateString()}</Text>           
+               
             </View>
             :null }
             </View>
@@ -202,20 +200,16 @@ const Covid_Bed_Details_Screen = (props) => {
                 <View
                 style={[ProfileScreenStyles.cardview,{alignItems:'center',}]}
                 >
-                     <TouchableOpacity 
-                //  style={[styles.buttonstyle,]}
-            onPress={() => Linking.openURL(`tel:${item.number}`)}
-            >
-                    <View style={[{alignItems:'center'}]}>
-                    <Text style={styles.textStyle}>{item.location}</Text>  
-                    <View style={[ProfileScreenStyles.row,{padding:0}]}>  
-                    <Icon style={{ color: 'green' }} name="phone"
-                    //  color={colors.text} 
-                     size={20} />
-                    <Text style={[ProfileScreenStyles.row,{padding:0,color: 'green'}]}>  {item.number}</Text> 
-                    </View>    
-                    </View>   
-                    </TouchableOpacity>    
+                   
+                   <Text  style={styles.textStyle}>Total Hospitals: {item.totalHospitals}</Text>  
+                <Text  style={styles.textStyle}>Total Beds: {item.totalBeds}</Text> 
+                <Text  style={styles.textStyle}>Rural Hospitals: {item.ruralHospitals}</Text>                      
+                <Text  style={styles.textStyle}>Rural Beds: {item.ruralBeds}</Text>  
+                
+                <Text  style={styles.textStyle}>Urban Hospitals: {item.urbanHospitals}</Text>  
+                <Text  style={styles.textStyle}>Urban Beds: {item.urbanBeds}</Text>  
+                <Text  style={styles.textStyle}>As On: {new Date(item.asOn).toDateString()}</Text>    
+                    
                 </View>
               )}
               keyExtractor={item => item.location}

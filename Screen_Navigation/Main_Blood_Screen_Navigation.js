@@ -65,7 +65,8 @@ const Main_Blood_Screen_Navigation = (props) => {
       <Drawer.Screen name="CovidGlobalScreen" component={CovidScreen.CovidGlobalStackScreen} /> 
       <Drawer.Screen name="CovidIndiaScreen" component={CovidScreen.CovidIndiaStackScreen} /> 
       <Drawer.Screen name="CovidIndiaContactScreen" component={CovidScreen.CovidIndiaContactStackScreen} /> 
-      
+
+      <Drawer.Screen name="CovidIndiaBedScreen" component={CovidScreen.CovidIndiaBedStackScreen} /> 
       {/* <Drawer.Screen name="SearchMap" component={SearchMap} /> */} 
       
     </Drawer.Navigator>

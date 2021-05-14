@@ -1,56 +1,48 @@
 import React, { useEffect } from 'react';
 import { View, Text,
    Button, StyleSheet,StatusBar,ToastAndroid,
-   TouchableOpacity,Linking } from 'react-native';
+   TouchableOpacity,Linking,ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 //import Toaster from 'react-native-toaster';
 import {useSelector,useDispatch} from 'react-redux';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import {styles as MainScreenStyles} from '../../../Main_Screen/MainScreen';
-import * as fetchCovid from '../../Covid_India_Fetch_Datas';
+import * as fetchCovid from '../Covid_India_Fetch_Datas';
 import { ScrollView } from 'react-native-gesture-handler';
-
 import FlipCard from 'react-native-flip-card';
-import Covid_Statewise_Data_Screen from '../../Covid_Statewise_Data_Screen';
+
 import { Picker } from '@react-native-community/picker';
-import Covid_India_Contacts_Screen from '../Covid_India_Contacts_Screen';
+import Covid_Bed_Details_Screen from './Covid_Bed_Details_Screen';
 class Covid_Bed_Details extends React.Component {   
     state = {
-      contact: {}, 
-      new:{},
-      primarycontacts:{
-        number: null,
-        numbertollfree:null,
-        email: "ncov2019@gov.in",
-        twitter: "https://twitter.com/MoHFW_INDIA",
-        facebook: "https://www.facebook.com/MoHFWIndia",
-      } ,  
-      selectedcontactloc:null 
+      bed: {}, 
+      summary:{},     
+      selectedbedloc:null,
+      isLoading:false, 
     }
  
     async componentDidMount() {
     //   const data = await fetchCovid.fetchCovidStateData();
-      const contactdata = await fetchCovid.fetchCovidStateContactData();
-    //   console.log("[Covid_India_Contacts_Screen] fetchData data");
+      const beddata = await fetchCovid.fetchCovidBedData();
+    //   console.log("[Covid_Bed_Details_Screen] fetchData data");
     // console.log("contactdata");
      
       
-      console.log("[Covid_India_Contacts] allcontact datas");    
-    //   console.log(contactdata.primary);
-      console.log(contactdata);
-      this.setState({        
-        // contact:contactdata.regional,
-        // primarycontacts:contactdata.primary
-        contact:contactdata.allcontactsplit,
-        primarycontacts:contactdata.allcontact.contacts.primary
+      console.log("[Covid_Bed_Details_Screen] datas");    
+      // console.log(beddata.primary);
+      console.log(beddata);
+      this.setState({       
+        bed:beddata.regional,
+        summary:beddata.summary,
+        isLoading:false
     });
-    // console.log(this.state);  
-    //  this.state.contact.map((contact, index) => {
-    //   console.log("contact inside") ;
-    //   console.log(contact) ;  
-    //   this.var =  contact.location;
+    console.log(this.state);  
+     this.state.bed.map((bed, index) => {
+      console.log("bed state") ;
+      console.log(bed) ;  
+      // this.var =  bed.state;
       
-    // });  
+    });  
     // console.log(this.var) ;  
       //  console.log(this.state.indiadata);
 
@@ -61,6 +53,8 @@ class Covid_Bed_Details extends React.Component {
         
       // })}
     } 
+
+    
     
      handleStateContactChange = (e) =>{
       let  newData = this.state.contact.filter((contact)=>{
@@ -82,15 +76,29 @@ class Covid_Bed_Details extends React.Component {
        }
   
     render() {
-      const { contact,primarycontacts } = this.state;
-      
+      const { bed,summary } = this.state;
+      if( this.state.isLoading ) {
+        return(
+          <View style={{
+             flex:1,
+            justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large"/>
+            {/* <Text  style={{ 
+              flex:1,     
+            justifyContent:'center',alignItems:'center'}}>Donate Blood</Text>        */}
+            
+            
+          </View>
+        );
+      }
       return (   
         <View>
-        <Covid_India_Contacts_Screen props ={contact} primarycontacts={primarycontacts}  />   
+        <Covid_Bed_Details_Screen props ={bed} summary={summary}  />   
         </View> 
       );
     }
   }
+  
   
   export default Covid_Bed_Details;
   const styles = StyleSheet.create({

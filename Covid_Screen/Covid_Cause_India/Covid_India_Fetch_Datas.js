@@ -154,7 +154,7 @@ export const fetchCovidStateContactData = async () => {
 
 export const fetchCovidBedData = async () => {
   let changeableUrl = Covid.Covid_Beds_Stats_URL,
-  allbed=[],allcontactsplit="",finalcontact={},regiondata=[];
+  allbed=[],allcontactsplit="",finalbed={},lastupdate=[];
   // location,confirmed;
   
   // console.log('[Covid_India_Contacts_Screen] changeableUrl ' +changeableUrl);
@@ -164,21 +164,23 @@ export const fetchCovidBedData = async () => {
    await fetch(changeableUrl, {
       method: 'post',
     }).then(res => res.json()).then(res => {
-      // console.log("[Covid_India_Fetch_Datas] allcontact response");
+      console.log("[Covid_India_Fetch_Datas] fetchCovidBedData response");
       // console.log( res);    
       // console.log(res.data.contacts);              
       
       allbed=res.data;
-      // console.log(allcontact); 
+      console.log(allbed); 
+      // console.log(allbed.summary); 
+      
       // console.log("[Covid_India_Fetch_Datas] allcontact.regional response");
       // console.log(allcontact.contacts); 
-      allcontactsplit= allcontact.contacts.regional.map((contacts) => ({        
-        location:contacts.loc	 ,
-        number:contacts.number	,                 
-      }))
-      console.log( "[Covid_India_Fetch_Datas] allcontact contact");    
-       console.log(allcontactsplit);    
-       finalcontact = {allcontact , allcontactsplit}
+      // allcontactsplit= allcontact.contacts.regional.map((contacts) => ({        
+      //   location:contacts.loc	 ,
+      //   number:contacts.number	,                 
+      // }))
+      // console.log( "[Covid_India_Fetch_Datas] allcontact contact");    
+      //  console.log(allcontactsplit);    
+      //  finalcontact = {allcontact , allcontactsplit}
       //  console.log(finalcontact); 
 
     })
@@ -188,7 +190,7 @@ export const fetchCovidBedData = async () => {
    
     // console.log("[Covid_India_Fetch_Datas] region datas");
     // console.log(region);   
-    return finalcontact;
+    return allbed;
     // return regiondata;
   } catch (error) {
     return error;

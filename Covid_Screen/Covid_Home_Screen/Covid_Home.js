@@ -35,7 +35,15 @@ const Covid_Home = ({ navigation }) => {
         <StatusBar barStyle={themes.dark ? "light-content" : "default-content"} />
         <Covid_Main_Screen />
         <View style={[MainScreenStyles.cardview, { margin: '2%' }]}>
-          <View style={MainScreenStyles.row}>
+          <View 
+          // style={MainScreenStyles.row}
+          
+          >
+             <ScrollView 
+      horizontal={true}
+        showsHorizontalScrollIndicator={false}   
+        style={[{margin:0,marginRight:'2%'}]}     
+      >
             <View style={MainScreenStyles.component}>
               <TouchableOpacity style={MainScreenStyles.touchspacing}
                 onPress={() => navigation.navigate('CovidGlobalScreen')}>
@@ -44,9 +52,8 @@ const Covid_Home = ({ navigation }) => {
               </TouchableOpacity>
               <Text>Global Causes</Text>
             </View>
-          </View>
-
-          <View style={MainScreenStyles.row}>
+       
+          
             <View style={MainScreenStyles.component}>
               <TouchableOpacity style={MainScreenStyles.touchspacing}
                 onPress={() => navigation.navigate('CovidIndiaScreen')}>
@@ -55,9 +62,8 @@ const Covid_Home = ({ navigation }) => {
               </TouchableOpacity>
               <Text>India Causes</Text>
             </View>
-          </View>
-
-          <View style={MainScreenStyles.row}>
+          
+         
             <View style={MainScreenStyles.component}>
               <TouchableOpacity style={MainScreenStyles.touchspacing}
                 onPress={() => navigation.navigate('CovidIndiaContactScreen')}>
@@ -66,10 +72,21 @@ const Covid_Home = ({ navigation }) => {
               </TouchableOpacity>
               <Text>Covid Help Line</Text>
             </View>
+          
+            <View style={MainScreenStyles.component}>
+              <TouchableOpacity style={MainScreenStyles.touchspacing}
+                onPress={() => navigation.navigate('CovidIndiaBedScreen')}>
+                <Fontisto style={MainScreenStyles.iconcenterspacing}
+                  name="blood-drop" color={colors.text} size={35} />
+              </TouchableOpacity>
+              <Text>Covid Bed Details</Text>
+            </View>
+            </ScrollView>
+          
           </View>
 
         </View>
-        <Covid_Statewise_Data />
+        {/* <Covid_Statewise_Data /> */}
         
       </View>
     </ScrollView>

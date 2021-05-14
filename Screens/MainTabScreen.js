@@ -54,7 +54,8 @@ const MainTabScreen = () => (
         name="Blood_Request_List"
         component={Requester_Detail_StackScreen}
         options={{
-          tabBarLabel: 'Donate',
+        //  tabBarLabel: 'Donate',
+          tabBarLabel: 'Request',
           tabBarColor: '#d02860',
           tabBarIcon: ({ color }) => (
             <Fontisto name="blood-drop" color={color} size={26} />
@@ -103,7 +104,7 @@ const HomeStackScreen = ({navigation}) =>(
       headerTitleAlign:'center',
     }}>
     <HomeStack.Screen name="Home" component={HomeScreen} 
-    options={{ title:"Home Screen",
+    options={{ title:"Blood Home Screen",
     headerLeft:() => (
       <Icon.Button name="ios-menu" size={25}
         backgroundColor = "#009387"

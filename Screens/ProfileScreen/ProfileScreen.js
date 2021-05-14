@@ -36,7 +36,7 @@ const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     console.log('screen_width admin_comments ' + screen_width + admin_comments);
-    console.log('user_data_user_BloodGroup ' + user_data_user_BloodGroup);
+    console.log('****user_data_user_first_name ' + user_data_user_first_name);
   }, [screen_width]);
   const user_data_user_number = useSelector(state =>
     state.helpone.user_number,
@@ -207,6 +207,7 @@ const ProfileScreen = ({ navigation }) => {
               :
               <FontAwesome name="user-circle-o" color={colors.text} size={150} />
             }
+            {user_data_user_name !== null ?
             <View>
               <View>
                 <Title style={[editprofilestyle.cardview_no_shadow, {
@@ -216,6 +217,7 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               {/* <Caption style={{ marginLeft: '4%' }}>{user_data_user_first_name} {user_data_user_last_name}</Caption> */}
             </View>
+            :null}
           </View>
 
         </View>
@@ -236,7 +238,7 @@ const ProfileScreen = ({ navigation }) => {
         
 
         <View style={[styles.userInfoSection, styles.cardview,]}>
-          {user_data_user_first_name || user_data_user_last_name ?
+          {user_data_user_first_name && user_data_user_last_name && user_data_user_first_name.trim() !=='' ?
             <View style={[styles.row, styles.cardfirstvalue]}>
               <FontAwesome name="user-o" color={colors.text} size={20} />
               <Text style={{ color: colors.text, marginLeft: 20 }}>{user_data_user_first_name} {user_data_user_last_name}</Text>
@@ -558,13 +560,16 @@ export const styles = StyleSheet.create({
   cardview: {
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 7,
+    shadowRadius: 2,
     shadowOpacity: 0.25,
     elevation: 5,
-    // backgroundColor: 'white',
-    padding: '2%',
-    borderRadius: 20,
-    margin: '2%',
+    // backgroundColor: 'white',   
+    backgroundColor: 'white',
+    padding: '5%',
+    paddingBottom: '2%',
+    //paddingTop:'7%',
+    borderRadius: 10,
+    margin: '3%',
   },
 
   profileImg: {

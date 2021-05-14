@@ -45,7 +45,13 @@ export const Toggle_user_sos_name1_number ='Toggle_user_sos_name1_number ';
 export const Toggle_user_sos_name2_number ='Toggle_user_sos_name2_number ';
 export const Toggle_user_sos_name3_number ='Toggle_user_sos_name3_number ';
 export const Toggle_user_sos_msg ='Toggle_user_sos_msg ';
+export const Toggle_ip_address ='Toggle_ip_address ';
 
+export const toggleip_address= (ip_address) =>{
+		return {
+			type:Toggle_ip_address, ip_address:ip_address
+		};
+}
 export const toggleuser_sos_msg= (user_sos_msg) =>{
 		return {
 			type:Toggle_user_sos_msg, user_sos_msg:user_sos_msg

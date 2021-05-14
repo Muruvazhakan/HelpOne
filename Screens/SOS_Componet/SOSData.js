@@ -3,6 +3,7 @@ import {
   View, Button, StyleSheet, TextInput, TouchableOpacity,
   ToastAndroid,Alert
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as toggledata from '../../Store/actions/HelpOne';
 import {
   Avatar,
@@ -67,7 +68,7 @@ const SOSData = ({ navigation }) => {
     check_textInput_user2_sos_name: false,
     check_textInput_user3_sos_number: false,
     check_textInput_user3_sos_name: false,
-    check_textInput_user_sos_msg: false,
+    check_textInput_user_sos_msg: true,
   };
   const [state, setState] = useState(initialState);
   const dispatch = useDispatch();
@@ -285,34 +286,34 @@ const SOSData = ({ navigation }) => {
     console.log(state);
     try {
 
-      if (typeof state.sos_name1 !== "undefined") {
-        dispatch(toggledata.toggleuser_sos_name1(state.sos_name1));
+      if (typeof state.sos_user1 !== "undefined") {
+        dispatch(toggledata.toggleuser_sos_name1(state.sos_user1));
       }
 
-      if (typeof state.sos_name1Number !== "undefined") {
-        dispatch(toggledata.toggleuser_sos_name2(state.sos_name1Number));
+      if (typeof state.sos_user1_number !== "undefined") {
+        dispatch(toggledata.toggleuser_sos_name2(state.sos_user1_number));
       }
-      if (typeof state.sos_name2 !== "undefined") {
-        dispatch(toggledata.toggleuser_sos_name2(state.sos_name2));
-      }
-
-      if (typeof state.sos_name2Number !== "undefined") {
-        dispatch(toggledata.toggleuser_sos_name2(state.sos_name2Number));
+      if (typeof state.sos_user2 !== "undefined") {
+        dispatch(toggledata.toggleuser_sos_name2(state.sos_user2));
       }
 
-      if (typeof state.sos_name3 !== "undefined") {
-        dispatch(toggledata.toggleuser_sos_name3(state.sos_name3));
+      if (typeof state.sos_user2_number !== "undefined") {
+        dispatch(toggledata.toggleuser_sos_name2(state.sos_user2_number));
       }
 
-      if (typeof state.sos_name3Number !== "undefined") {
-        dispatch(toggledata.toggleuser_sos_name3(state.sos_name3Number));
+      if (typeof state.sos_user3 !== "undefined") {
+        dispatch(toggledata.toggleuser_sos_name3(state.sos_user3));
+      }
+
+      if (typeof state.sos_user3_number !== "undefined") {
+        dispatch(toggledata.toggleuser_sos_name3(state.sos_user3_number));
       }
 
       if (typeof state.user_sos_msg !== "undefined") {
         dispatch(toggledata.toggleuser_sos_msg(state.user_sos_msg));
       }
 
-      console.log('[SOSData] sos data state.sos_name1' + state.sos_name1, state.sos_name2);
+      console.log('[SOSData] sos data state.sos_user' + state.sos_user1, state.sos_user2);
 
       setsosasyncstorage();
     } catch (e) {
@@ -322,30 +323,33 @@ const SOSData = ({ navigation }) => {
 
   const setsosasyncstorage = async () => {
     try {
-      console.log('[SOSData] sos setsosasyncstorage ' + state.sos_name1);
-
-      if (typeof state.sos_name1 !== "undefined") {
-        await AsyncStorage.setItem('user_sos_name1', state.sos_name1);
+      console.log('[SOSData] sos setsosasyncstorage ');
+      console.log(state);
+      if (typeof state.sos_user1 !== "undefined") {
+        await AsyncStorage.setItem('user_sos_name1', state.sos_user1);
+        console.log(state.sos_user1);
       }
 
-      if (typeof state.sos_name1_number !== "undefined") {
-        await AsyncStorage.setItem('user_sos_name1_number', state.sos_name1_number);
+      if (typeof state.sos_user1_number !== "undefined") {
+        await AsyncStorage.setItem('user_sos_name1_number', state.sos_user1_number);
       }
 
-      if (typeof state.sos_name2 !== "undefined") {
-        await AsyncStorage.setItem('user_sos_name2', state.sos_name2);
+      if (typeof state.sos_user2 !== "undefined") {
+        await AsyncStorage.setItem('user_sos_name2', state.sos_user2);
+        console.log("state.sos_user2"+state.sos_user2);
       }
 
-      if (typeof state.sos_name2_number !== "undefined") {
-        await AsyncStorage.setItem('user_sos_name2_number', state.sos_name2_number);
+      if (typeof state.sos_user2_number !== "undefined") {
+        await AsyncStorage.setItem('user_sos_name2_number', state.sos_user2_number);
       }
 
-      if (typeof state.sos_name3 !== "undefined") {
-        await AsyncStorage.setItem('user_sos_name3', state.sos_name3);
+      if (typeof state.sos_user3 !== "undefined") {
+        await AsyncStorage.setItem('user_sos_name3', state.sos_user3);
+        console.log("state.sos_name3"+state.sos_user3);
       }
 
-      if (typeof state.sos_name3_number !== "undefined") {
-        await AsyncStorage.setItem('user_sos_name3_number', state.sos_name3_number);
+      if (typeof state.sos_user3_number !== "undefined") {
+        await AsyncStorage.setItem('user_sos_name3_number', state.sos_user3_number);
       }
       if (typeof state.user_sos_msg !== "undefined") {
         await AsyncStorage.setItem('user_sos_msg', state.user_sos_msg);

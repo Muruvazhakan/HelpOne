@@ -137,8 +137,8 @@ const Blood_Request_List_Screen = ({ navigation }) => {
       } else {
         //Alert.alert("You are online!");
         console.log("You are online!", state.isConnected);
-        //onRetrivemydonordata();
-        onMapget();
+        requestLocationPermission	();
+        // onMapget();
         if (offline === 1) {
           ToastAndroid.show("Back to online!", ToastAndroid.SHORT);
         }
@@ -301,7 +301,7 @@ const Blood_Request_List_Screen = ({ navigation }) => {
   }
 
   var locateCurrentPosition = () => {
-
+    console.log("locateCurrentPosition*****");
     Geolocation.getCurrentPosition(
       position => {
         console.log(JSON.stringify(position));
@@ -340,8 +340,8 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     //   .catch((error)=>{
     //     console.error(error);
     //     });
-    //onMapget();
-    loadProducts();
+    onMapget();
+    // loadProducts();
   }
 
   // console.log(data.lat);
@@ -379,11 +379,12 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     });
 
     if (!data.isMapvisible && !state.isRequestCompleted) {
-      requestLocationPermission();
+           requestLocationPermission();
+      //loadProducts();
     }
 
     console.log("use effect data.isMapvisible");
-    console.log(data.isMapvisible);
+    console.log(data.isMapvisible+" "+state.isRequestCompleted);
 
   }, [data.isMapvisible,]);
 
@@ -612,7 +613,10 @@ const Blood_Request_List_Screen = ({ navigation }) => {
                 </View>
                 <View style={styles.arrowBorder} />
                 <View style={styles.arrow} />
-                <TouchableOpacity onPress={() => requestLocationPermission()} />
+                <TouchableOpacity onPress={() => 
+                //loadProducts()
+                  requestLocationPermission()
+                  } />
               </View>
             </Callout>
           </Marker>
@@ -826,7 +830,10 @@ const Blood_Request_List_Screen = ({ navigation }) => {
         : null}
 
       <View style={styles.refreshbox}>
-        <TouchableOpacity onPress={() => requestLocationPermission()}>
+        <TouchableOpacity onPress={() =>
+         //loadProducts()
+        requestLocationPermission()
+        }>
           <Ionics name="md-locate" size={60} />
           {/* <Animated.Image
                           source={require('../assets/target1.png')}

@@ -1,6 +1,6 @@
 import React, { useState,Component } from 'react';
 import { Alert, Button, TextInput } from 'react-native';
-import auth from '@react-native-firebase/auth';
+//import auth from '@react-native-firebase/auth';
 import { View } from 'react-native-animatable';
 
 // let [confirm, setConfirm] = useState(null);

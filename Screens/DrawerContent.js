@@ -85,7 +85,10 @@ export function DrawerContent(props) {
                                 }
                             </View>
 
-                            <View style={{ alignItems: 'flex-start' }}>
+                            <View style={{ 
+                                justifyContent:'center'
+                                // alignItems: 'flex-start'
+                                 }}>
                                 <Title style={[ProfileStyles.title]}>{user_data_user_name}</Title>
                                 {user_data_user_first_name !== '' && user_data_user_first_name !== null ?
                                     <Caption style={[styles.caption]}>{user_data_user_first_name} {user_data_user_last_name}</Caption>
@@ -175,7 +178,7 @@ export function DrawerContent(props) {
                         label="SOS Screen Setting"
                         onPress={() => { props.navigation.navigate('SOSScreen') }}
                     />
-                    <DrawerItem
+                    {/* <DrawerItem
                         icon={({ color, size }) => (
                             <Icon
                                 name="bookmark-outline"
@@ -185,7 +188,7 @@ export function DrawerContent(props) {
                         )}
                         label="Bookmarks"
                         onPress={() => { props.navigation.navigate('BookmarkScreen') }}
-                    />
+                    /> */}
                     {/* <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
@@ -197,7 +200,7 @@ export function DrawerContent(props) {
                             label="Settings"
                             onPress={() => {props.navigation.navigate('SettingScreen')}}
                         /> */}
-                    <DrawerItem
+                    {/* <DrawerItem
                         icon={({ color, size }) => (
                             <Icon
                                 name="account-check-outline"
@@ -207,8 +210,9 @@ export function DrawerContent(props) {
                         )}
                         label="Support"
                         onPress={() => { props.navigation.navigate('SupportScreen') }}
-                    />
-                    <Drawer.Section title="Preferences">
+                    /> */}
+                     {/*  Theme is disabled
+                    {/* <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => { toggleTheme() }}>
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
@@ -217,13 +221,13 @@ export function DrawerContent(props) {
                                 </View>
                             </View>
                         </TouchableRipple>
-                    </Drawer.Section>
+                    </Drawer.Section> */}
                 </View>
 
             </DrawerContentScrollView>
 
             <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem
+                {/* <DrawerItem
                     icon={({ color, size }) => (
                         <Icon
                             name="settings-outline"
@@ -233,7 +237,7 @@ export function DrawerContent(props) {
                     )}
                     label="settings"
                     onPress={() => { props.navigation.navigate('SettingsScreen') }}
-                />
+                /> */}
 
                 <DrawerItem
 

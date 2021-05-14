@@ -120,7 +120,9 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     const regesterHandle = (mobileno, password, email, confirm_password, name) => {
-
+        console.log("[SignUpScreen]regesterHandle");
+        console.log(data);
+        console.log(mobileno, password, email, confirm_password, name);
         if (password !== confirm_password) {
             Alert.alert('Password is not matching', 'Enter the same password', [
                 { text: 'Okay' }
@@ -143,9 +145,10 @@ const SignUpScreen = ({ navigation }) => {
                 return;
             }
         }        
-        authContext.createemailAccount(email,password);
-        console.log("createemailAccount passed");
-		let API_URL = `${Server_URL}/user_register.php`;
+        // authContext.createemailAccount(email,password);
+        // console.log("createemailAccount passed");
+        // let API_URL = `${Server_URL}/user_register.php`;
+		let API_URL = `${Server_URL}/User_Login_Component/user_register.php`;
         fetch(API_URL, {
             method: 'post',
             header: {
@@ -163,12 +166,13 @@ const SignUpScreen = ({ navigation }) => {
         })
             .then((response) => response.json())
             .then((responseJson) => {
-
+                console.log("[SignUpScreen]responseJson");
+                console.log(responseJson);
                 if (responseJson == "User already Registered") {
                     Alert.alert("User Exist", 'Account already Registered!', [
                         { text: 'Okay' }
                     ]);
-                    //alert(responseJson);
+                    //alert(responseJson);                    
                     navigation.goBack();
                 }
                 if (responseJson == "Account is Registered") {
@@ -184,7 +188,7 @@ const SignUpScreen = ({ navigation }) => {
                         { text: 'Okay' }
                     ]);
                     //alert(responseJson);
-                    navigation.goBack();
+                   // navigation.goBack();
                 }
             })
             .catch((error) => {
@@ -203,7 +207,9 @@ const SignUpScreen = ({ navigation }) => {
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <View style={styles.header}>
 
-                <Text style={[styles.title, { color: colors.text }]}>Register Now</Text>
+                <Text style={[styles.title, 
+                    // { color: colors.text }
+                    ]}>Register Now</Text>
             </View>
 
             {/* <Text styles={ [styles.title,{color:colors.text}]}>Register Now</Text> */}
@@ -385,9 +391,10 @@ export const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: "5%",
-        paddingBottom: "8%",
+        justifyContent: 'center',
+        // paddingHorizontal: "5%",
+        paddingBottom: "10%",
+        alignItems:'center',
     },
     title: {
         color: '#fff',
@@ -404,7 +411,7 @@ export const styles = StyleSheet.create({
         color: 'grey',
     },
     footer: {
-        flex: 4.5,
+        flex: 4,
         backgroundColor: '#fff',
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,

@@ -244,8 +244,8 @@ const All_User_Donation_Bottom = (props) => {
         }
         //addRecords(0);
         console.log("[All_User_Donation_Bottom] isLoading & checkdataavailable: done  " + state.isLoading + state.checkdataavailable);
-        let img = 'https://storage.googleapis.com/helpone-9bf33.appspot.com/User_Profile_Photo/123456780.png'
-        console.log(img);
+        // let img = 'https://storage.googleapis.com/helpone-9bf33.appspot.com/User_Profile_Photo/123456780.png'
+        // console.log(img);
         // console.log(state.isBoodRequestAvailable);
       }
       //console.log("retriveserverdata after"+state.retrivedonor);  
@@ -498,7 +498,7 @@ const All_User_Donation_Bottom = (props) => {
             {/* <Text>Search</Text> */}
 
             <FlatList
-              data={state.fulldata.slice(0, 3)}
+              data={state.fulldata}
               // data={slicedata}
               maxToRenderPerBatch={5}
               renderItem={({ item,index }) => (
@@ -525,7 +525,7 @@ const All_User_Donation_Bottom = (props) => {
                     onPress={() => handlepress(item)}> */}
                     <View style={[ProfileScreenStyles.cardview,
                     {
-                      alignItems: 'stretch', marginTop: '2%',
+                      alignItems: 'center', marginTop: '2%',
                       borderRadius: 25, paddingTop: '4%'
                     }]
                     }>
@@ -621,7 +621,7 @@ const All_User_Donation_Bottom = (props) => {
                     {/* back screen */}
                     <View style={[ProfileScreenStyles.cardview,
                     {
-                      alignItems: 'stretch', marginTop: '2%',
+                      alignItems: 'center', marginTop: '2%',
                       borderRadius: 25, paddingTop: '4%'
                     }]
                     }>
@@ -641,7 +641,7 @@ const All_User_Donation_Bottom = (props) => {
                         </View>
                       </View>
 
-                      <View style={styles.rowalign}>
+                      <View style={[styles.rowalign,{alignItems: 'stretch'}]}>
                         <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                           <View style={[ProfileScreenStyles.row, { alignContent: 'space-between' }]}>
                             {/* <FontAwesome name="hospital-o" color={colors.text} size={20} /> */}
@@ -678,7 +678,7 @@ const All_User_Donation_Bottom = (props) => {
                           </View>
                           <View style={[ProfileScreenStyles.row]}>
                             <Fontisto style={{ marginLeft: '1%', color: 'red' }} name="blood-drop" color={colors.text} size={20} />
-                            <Text style={{ marginLeft: '3%' }}>Bloodgroup: {item.donorbloodgroup}</Text>
+                            <Text style={{ marginLeft: '3%' }}>BG: {item.donorbloodgroup}</Text>
                           </View>
 
 
@@ -715,7 +715,7 @@ const All_User_Donation_Bottom = (props) => {
                           </View>
                           <View style={[ProfileScreenStyles.row]}>
                             <Fontisto style={{ marginLeft: '1%', color: 'red' }} name="blood-drop" color={colors.text} size={20} />
-                            <Text style={{ marginLeft: '3%' }}>Bloodgroup: {item.reqbloodgroup}</Text>
+                            <Text style={{ marginLeft: '3%' }}>BG: {item.reqbloodgroup}</Text>
                           </View>
                         </View>
                       </View>

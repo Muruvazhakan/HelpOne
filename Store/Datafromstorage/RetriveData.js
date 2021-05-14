@@ -96,6 +96,7 @@ const RetriveData = (props) => {
         sos_name1_number:null,
         sos_name2_number:null,
         sos_name3_number:null,
+		user_sos_msg:null,
     };
 
     const [state, setState] = useState(initialState);
@@ -108,13 +109,13 @@ const RetriveData = (props) => {
     //console.log('[RetriveData] Screen: props ');
     //console.log(props);
     //console.log('[RetriveData] Screen: user name ' + props.userData.userdata.userName);
-    //console.log('[RetriveData] Screen: user name ' + props.userData.userdata.userNumber);
-    //console.log("data in state "+state.user_name +""+ state.user_number);
+    console.log('[RetriveData] Screen: user name ' + props.userData.userdata.userNumber);
+    console.log("data in state "+state.user_name +""+ state.user_number);
     let connectstate="";
     const [error, setError] = useState();
     const [offlinemsgflag, setOfflinemsgflag] = useState(false);
     const offlinemsgflagref = useRef();
-
+    
     useEffect(()=>{
         offlinemsgflagref.current=offlinemsgflag;
     },[offlinemsgflag])
@@ -208,7 +209,7 @@ const RetriveData = (props) => {
         // Alert.alert(props.userData);
         // state.user_logout=  AsyncStorage.getItem('user_logout');
         //setIsloading(true);
-        
+       
         loadProducts();
        
         // if (state.asyncstorage) {
@@ -230,7 +231,7 @@ const RetriveData = (props) => {
 
        // console.log("typeof state.user_logout "+ typeof state.user_logout);
     }, []);
-
+    
     const manageretrive = () => {
         
          getdatafromstorage();
@@ -240,8 +241,8 @@ const RetriveData = (props) => {
     const getdatafromstorage = async () => {
         try {
             state.user_logout = await AsyncStorage.getItem('user_logout');
-            // state.user_name = await AsyncStorage.getItem('userName');
-            // state.user_number = await AsyncStorage.getItem('userNumber');            
+            state.user_name = await AsyncStorage.getItem('userName');
+            state.user_number = await AsyncStorage.getItem('userNumber');            
             // console.log('RetriveData Screen user_logout1 :'+ state.user_logout);
             // if(state.user_logout!=='0'){
             //state.user_data = await AsyncStorage.getItem('userfirstname');
@@ -278,13 +279,16 @@ const RetriveData = (props) => {
             state.sos_name1_number = await AsyncStorage.getItem('user_sos_name1_number');
             state.sos_name2_number = await AsyncStorage.getItem('user_sos_name2_number');
             state.sos_name3_number = await AsyncStorage.getItem('user_sos_name3_number');
+			state.user_sos_msg = await AsyncStorage.getItem('user_sos_msg');
+			
             setState({
                 ...state,
                 asyncstorage: false,
             });
 
             // }
-            console.log('RetriveData Screen user_logout : and state.serverdata ' + state.user_id + state.serverdata);
+            console.log('[RetriveData] From Storage Screen ' + state.user_id + state.serverdata);
+			console.log(state);
             // userNumber = await AsyncStorage.getItem('userNumber');+
             if (state.serverdata) {
                 onRetrivetabledata();
@@ -419,14 +423,16 @@ const RetriveData = (props) => {
                 //console.log('data from server ');
                 //console.log(data);
 
-                console.log('[RetriveData] state.proof_status2 same ' + state.proof_status);
-                if ((data.proofstatus !== null
-                    || data.proofstatus !== ' ' || data.proofstatus !== " ")) {
-                    console.log('[RetriveData] new data.proofstatus  ' + data.proofstatus);
-                    dispatch(toggledata.toggleuser_proof_status(data.proofstatus));
+                console.log('[RetriveData] state.proof_status2 same typeof data.userproofstatus ' + state.proof_status+typeof data.userproofstatus);
+                // if ((data.proofstatus !== null
+                //     || data.proofstatus !== ' ' || data.proofstatus !== " ")) 
+                if ((data.userproofstatus !== null && data.userproofstatus !== ' ' &&
+                 data.userproofstatus !== " ") &&  typeof data.userproofstatus !== "undefined") {
+                    console.log('[RetriveData] new data.userproofstatus  ' + data.userproofstatus);
+                    dispatch(toggledata.toggleuser_proof_status(data.userproofstatus));
                     setState({
                         ...state,
-                        proof_status: data.proofstatus,
+                        proof_status: data.userproofstatus,
                         serverdata: false,
                     });
                 }
@@ -434,7 +440,7 @@ const RetriveData = (props) => {
                 if(state.admin_comments !== data.admincomments)
                 {
                 if ((data.admincomments !== null
-                    || data.admincomments !== ' ' || data.admincomments !== " ")) {
+                    && data.admincomments !== ' ' && data.admincomments !== " ")) {
                     console.log('[RetriveData] new data.admincomments  ' + data.admincomments);
                     ToastAndroid.show('admin comments:'+ data.admincomments, ToastAndroid.LONG);
                     setState({
@@ -538,7 +544,10 @@ const RetriveData = (props) => {
 }
 
 const onRetrivetableSosdata = () => {
-    console.log(state.user_number+"onRetrivetableSosdata state.user_number"); let API_URL = `${Server_URL}/Retrive_Component/user_sos_data.php`;    
+    console.log(state.user_number+"onRetrivetableSosdata state.user_number");
+    let API_URL = `${Server_URL}/Retrive_Component/user_sos_data.php`;    
+    // let API_URL = `${Server_URL}/Retrive_Component/user_sos_data.php`;    
+    //user_data_ip_address
     //let API_URL = 'http://192.168.0.9/help_1/Retrive_Component/user_sos_data.php';
     // setmarkers:{isloading:true};
     fetch(API_URL, {
@@ -688,16 +697,14 @@ const onRetrivetableSosdata = () => {
         }
     }
     const dipatchserverdata = (datas) => {
-        console.log('[RetriveData] dipatchserverdata data');
+        console.log('[RetriveData] dipatchserverdata data datas.userid *****'+datas.userid);
         console.log(datas);        
         try {            
             
-            if(typeof datas.username !== "undefined")
-            {
-                dispatch(toggledata.toggleusername(datas.username));
-            }
             
-            //dispatch(toggledata.toggleusernumber(state.user_number));
+            dispatch(toggledata.toggleusername(state.user_name));
+            
+            dispatch(toggledata.toggleusernumber(state.user_number));
             //dispatch(toggledata.toggleuser_Proof_Select(datas.user_Proof_Select));
             if(typeof datas.userrequest !== "undefined")
             {
@@ -771,13 +778,13 @@ const onRetrivetableSosdata = () => {
             if(typeof datas.userfirstname !== "undefined")
             {
                 
-                dispatch(toggledata.toggleuserfirstname(datas.userfirstname));
+                dispatch(toggledata.toggleuserfirstname(datas.userfirstname.trim()));
                 
             }
 
             if(typeof datas.userlastname !== "undefined")
             {
-                dispatch(toggledata.toggleuserlastname(datas.userlastname));
+                dispatch(toggledata.toggleuserlastname(datas.userlastname.trim()));
             }
 
             if(typeof datas.userbloodgroup !== "undefined")
@@ -808,23 +815,128 @@ const onRetrivetableSosdata = () => {
             {
                 dispatch(toggledata.toggleuser_Id(datas.userid));
             }
-              
-            
-                    
-            
-            //dispatch(toggledata.toggleuser_Proof(datas.user_Proof));
-           
-            //dispatch(toggledata.toggleuserisUserImageAvailable(datas.isUserImageAvailable));
-           
-            //dispatch(toggledata.toggleuserrewardclaimed(datas.userrewardsclaimed));
+                         
+               
+            if(typeof datas.isUserImageAvailable !== "undefined")
+            {
+                dispatch(toggledata.toggleuserisUserImageAvailable(datas.isUserImageAvailable));
+            }
+
+            if(typeof datas.userrewardsclaimed !== "undefined")
+            {
+                dispatch(toggledata.toggleuserrewardclaimed(datas.userrewardsclaimed));
+            } 
             
             //console.log('datas.userid tog '+datas.user_id);
-            setasyncstorage(data);
+            setasyncServerdatasHandler(datas);
         } catch (e) {
             console.log('[RetriveData] RetriveData dispatch error' + e);
         }
     }
 
+    const setasyncServerdatasHandler = async (datas) => {
+        console.log(" ***[RetriveData] ***aynsc storgae datas ");
+        console.log(datas);
+        try {
+            
+        //await AsyncStorage.setItem('userName', datas.username);	
+        //await AsyncStorage.setItem('userNumber', datas.username);	
+    
+          if (typeof datas.userfirstname !== "undefined" && datas.userfirstname !== null) {
+            await AsyncStorage.setItem('user_First_Name', datas.userfirstname);
+          }
+    
+          if (typeof datas.userlastname !== "undefined" && datas.userlastname !== null) {
+            await AsyncStorage.setItem('user_Last_Name', datas.userlastname);
+          }
+    
+    
+    
+          if (typeof datas.useremail !== "undefined" && datas.useremail !== null) {
+            await AsyncStorage.setItem('user_Email', datas.useremail);
+          }
+    
+          if (typeof datas.isUserImageAvailable !== "undefined" && datas.isUserImageAvailable !== null) {
+            await AsyncStorage.setItem('is_User_Image_Available', datas.isUserImageAvailable);
+          }
+    
+    
+          if (typeof datas.userbloodgroup !== "undefined" && datas.userbloodgroup !== null) {
+            await AsyncStorage.setItem('user_BloodGroup', datas.userbloodgroup);
+          }
+    
+    
+    
+          if (typeof datas.usergender !== "undefined" && datas.usergender !== null) {
+            await AsyncStorage.setItem('user_Gender', datas.usergender);
+          }
+    
+    
+          if (typeof datas.userdob !== "undefined" && datas.userdob !== null) {
+            await AsyncStorage.setItem('user_DOB', datas.userdob);
+          }
+    
+          if (typeof datas.userconfermation !== "undefined" && datas.userconfermation !== null) {
+            await AsyncStorage.setItem('user_Confermation', ((datas.userconfermation) ? '1' : '0'));
+          }
+          //await AsyncStorage.setItem('user_Proof', datas.user_Proof);
+          if (typeof datas.userproof !== "undefined" && datas.userproof !== null) {
+            await AsyncStorage.setItem('user_Proof_Select', datas.userproof);
+            await AsyncStorage.setItem('user_Proof', datas.userproof);
+          }
+    
+          if (typeof useraddressline1 !== "undefined" && useraddressline1 !== null) {
+            await AsyncStorage.setItem('user_Address_Line1', datas.useraddressline1);
+          }
+    
+          if (typeof usercity !== "undefined" && usercity !== null) {
+            await AsyncStorage.setItem('user_City', datas.usercity);
+          }
+    
+    
+          if (typeof userstate !== "undefined" && userstate !== null) {
+            await AsyncStorage.setItem('user_State_Name', datas.userstate);
+          }
+    
+          if (typeof datas.district !== "undefined" && datas.district !== null) {
+            await AsyncStorage.setItem('user_District', datas.district);
+          }
+    
+          if (typeof usercountry !== "undefined" && usercountry !== null) {
+            await AsyncStorage.setItem('user_Country', datas.usercountry);
+          }
+    
+          if (typeof datas.userpincode !== "undefined" && datas.userpincode !== null) {
+            await AsyncStorage.setItem('user_Pincode', datas.userpincode);
+          }
+    
+          if (typeof datas.userlocationlongitude !== "undefined" && datas.userlocationlongitude !== null) {
+            // await AsyncStorage.setItem('user_Longitude', datas.userlocationlongitude.stringify());	
+            await AsyncStorage.setItem('user_Longitude', datas.userlocationlongitude);
+    
+          }
+    
+          if (typeof datas.userlocationlatitude !== "undefined" && datas.userlocationlatitude !== null) {
+             await AsyncStorage.setItem('user_Latitude', datas.userlocationlatitude);
+            
+          }
+    
+        if (typeof datas.userid !== "undefined" && datas.userid !== null) {
+             await AsyncStorage.setItem('user_id', datas.userid);
+            
+          }
+          
+          if (typeof datas.userrewardsclaimed !== "undefined" && datas.userrewardsclaimed !== null) {
+             await AsyncStorage.setItem('user_rewards_claimed', datas.userrewardsclaimed);
+            
+          }
+           
+          console.log("AsyncStorage is over");
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    
     if(isloading){   
 
         return ( <View>

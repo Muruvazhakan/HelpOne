@@ -1,5 +1,6 @@
 import React, { useState, useEffect,useRef } from 'react';
-import { View, Button, StyleSheet, Switch, TextInput, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
+import { View, Button, StyleSheet, Switch, TextInput, 
+  TouchableOpacity, Alert, ToastAndroid } from 'react-native';
 import {
   Avatar,
   Title,
@@ -861,7 +862,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 7,
     shadowOpacity: 0.25,
     elevation: 5,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     padding: '4%',
     paddingLeft: '6%',
     borderRadius: 20,

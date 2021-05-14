@@ -7,14 +7,13 @@ import com.facebook.react.ReactApplication;
 import com.tkporter.sendsms.SendSMSPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
-import com.peel.react.rnos.RNOSModule;
+// import com.peel.react.rnos.RNOSModule;
 import com.rnfs.RNFSPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
-import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+// import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+// import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
+// import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -38,8 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          new RNFirebaseMessagingPackage();
-          new RNFirebaseNotificationsPackage();
+          // new RNFirebaseMessagingPackage();
+          // new RNFirebaseNotificationsPackage();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
            //new MapsPackage()

@@ -21,6 +21,7 @@ import Ambulace_home from '../Ambulance_Screen/Ambulace_home';
 import Main_Ambulance_Screen_Navigation from './Ambulance_Screen_Navigation';
 import RetriveData from '../Store/Datafromstorage/RetriveData';
 import SOSScreen from '../Screens/SOS_Componet/SOSScreen';
+import * as CovidScreen from './Covid_Screen_Navigation';
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 let { username } = ' ';
@@ -56,9 +57,17 @@ const Main_Blood_Screen_Navigation = (props) => {
       <Drawer.Screen name="OTP_Screen" component={Screens.OTPStackScreen} />
       <Drawer.Screen name="SOSScreen" component={Screens.SOSStackScreen} />
       <Drawer.Screen name="Here_Map" component={Screens.HereMapDisplayStackScreen} />
-      <Drawer.Screen name="AmbulanceHomeDrawer" component={Ambulace_home} />
-      {/* <Drawer.Screen name="SearchMap" component={SearchMap} /> */}
-      {/* <Main_Ambulance_Screen_Navigation/> */}
+      <Drawer.Screen name="AmbulanceHomeDrawer" component={Ambulace_home} /> 
+      
+      {/* <Main_Covid_Screen_Navigation /> */}
+      {/* Covid Screens */}
+      <Drawer.Screen name="CovidHomeDrawer" component={CovidScreen.MainCovidStackScreen} /> 
+      <Drawer.Screen name="CovidGlobalScreen" component={CovidScreen.CovidGlobalStackScreen} /> 
+      <Drawer.Screen name="CovidIndiaScreen" component={CovidScreen.CovidIndiaStackScreen} /> 
+      <Drawer.Screen name="CovidIndiaContactScreen" component={CovidScreen.CovidIndiaContactStackScreen} /> 
+      
+      {/* <Drawer.Screen name="SearchMap" component={SearchMap} /> */} 
+      
     </Drawer.Navigator>
   );
 

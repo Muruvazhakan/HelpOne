@@ -47,11 +47,18 @@ const initialState={
     user_sos_name2_number:null,
     user_sos_name3_number:null,
     user_sos_msg:null,
+    ip_address:null,
 };
 
 const helponeReducer=(state=initialState, action)=>{
    // console.log("user_name"+state.user_name);
     switch (action.type) { 
+
+        case Toggle.Toggle_ip_address :
+            return {...state,
+                ip_address:action.ip_address,               
+                }
+                
         case Toggle.Toggle_user_sos_msg :
             return {...state,
                 user_sos_msg:action.user_sos_msg,               

@@ -48,7 +48,8 @@ import { screen_width } from '../../components/Parameter';
 import RNFetchBlob from 'rn-fetch-blob';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import NetInfo from "@react-native-community/netinfo";
-import {Server_URL} from '../../components/Parameter';
+import * as Aws from '../../components/Parameter';
+import { RNS3 } from 'react-native-aws3';
 // import {profiledata as profile_data} from './ProfileScreen';
 const EditProfileScreen = ({ navigation }) => {
 
@@ -58,7 +59,10 @@ const EditProfileScreen = ({ navigation }) => {
   // const toggleuserfname =useCallback(()=>{
   //   dispatch(toggleuserfirstname(profiledata.user_first_name));
   // },[dispatch,profiledata.user_first_name]);
-  const bucketName = 'staging.helpone-9bf33.appspot.com';
+  const bucketName = 'staging.helpone-9bf33.appspot.com';  
+  const user_data_ip_address = useSelector(state =>
+    state.helpone.ip_address,
+  );
   const user_data_user_name = useSelector(state =>
     state.helpone.user_name
   );
@@ -172,6 +176,7 @@ const EditProfileScreen = ({ navigation }) => {
   const checkConnectivity = () => {
     setOfflinemsgflag(false);
     console.log("offlinemsgflagref", offlinemsgflagref);
+    
     NetInfo.fetch().then(state => {
       console.log("Is connected?111", state.isConnected);
       //  setIsStarted({setState:false});
@@ -279,8 +284,12 @@ const EditProfileScreen = ({ navigation }) => {
     // availableprofiledata =val;
     console.log(profiledata.user_address_line1 + "user_address_line1");
   }
-
+  const Full_date = new Date();
+  const date="-"+Full_date.getDate()+"-"+Full_date.getMonth()+"-"+Full_date.getFullYear()
+  +"-"+Full_date.getHours()+":"+Full_date.getMinutes()+":"+Full_date.getSeconds();
   useEffect(() => {
+    
+    console.log("*******user_data_ip_address", user_data_ip_address);
     console.log('user_data_user_name user_data_user_Gender ' + user_data_user_Gender + profiledata.user_Gender);
     setprofiledata({
       ...profiledata, isLoading: false,
@@ -421,8 +430,7 @@ const EditProfileScreen = ({ navigation }) => {
     }
 
 
-  }
-
+  }  
 
   const [profiledata, setprofiledata] = React.useState({
     isLoading: true,
@@ -459,7 +467,7 @@ const EditProfileScreen = ({ navigation }) => {
     Proof_data: '',
   });
 
-
+ 
   const SubmitHandler = async () => {
 
     console.log(profiledata.isUserImageAvailable + " Edit profile screen submit isUserImageAvailable ");
@@ -470,21 +478,24 @@ const EditProfileScreen = ({ navigation }) => {
       profiledata.user_Gender !== '' &&
       profiledata.check_textInput_user_first_name) {
       //navigation.navigate('Explore');
-      loadProducts();
-      asyncStoragehandler();
-      dipatchHandler();
-      user_data_upload();
-      //  upusingapi();
-      //uploadphoto();
+      // loadProducts();
+      // asyncStoragehandler();
+      // dipatchHandler();
+      // user_data_upload();
+      //update_Aws_Proof_InServer();
+      update_Aws_Photo_InServer();
+      //  upusingapi();     
       //handleUploadPhoto();
       //uploadproof();
       if (user_data_isUserImageAvailable !== profiledata.isUserImageAvailable) {
         ToastAndroid.show('Photo is Uploaded', ToastAndroid.LONG);
-        uploadphoto();
+        //uploadphoto();
+       // upload_Aws_Photo();
       }
       if (user_data_user_Proof !== profiledata.user_Proof) {
         ToastAndroid.show('Proof is  Uploaded', ToastAndroid.LONG);
-        uploadproof();
+        //uploadproof();
+        //upload_Aws_Proof();
       }
       ToastAndroid.show('Your details has been saved.', ToastAndroid.LONG);
     }
@@ -563,11 +574,11 @@ const EditProfileScreen = ({ navigation }) => {
       type: `image/${fileExtension}`
     });
     console.log("upload formData", formData.photo);
-	let API_URL = `${Server_URL}/user_image_upload.php`;
+	let API_URL = `${user_data_ip_address}/User_Photo_Component/user_image_upload.php`;
+	//let API_URL = `${Aws.Server_URL}/User_Photo_Component/user_image_upload.php`;
     fetch(API_URL, {
       method: "POST",
       header: {
-
         'Content-Type': 'multipart/form-data'
       },
       body: formData
@@ -584,8 +595,8 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   const handleUploadPhoto = async () => {
-
-	let API_URL = `${Server_URL}`;
+	let API_URL = `${user_data_ip_address}`;
+	//let API_URL = `${Aws.Server_URL}`;
     let res = await fetch(API_URL, {
       method: "POST",
       header: {
@@ -686,8 +697,222 @@ const EditProfileScreen = ({ navigation }) => {
 
   }
 
-  const uploadphoto = () => {
-	let API_URL = `${Server_URL}/user_profile_upload.php`;
+  const Aws_Profile_File = {
+    // `uri` can also be a file system path (i.e. file://)
+    uri: profiledata.isUserImageAvailable,
+    name: `${profiledata.user_number}.png`,
+    // `${profiledata.user_number}.png`
+    type: "image/png"
+  }
+  const Aws_Profile_Options = {
+    keyPrefix: 'Profile/',
+    bucket: Aws.AWS_Bucket,
+    region: Aws.AWS_Region,
+    accessKey: Aws.AWS_Access_KeyId,
+    secretKey: Aws.AWS_Secret_KeyId,
+    successActionStatus: 201
+  }  
+
+  const upload_Aws_Photo = () => {
+    console.log("profiledata.isUserImageAvailable: "+profiledata.isUserImageAvailable);
+    RNS3.put(Aws_Profile_File,Aws_Profile_Options)
+    .progress((e) => console.log(e.loaded / e.total))
+    .then(response => {
+      console.log(response);
+      
+      if (response.status !== 201)
+      {
+        console.log("Failed to upload image to S3");
+        ToastAndroid.show('Failed to upload image', ToastAndroid.LONG);
+      }
+      else  {
+        update_Aws_Photo_InServer();
+        console.log("upload_Aws_photo Uploaded");        
+      }
+      console.log(response.body);
+      /**
+       * {
+       *   postResponse: {
+       *     bucket: "your-bucket",
+       *     etag : "9f620878e06d28774406017480a59fd4",
+       *     key: "uploads/image.png",
+       *     location: "https://your-bucket.s3.amazonaws.com/uploads%2Fimage.png"
+       *   }
+       * }
+       */
+    });
+  }
+
+  const Aws_Proof_File = {
+    // `uri` can also be a file system path (i.e. file://)
+    uri: profiledata.user_Proof,
+    name: `${profiledata.user_number}${date.toString()}.png`,
+    // `${profiledata.user_number}.png`
+    type: "image/png"
+  }
+  const Aws_Proof_Options = {
+    keyPrefix: 'Proof/',
+    bucket: Aws.AWS_Bucket,
+    region: Aws.AWS_Region,
+    accessKey: Aws.AWS_Access_KeyId,
+    secretKey: Aws.AWS_Secret_KeyId,
+    successActionStatus: 201
+  }  
+
+  const upload_Aws_Proof = () => {
+    console.log("profiledata.isUserImageAvailable: "+profiledata.isUserImageAvailable);
+    RNS3.put(Aws_Proof_File,Aws_Proof_Options)
+    .progress((e) => console.log(e.loaded / e.total))
+    .then(response => {
+      console.log(response);
+      console.log("upload_Aws_Proof Uploaded");
+      if (response.status !== 201)
+      {
+        console.log("Failed to Proof to S3");
+        ToastAndroid.show('Failed to Proof', ToastAndroid.LONG);
+      }
+      else  {
+        update_Aws_Proof_InServer();
+        console.log("update_Aws_Proof_InServer Uploaded");        
+      }
+      console.log(response.body);
+      /**
+       * {
+       *   postResponse: {
+       *     bucket: "your-bucket",
+       *     etag : "9f620878e06d28774406017480a59fd4",
+       *     key: "uploads/image.png",
+       *     location: "https://your-bucket.s3.amazonaws.com/uploads%2Fimage.png"
+       *   }
+       * }
+       */
+    });
+  }
+
+  const update_Aws_Proof_InServer = () => {
+    console.log("update_Aws_Proof_InServer", profiledata.user_Proof_Select);
+	let API_URL = `${user_data_ip_address}/User_Photo_Component/user_proof_upload.php`;
+    //let API_URL = `${Aws.Server_URL}/User_Photo_Component/user_proof_upload.php`;
+    fetch(API_URL, {
+      method: 'post',
+      header: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        // we will pass our input data to server
+        mobile: profiledata.user_number,
+        proofid:profiledata.user_Proof_Select,    
+        filename: Aws_Proof_File.name       
+      })
+
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(" update_Aws_Proof_InServer responseJson");
+        console.log(responseJson);
+        //ToastAndroid.show(responseJson,ToastAndroid.LONG);
+
+        if (responseJson === "Updated") {
+          console.log("Updated the Proof");
+          ToastAndroid.show('Updated the Proof', ToastAndroid.LONG);         
+        }
+        else if (responseJson === "Recorded") {
+          console.log("Recorded the Proof");
+          ToastAndroid.show('Recorded the Proof', ToastAndroid.LONG); 
+        }
+        else if (responseJson === "Pending") {
+          // if (user_data_user_Proof !== profiledata.user_Proof) {
+          //   console.log("Pending");
+          //   ToastAndroid.show('Your Proof is in Pending Status', ToastAndroid.LONG);
+          // }
+          ToastAndroid.show('Your Proof is in Pending Status', ToastAndroid.LONG);
+        }
+        else if (responseJson === "check") {
+          Alert.alert("Connection Lost", 'check internet connection!', [
+            { text: 'Okay' }
+          ]);
+          console.log("fail");
+          //alert(responseJson);
+          //navigation.goBack();
+        }
+        else if (responseJson == "user") {
+          console.log("Invalid user");
+          Alert.alert("Invalid user", 'Invalid user!', [
+            { text: 'Okay' }
+          ]);
+          //alert(responseJson);
+          //navigation.goBack();
+        }
+        else {
+          console.log("else else");
+        };
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    //navigation.goBack();  
+  }
+
+  const update_Aws_Photo_InServer = () => {
+    console.log("update_Aws_Photo_InServer");
+	let API_URL = `${user_data_ip_address}/User_Photo_Component/user_profile_upload.php`;
+    //let API_URL = `${Aws.Server_URL}/User_Photo_Component/user_profile_upload.php`;
+    fetch(API_URL, {
+      method: 'post',
+      header: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        // we will pass our input data to server
+        mobile: profiledata.user_number     
+      })
+
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(" update_Aws_Photo_InServer");
+        console.log(responseJson);
+        //ToastAndroid.show(responseJson,ToastAndroid.LONG);
+
+        if (responseJson === "Updated") {
+          console.log("Photo Updated");
+          ToastAndroid.show('Photo Updated', ToastAndroid.LONG);         
+        }
+        else if (responseJson === "Recorded") {
+          console.log("Photo Recorded");
+        }
+        else if (responseJson === "Pending") {
+          // if (user_data_user_Proof !== profiledata.user_Proof) {
+          //   console.log("Pending");
+          //   ToastAndroid.show('Your Proof is in Pending Status', ToastAndroid.LONG);
+          // }
+          ToastAndroid.show('Your Photo is Updated', ToastAndroid.LONG);
+        }
+        else if (responseJson === "check") {
+          Alert.alert("Connection Lost", 'check internet connection!', [
+            { text: 'Okay' }
+          ]);
+          console.log("fail");
+          //alert(responseJson);
+          //navigation.goBack();
+        }
+       else {
+          console.log("Photo else else");
+        };
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    //navigation.goBack();  
+  }
+
+  const upload_GCP_photo = () => {
+	  let API_URL = `${user_data_ip_address}/user_profile_upload.php`;
+	//let API_URL = `${Aws.Server_URL}/user_profile_upload.php`;
     RNFetchBlob.fetch('POST', API_URL, {
       Authorization: "Bearer access-token",
       otherHeader: "foo",
@@ -713,8 +938,9 @@ const EditProfileScreen = ({ navigation }) => {
     })
   };
 
-  const uploadproof = () => {
-	let API_URL = `${Server_URL}/user_proof_upload.php`;
+  const upload_Gcp_proof = () => {
+	let API_URL = `${user_data_ip_address}/user_proof_upload.php`;
+	//let API_URL = `${Aws.Server_URL}/user_proof_upload.php`;
     RNFetchBlob.fetch('POST', API_URL, {
       Authorization: "Bearer access-token",
       otherHeader: "foo",
@@ -743,7 +969,8 @@ const EditProfileScreen = ({ navigation }) => {
 
   const user_data_upload = async () => {
     console.log("else profiledata.user_Proof_Select else profiledata.user_Proof_Select", profiledata.user_Proof_Select);
-	let API_URL = `${Server_URL}/user_personal_details_upload.php`;
+	let API_URL = `${user_data_ip_address}/User_Photo_Component/user_personal_details_upload.php`;
+	//let API_URL = `${Aws.Server_URL}/User_Photo_Component/user_personal_details_upload.php`;
     fetch(API_URL, {
       method: 'post',
       header: {
@@ -781,9 +1008,7 @@ const EditProfileScreen = ({ navigation }) => {
         userGender: profiledata.user_Gender,
         userBloodGroup: profiledata.user_BloodGroup,
         userDOB: profiledata.user_DOB,
-        userConfermation: profiledata.user_Confermation,
-        userProofdata: profiledata.Proof_data
-
+        userConfermation: profiledata.user_Confermation    
       })
 
     })
@@ -1724,18 +1949,18 @@ export const styles = StyleSheet.create({
     shadowRadius: 1,
     shadowOpacity: 0.25,
     elevation: 5,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     // padding: '2%',
     borderRadius: 20,
     margin: '3%'
   },
   cardview_no_shadow: {
-    // shadowColor: 'black',
-    //   shadowOffset: { width: 0, height: 1 },
-    //   shadowRadius: 1,
+    shadowColor: 'black',
+      shadowOffset: { width: 0, height: 1 },
+      shadowRadius: 1,
     shadowOpacity: 0.25,
     elevation: 5,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     // padding: '2%',
     borderRadius: 20,
     paddingRight: '7%',

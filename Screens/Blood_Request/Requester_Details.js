@@ -1,4 +1,4 @@
-import React, { useEffect,useRef } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import {
   View, Button, StyleSheet,
   SafeAreaView,
@@ -26,6 +26,11 @@ import Share, {
 const Requester_Details = (props) => {
   const { colors } = useTheme();
 
+  let connectstate="";
+    const [error, setError] = useState();
+    const [offlinemsgflag, setOfflinemsgflag] = useState(false);
+    const offlinemsgflagref = useRef();
+    var offline=0;
   const initialRequesterDetails = {
     userid: props.route.params.userid,
     isLoading:false,
@@ -44,8 +49,7 @@ const Requester_Details = (props) => {
     // console.log('user_data_user_name sdf'+user_data_user_name);
 
 
-  });
-   const [error, setError] = useState();
+  });   
   const [isloading, setIsLoading] = useState(true);
    const loadProducts = () => {
     // console.log("loadProduct");
@@ -92,7 +96,7 @@ const Requester_Details = (props) => {
         //Alert.alert("You are online!");
         console.log("You are online!", state.isConnected);
         //onRetrivemydonordata();
-		donorAcceptHandler();
+		    donorAcceptHandler();
         if (offline === 1) {
           ToastAndroid.show("Back to online!", ToastAndroid.SHORT);
         }
@@ -123,7 +127,8 @@ const Requester_Details = (props) => {
     }
     console.log("refressdfh");
     //donorAcceptHandler();
-	loadProducts();
+	// loadProducts();
+  checkConnectivity();
   }
 
   // if (state.isLoading) {

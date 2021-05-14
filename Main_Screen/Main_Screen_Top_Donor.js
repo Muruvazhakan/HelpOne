@@ -274,7 +274,7 @@ const Main_Screen_Top_Donor = (props) => {
   }
 
   useEffect(() => {
-    console.log("[Main_Screen_Top_Donor] props: ", props.props);
+  //  console.log("[Main_Screen_Top_Donor] props: ", props.props);
     // console.log("[Main_Screen_Top_Donor] props:props.navigation ", props.props.navigation);
     // console.log("[Main_Screen_Top_Donor] props:navigation. ", props.navigation);
     loadProducts();
@@ -317,7 +317,9 @@ const Main_Screen_Top_Donor = (props) => {
   return (
 
     <SafeAreaView>
-      <ScrollView >
+      <ScrollView       
+      showsHorizontalScrollIndicator={false}
+      >
         <View style={{ margin: 0, padding: 0 }}>
           <Main_Screen_Icons props={props.props} />
           {state.checkdataavailable ?
@@ -361,8 +363,10 @@ const Main_Screen_Top_Donor = (props) => {
                                     <Text style={{ fontWeight: 'bold', marginLeft: '3%', alignItems: 'flex-start' }}>{item.UserFirstName}{item.UserLastName}</Text>
                                   </View>
                                   <View style={[ProfileScreenStyles.row]}>
-                                    <Fontisto style={{ marginLeft: '1%', color: '#bb0a1e' }} name="blood-drop" color={colors.text} size={20} />
-                                    <Text style={{ marginLeft: '3%' }}>{item.UserBloodGroup}</Text>
+                                    <Fontisto style={{ marginLeft: '1%',
+                                     color: '#bb0a1e'                                    
+                                      }} name="blood-drop" color={colors.text} size={20} />
+                                    <Text style={{ marginLeft: '3%',}}>{item.UserBloodGroup}</Text>
                                   </View>
                                 </View>
                               </View>

@@ -376,7 +376,9 @@ var offline = 0;
 
 
   return (
-    <SafeAreaView style={[ProfileScreenStyles.container, { margin: '2%', paddingBottom: '5%' }]}>
+    <SafeAreaView style={[ProfileScreenStyles.container, {
+       margin: '2%', paddingBottom: '5%' 
+       }]}>
       <View containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
 
         {state.checkdataavailable ?
@@ -401,10 +403,13 @@ var offline = 0;
                   >
                     <View style={[ProfileScreenStyles.cardview, {
                       padding: '4%',
-                      backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#7FFF30' : item.noofdonoraccepted > 0 && colors.text !== "#333333" ? '#70AF49' : null
+                      // backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#7FFF30' : item.noofdonoraccepted > 0 && colors.text !== "#333333" ? '#70AF49' : null
+                      backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#ffc' : '#fff'
                     }]}>
 
-                      <View style={[ProfileScreenStyles.row, { margin: '1%', marginLeft: '5%' }]}>
+                      <View style={[ProfileScreenStyles.row, { 
+                        margin: '1%', marginLeft: '5%' 
+                        }]}>
                         <FontAwesome name="hospital-o" color={colors.text} size={20} />
                         <Text style={{ fontWeight: 'bold', marginLeft: '3%' }}>Hospital Name: {item.hospitalname}</Text>
                       </View>
@@ -425,7 +430,8 @@ var offline = 0;
 
                     <View style={[ProfileScreenStyles.cardview, {
                       padding: '4%',
-                      backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#7FFF30' : item.noofdonoraccepted > 0 && colors.text !== "#333333" ? '#70AF49' : null
+                      // backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#7FFF30' : item.noofdonoraccepted > 0 && colors.text !== "#333333" ? '#70AF49' : null
+                      backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#ffc' : '#fff'
                     }]}>
                       <View style={[ProfileScreenStyles.row, { margin: '1%', marginLeft: '5%' }]}>
                         <FontAwesome name="hospital-o" color={colors.text} size={20} />

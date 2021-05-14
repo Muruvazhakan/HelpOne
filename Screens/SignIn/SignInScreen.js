@@ -120,7 +120,8 @@ const SignInScreen = ({navigation}) => {
         }
         else
         {
-			let API_URL = `${Server_URL}/user_login.php`;
+            console.log(Server_URL+"Server_URL");
+			let API_URL = `${Server_URL}/User_Login_Component/user_login.php`;
             fetch(API_URL,{
                 method:'post',
                 header:{
@@ -153,6 +154,9 @@ const SignInScreen = ({navigation}) => {
                 
             })
             .catch((error)=>{
+                Alert.alert('Error Input!',error, [
+                    {text: 'Okay'}
+                ]);
             console.error(error);
             });
         }
@@ -260,29 +264,29 @@ const SignInScreen = ({navigation}) => {
                 </TouchableOpacity>
                 </View>
             </Animatable.View>
-        </View>
-      
+        </View>      
         </ScrollView>       
       );
-
 };
 export default SignInScreen;
 
 
 export const styles = StyleSheet.create({
     container: {
-      flex: 1, 
+        // direction:'',
+      //flex: 1, 
       backgroundColor: '#009387'
     },
     header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: "5%",
-        paddingBottom: "30%",
+        // flex: 2,
+        justifyContent: 'center',
+        // paddingHorizontal: "5%",
+        paddingTop: "10%",
+        paddingBottom: "15%",
         alignItems:'center',
     },
     footer: {
-        flex: 3,
+        // flex: 3,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,

@@ -3,7 +3,7 @@ import { View, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import FCM_Screen from '../FirebaseCloud/FCM_Screen';
+// import FCM_Screen from '../FirebaseCloud/FCM_Screen';
 import {
   Text,
   useTheme,
@@ -12,6 +12,7 @@ import RetriveData from '../Store/Datafromstorage/RetriveData';
 import Main_Screen_Top_Donor from './Main_Screen_Top_Donor';
 import Swiper from 'react-native-swiper';
 import { ScrollView } from 'react-native-gesture-handler';
+import Main_Covid_Screen_Navigation from '../Screen_Navigation/Covid_Screen_Navigation';
 const MainScreen = (props) => {
   let navigation = props.navigation;
 
@@ -53,10 +54,10 @@ const MainScreen = (props) => {
         </ScrollView>
       </View> */}
      
-      <FCM_Screen />
+      {/* <FCM_Screen /> */}
       {/* <RetriveData userData={props} /> */}      
       <Main_Screen_Top_Donor props={props}/>
-     
+      <Main_Covid_Screen_Navigation />
     </View>
   );
 };
@@ -97,7 +98,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 7,
     shadowOpacity: 0.25,
     elevation: 5,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     padding: '5%',
     paddingBottom: '2%',
     borderRadius: 20,

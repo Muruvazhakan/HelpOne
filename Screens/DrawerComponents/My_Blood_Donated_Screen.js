@@ -404,7 +404,9 @@ var offline = 0;
                   >
 
                     <View style={[ProfileScreenStyles.cardview, { padding: '4%',
-                    backgroundColor: item.noofdonoraccepted >  0 && colors.text==="#333333" ?'#7FFF30': item.noofdonoraccepted >  0 && colors.text !=="#333333" ?'#70AF49':null }]}>
+                   // backgroundColor: item.noofdonoraccepted >  0 && colors.text==="#333333" ?'#7FFF30': item.noofdonoraccepted >  0 && colors.text !=="#333333" ?'#70AF49':null
+                   backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#ffc' : '#fff'
+                     }]}>
                       <View style={[ProfileScreenStyles.row, { margin: '1%', marginLeft: '5%' }]}>
                         <FontAwesome name="hospital-o" color={colors.text} size={20} />
                         <Text style={{ fontWeight: 'bold', marginLeft: '3%' }}>Hospital Name: {item.hospitalname}</Text>
@@ -421,7 +423,9 @@ var offline = 0;
                         : null}
                     </View>
                     <View style={[ProfileScreenStyles.cardview, { padding: '4%',
-                    backgroundColor: item.noofdonoraccepted >  0 && colors.text==="#333333" ?'#7FFF30': item.noofdonoraccepted >  0 && colors.text !=="#333333" ?'#70AF49':null }]}>
+                    // backgroundColor: item.noofdonoraccepted >  0 && colors.text==="#333333" ?'#7FFF30': item.noofdonoraccepted >  0 && colors.text !=="#333333" ?'#70AF49':null 
+                    backgroundColor: item.noofdonoraccepted > 0 && colors.text === "#333333" ? '#ffc' : '#fff'
+                    }]}>
                       <View style={[ProfileScreenStyles.row, { margin: '1%', marginLeft: '5%' }]}>
                         <FontAwesome name="hospital-o" color={colors.text} size={20} />
                         <Text style={{ fontWeight: 'bold', marginLeft: '3%' }}>Hospital Name: {item.hospitalname}</Text>

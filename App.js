@@ -47,7 +47,7 @@ const App =() =>{
  
     //  const [isLoading, setIsLoading] = React.useState(true);
     // const [userToken, setUserToken] = React.useState(null); 
-    // const dispatchredux = useDispatch();
+    // const dispatchredux = useDispatch();   
   const [isDarkTheme, setIsDarkTheme] = React.useState(false); 
   const initialLoginState = {
     isLoading: true,
@@ -165,8 +165,14 @@ const App =() =>{
   const clearAppData = async() => {
     try {
       console.log('clearAppData in AsyncStorage ');
-        const keys = await AsyncStorage.getAllKeys();
-        await AsyncStorage.multiRemove(keys);
+        // const keys = await AsyncStorage.getAllKeys();
+        // await AsyncStorage.multiRemove(keys);
+        AsyncStorage.getAllKeys()
+        .then(keys => AsyncStorage.multiRemove(keys))
+        .then(() =>{ 
+          console.log('logout success');
+          // alert('success')
+        });
     } catch (error) {
         console.error('Error clearing app data.');
     }
@@ -200,9 +206,15 @@ const App =() =>{
          flex:1,
         justifyContent:'center',alignItems:'center'}}>
         {/* <ActivityIndicator size="large"/> */}
-        <Text style={{       
-        justifyContent:'center',alignItems:'center'}}>Donate Blood</Text>       
-        <LottieView source={require('./assets/blood-transfusion-kawaii.json')} autoPlay loop />
+        {/* <Text  style={{ 
+          flex:1,     
+        justifyContent:'center',alignItems:'center'}}>Donate Blood</Text>        */}
+        <LottieView
+         style={{ 
+          flex:1,     
+        justifyContent:'center',alignItems:'center',
+      }}
+         source={require('./assets/heart-ani.json')} autoPlay loop />
         
       </View>
     );

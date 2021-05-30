@@ -3,13 +3,13 @@ import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import {
   View,
   // Share,
-  TextInput, TouchableOpacity, Animated, ScrollView, Dimensions, 
+  TextInput, TouchableOpacity, Animated, ScrollView, Dimensions,
   Button,
   StyleSheet, Image, Platform, Alert, ToastAndroid, Linking,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import { PERMISSIONS, request } from 'react-native-permissions';
-import { mapDarkStyle, manpStandardStyle } from './mapStyle';
+import { mapDarkStyle, manpStandardStyle } from '../../Screens/Blood_Request/mapStyle';
 import Share, {
   ShareSheet,
   //Button
@@ -22,7 +22,7 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 // import { set } from 'react-native-reanimated';
 import NetInfo from "@react-native-community/netinfo";
-import { screen_width } from '../../components/Parameter';
+import { screen_height, screen_width } from '../../components/Parameter';
 import { Server_URL } from '../../components/Parameter';
 import * as Server_Url from '../../components/Covid_Parameter';
 import FlipCard from 'react-native-flip-card';
@@ -34,14 +34,15 @@ import {
   useTheme, Checkbox
 } from 'react-native-paper';
 import Click_to_flip_Component from '../../components/Click_to_flip_Component';
+import Covid_Data_Single_Display_Screen from './Covid_Data_Single_Display_Screen';
 
 // const CARD_HEIGHT = 177;
-const CARD_HEIGHT = screen_width*0.5;
+const CARD_HEIGHT = screen_width * 0.5;
 const CARD_WIDTH = screen_width * 0.8;
 const SPACING_FOR_CARD = screen_width * 0.1 - 10;
 
-const Blood_Request_List_Screen = ({ navigation }) => {
-
+const Covid_Data_Display_List_Screen = ({ navigation }) => {
+var propsmark=[];
   var setupmark = [
     // {
     //     coordinate:{
@@ -150,8 +151,8 @@ const Blood_Request_List_Screen = ({ navigation }) => {
       } else {
         //Alert.alert("You are online!");
         console.log("You are online!", state.isConnected);
-        requestLocationPermission	();
-        // onMapget();
+        requestLocationPermission();
+        onMapget();
         if (offline === 1) {
           ToastAndroid.show("Back to online!", ToastAndroid.SHORT);
         }
@@ -170,6 +171,19 @@ const Blood_Request_List_Screen = ({ navigation }) => {
   const [shareText, setshareText] = React.useState({
     visible: false,
   });
+
+  const acceptHandler = (data) => {
+    console.log("acceptHandler data");
+    console.log(data);
+    setState({
+      ...state,
+      acceptflag: true,
+      marksprops:data,
+    })
+    propsmark=data;
+    console.log("propsmark");
+    console.log(propsmark);
+  }
   const onCancel = () => {
     console.log("CANCEL")
     ToastAndroid.show("Message share was Canceled!", ToastAndroid.LONG);
@@ -195,9 +209,17 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     });
 
   }
+
+  const closeaccept =()=>{
+    setState({
+      ...state,
+      acceptflag:false,
+    })
+  }
   const onMapget = () => {
-    //let API_URL= 'http://192.168.0.9/help_1/Blood_Request_Component/blood_request_list.php';
-    let API_URL = `${Server_URL}/Blood_Request_Component/blood_request_list.php`;
+
+    let API_URL = `${Server_URL}/Covid_Components/Covid_Add_Details_Components/Covid_Details_list.php`;
+
     // setmarkers:{isloading:true};
     fetch(API_URL, {
       method: 'post',
@@ -226,26 +248,14 @@ const Blood_Request_List_Screen = ({ navigation }) => {
 
         setupmark = JSON.parse(res);
         console.log("setupmark " + setupmark);
-        let bloods=[];
-        setupmark.map((data, i) =>
-          {
-            bloods=[...bloods,data.bloodgroup];
-            console.log("bloods&&"+ bloods);
-          });
-        let alldata = [...bloods];
-        let finaldata= alldata.filter((item, pos) => alldata.indexOf(item) === pos)
-        console.log("finaldata &&asd*****"+ finaldata);
-        console.log(finaldata);
         setState({
           ...state,
           markers: setupmark,
           allmarkerdata: setupmark,
           isBoodRequestAvailable: true,
           isRequestCompleted: true,
-          uniquebloodgroup:finaldata,
         });
-        // console.log("in res finaldata " + finaldata);
-        // console.log(finaldata);
+        console.log("in res markers " + markers);
         // console.log(state.isBoodRequestAvailable);
       }
 
@@ -256,13 +266,19 @@ const Blood_Request_List_Screen = ({ navigation }) => {
   }
 
   const initialMapState = {
+    acceptflag: false,
     isLoading: true,
     markers,
     allmarkerdata,
-    uniquebloodgroup:[],
+    normalbedflag: false,
+    O2bedflag: false,
+    ICUbedflag: false,
+    O2Supplyflag: false,
+    filterflag: false,
     isBoodRequestAvailable: false,
     isRequestCompleted: false,
     userid: '',
+    marksprops:null,
     categories: [
       {
         name: 'B+',
@@ -299,7 +315,87 @@ const Blood_Request_List_Screen = ({ navigation }) => {
   };
 
   const [state, setState] = React.useState(initialMapState);
+  const [selectedbed, setselectedbed] = useState(null);
 
+  const onFilterSavePress = (e) => {
+    console.log(e);
+    let alldata = [];
+    let nomalbedarr = [];
+    let o2bedarr = [];
+    let icubedarr = [];
+    let o2supplyarr = [];
+
+    setState({
+      ...state,
+      markers: [],
+    })
+    // if (state.normalbedflag && state.O2bedflag && state.ICUbedflag && state.O2Supplyflag) {
+    //   setState({
+    //     ...state,
+    //     markers: allmarkerdata,
+    //   })
+    //   return markers;
+    // }
+    if (state.normalbedflag) {
+      nomalbedarr = state.allmarkerdata.filter((data) => {
+        console.log('BedCount' + data);
+        console.log(data.BedCount > 0);
+        return data.BedCount > 0;
+      })
+
+      //  console.log(state.markers);
+    }
+
+    if (state.O2bedflag) {
+      o2bedarr = state.allmarkerdata.filter((data) => {
+        console.log('O2BedCount' + data);
+        console.log(data.O2BedCount > 0);
+        return data.O2BedCount > 0;
+      })
+
+      // console.log(o2bedarr);
+    }
+
+    if (state.ICUbedflag) {
+      icubedarr = state.allmarkerdata.filter((data) => {
+        console.log('BedCount' + data);
+        console.log(data.ICUBedCount > 0);
+        return data.ICUBedCount > 0;
+      })
+
+      // console.log(icubedarr);
+    }
+
+    if (state.O2Supplyflag) {
+      o2supplyarr = state.allmarkerdata.filter((data) => {
+        console.log('BedCount' + data);
+        console.log(data.O2SupplyCount > 0);
+        return data.O2SupplyCount > 0;
+      })
+
+      //console.log(o2supplyarr);
+
+    }
+
+    alldata = [...nomalbedarr, ...o2bedarr, ...icubedarr, ...o2supplyarr];
+    console.log("alldata.length ****" + alldata.length);
+    var finaldata = alldata.filter((item, pos) => alldata.indexOf(item) === pos)
+    console.log("d.length ****" + finaldata.length);
+    if (!finaldata.length > 0) {
+      ToastAndroid.show("No data found!", ToastAndroid.SHORT);
+    }
+    else {
+      ToastAndroid.show(finaldata.length + " data found!", ToastAndroid.SHORT);
+    }
+    setState({
+      ...state,
+      markers: finaldata,
+      filterflag: false,
+    })
+
+
+
+  }
 
   const theme = useTheme();
 
@@ -328,8 +424,7 @@ const Blood_Request_List_Screen = ({ navigation }) => {
 
   }
 
-  var locateCurrentPosition = () => {
-    console.log("locateCurrentPosition*****");
+  var getGeolocation = async () => {
     Geolocation.getCurrentPosition(
       position => {
         console.log(JSON.stringify(position));
@@ -346,12 +441,16 @@ const Blood_Request_List_Screen = ({ navigation }) => {
         handledata(data.lat, data.long);
         setData({ ...data, isMapvisible: true });
         console.log("locateCurrentPosition data.isMapvisible");
-        ToastAndroid.show("Your Location", ToastAndroid.SHORT);
         console.log(data.isMapvisible);
       },
       error => Alert.alert(error.message),
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
     )
+  }
+
+  var locateCurrentPosition = () => {
+    console.log("locateCurrentPosition*****");
+
     //     let API_URL= 'http://192.168.0.9/help_1/blood_request_list.php';
     //   //setmarkers:{isloading:true};
     //   fetch(API_URL,{
@@ -370,10 +469,21 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     //     console.error(error);
     //     });
     onMapget();
+    getGeolocation();
     // loadProducts();
   }
 
   // console.log(data.lat);
+ const  handleCallback = (childData) =>{
+  console.log("handleCallback"+childData );
+  if(childData==="done")
+  {
+    setState({
+      ...state,
+      acceptflag: false})
+  }
+    
+}
 
   let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
@@ -408,12 +518,12 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     });
 
     if (!data.isMapvisible && !state.isRequestCompleted) {
-           requestLocationPermission();
+      requestLocationPermission();
       //loadProducts();
     }
 
     console.log("use effect data.isMapvisible");
-    console.log(data.isMapvisible+" "+state.isRequestCompleted);
+    console.log(data.isMapvisible + " " + state.isRequestCompleted);
 
   }, [mapAnimation]
     // [data.isMapvisible,]
@@ -447,41 +557,17 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
   }
 
-  const bloodfilerhander = (bloodgroup)=>{
-
-    let nomalbedarr = state.allmarkerdata.filter((data) => {
-      console.log('BedCount');
-      
-      return bloodgroup==data.bloodgroup ;
-    })
-    console.log('nomalbedarr');
-    console.log(nomalbedarr);
-    ToastAndroid.show(nomalbedarr.length + " Blood Request found!", ToastAndroid.SHORT);
-    setState({
-      ...state,
-      markers: nomalbedarr,      
-    });
-  }
-
-  const allBlooodPress = ()=>{
-    setState({
-      ...state,
-      markers: state.allmarkerdata
-    });
-    ToastAndroid.show("Displaying all Bloodgroup ", 200, ToastAndroid.LONG);
-  }
-
   const onBlooodPress = (index, e) => {
-    bloodfilerhander(e)
-    // console.log(index);
-    // console.log(e);
+
+    console.log(index);
+    console.log(e);
 
     // console.log("markerID"+markerID);
     let bloodgroup = e;
     //   console.log("bloodgroup"+bloodgroup.forwardref);
     ToastAndroid.show("Moved to " + bloodgroup + " request", 200, ToastAndroid.LONG);
     let markerID = index;
-    // console.log("markerID " + markerID);
+    console.log("markerID " + markerID);
     let x = (markerID * CARD_WIDTH) + (markerID * 20);
     if (Platform.OS === 'ios') {
       x = x - SPACING_FOR_CARD_INSET;
@@ -490,6 +576,12 @@ const Blood_Request_List_Screen = ({ navigation }) => {
     _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
   }
 
+  const filerHandler = () => {
+    setState({
+      ...state,
+      filterflag: !state.filterflag
+    })
+  }
 
   const [shareOptions, setshareOptions] = React.useState({
     title: '',
@@ -502,20 +594,25 @@ const Blood_Request_List_Screen = ({ navigation }) => {
   //   message: "Hola mundo",    
   //   subject: "Share Link" //  for email
   // };
-  const messagehandle = async (title, description, bloodgroup, phoneNumber) => {
+  const messagehandle = async (marker) => {
     //try {
     // console.log(title);
     // console.log(description);
-    // onOpen();      
+    // onOpen();  
+    let BedCounts = "" + (marker.BedCount > 0 ? ("Normal Bed Count: " + marker.BedCount) : "") + " " +
+      (marker.O2BedCount > 0 ? ("Oxygen Bed Count: " + marker.O2BedCount) : "") + " " +
+      (marker.ICUBedCount > 0 ? ("Icu Bed Count: " + marker.ICUBedCount) : "") + " " +
+      (marker.O2SupplyCount > 0 ? ("Oxygen Supply Count: " + marker.O2SupplyCount) : "");
     setshareOptions({
       ...shareOptions,
-      title: 'Blood Request!',
-      message: 'Hospital: ' + title +
-        ' Patient Name: ' + description +
-        '   Contact Number: ' + phoneNumber +
-        '   bloodgroup: ' + bloodgroup +
+      title: 'Help One Details!',
+
+      message: 'Hospital: ' + marker.title +
+        ' contact Name: ' + marker.contactname + marker.BedCount +
+        '   Contact Number: ' + marker.contactnumber +
+        BedCounts +
         ' From Help One',
-      subject: "Blood Request from Help One"
+      subject: "Help One Details"
     });
     //     Share.share({
     //       title: 'Wow, did you see that?'+title,
@@ -626,6 +723,8 @@ const Blood_Request_List_Screen = ({ navigation }) => {
 
     <View style={styles.container}>
       {/* <MapStyle/> */}
+
+
       <MapView
         identifier={"1"}
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
@@ -650,9 +749,9 @@ const Blood_Request_List_Screen = ({ navigation }) => {
           longitudeDelta: 0.0121,
         }}
       >
-        <View>
         {/* {data.isMapvisible ? */}
-          
+        <View>
+          {/* {state.isBoodRequestAvailable ? */}
           <Marker
             coordinate={{
               latitude: data.lat,
@@ -660,7 +759,7 @@ const Blood_Request_List_Screen = ({ navigation }) => {
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}
-            //image={require('../assets/map_marker.png')}
+            image={require('../../assets/map_marker.png')}
             title="Your Location"
           >
             <Callout tooltip>
@@ -670,15 +769,15 @@ const Blood_Request_List_Screen = ({ navigation }) => {
                 </View>
                 <View style={styles.arrowBorder} />
                 <View style={styles.arrow} />
-                <TouchableOpacity onPress={() => 
-                //loadProducts()
+                <TouchableOpacity onPress={() =>
+                  //loadProducts()
                   requestLocationPermission()
-                  } />
+                } />
               </View>
             </Callout>
           </Marker>
-          {/* // : null} */}
-          </View>
+          {/* : null} */}
+        </View>
         {state.isBoodRequestAvailable && state.markers.length > 0 ?
           <View>
 
@@ -730,40 +829,106 @@ const Blood_Request_List_Screen = ({ navigation }) => {
               <Ionics name="ios-search" size ={20} />
            </View> */}
 
-      {state.isBoodRequestAvailable ?
-        <ScrollView
-          horizontal
-          // scrollEventThroll={1}
-          showsHorizontalScrollIndicator={false}
-          // pagingEnabled={true}
-          height={50}
-          style={styles.chipsScrollView}
-          contentInset={{
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 10
-          }}
-          contentContainerStyle={{
-            paddingRight: Platform.OS === 'android' ? 20 : 0
-          }}
-        >
-            <View>
-            <TouchableOpacity style={styles.chipsItem} onPress={(e) => allBlooodPress()} >
-                <Text>All</Text>
-              </TouchableOpacity>
-              </View>
-          {state.uniquebloodgroup.map((marker, index) => (  
-            
+
+
+
+      {/* {state.markers.map((marker, index) => (
+
             <View key={index}>
-              <TouchableOpacity key={index} style={styles.chipsItem} onPress={(e) => onBlooodPress(index, marker)} >
-                <Text  >{marker}</Text>
+              <TouchableOpacity key={index} style={styles.chipsItem} onPress={(e) => onBlooodPress(index, marker.bloodgroup)} >
+                <Text  >{marker.BedCount}</Text>
               </TouchableOpacity>
-             
             </View>
-          ))}
-        
-        </ScrollView>
+          ))} */}
+      {state.isBoodRequestAvailable ?
+        <View style={[styles.chipsScrollView]} >
+          <TouchableOpacity onPress={() => filerHandler()}>
+            <MaterialCommunityIcon
+              //  style={styles.chipsIcon} 
+
+              name="filter" size={40} />
+          </TouchableOpacity>
+
+          {state.filterflag ?
+            <View>
+              <View style={styles.filterselect} animation="bounceInRight" >
+                <Animatable.View
+                  style={styles.bedstyles}
+                  animation="bounceInRight">
+                  <Animatable.Text animation="bounce" style={{ paddingTop: '3%' }} >Normal Bed</Animatable.Text>
+
+                  <Checkbox status={state.normalbedflag ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      console.log(state.normalbedflag + " state.Normal_Bed");
+                      setState({
+                        ...state,
+                        normalbedflag: !state.normalbedflag,
+                      })
+
+                    }} />
+                </Animatable.View>
+
+                <Animatable.View style={styles.bedstyles} animation="bounceInRight">
+                  <Animatable.Text animation="bounce" style={{ paddingTop: '3%' }} >Oxygen Bed</Animatable.Text>
+
+                  <Checkbox status={state.O2bedflag ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      console.log(state.O2bedflag + " state.O2Supplyflag");
+                      setState({
+                        ...state,
+                        O2bedflag: !state.O2bedflag,
+                      })
+
+                    }} />
+                </Animatable.View>
+
+                <Animatable.View style={styles.bedstyles} animation="bounceInRight">
+                  <Animatable.Text animation="bounce" style={{ paddingTop: '3%' }} >ICU Bed</Animatable.Text>
+
+                  <Checkbox status={state.ICUbedflag ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      console.log(state.ICUbedflag + " state.ICUbedflag");
+                      setState({
+                        ...state,
+                        ICUbedflag: !state.ICUbedflag,
+                      })
+
+                    }} />
+                </Animatable.View>
+
+                <Animatable.View style={styles.bedstyles} animation="bounceInRight">
+                  <Animatable.Text animation="bounce" style={{ paddingTop: '3%' }} >O2 Supply</Animatable.Text>
+
+                  <Checkbox status={state.O2Supplyflag ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      console.log(state.O2Supplyflag + " state.O2Supplyflag");
+                      setState({
+                        ...state,
+                        O2Supplyflag: !state.O2Supplyflag,
+                      })
+
+                    }} />
+                </Animatable.View>
+
+
+                <Animatable.View
+                  style={[styles.bedstyles, { alignSelf: 'center' }]}
+                  animation="bounceInRight">
+                  <TouchableOpacity onPress={() => onFilterSavePress()}>
+                    <MaterialCommunityIcon
+                      color='green'
+                      name="content-save" size={30} />
+                  </TouchableOpacity>
+                </Animatable.View>
+
+
+              </View>
+
+            </View>
+            : null}
+        </View>
+
+
         : null}
 
       {state.isBoodRequestAvailable && state.markers.length > 0 ?
@@ -798,11 +963,13 @@ const Blood_Request_List_Screen = ({ navigation }) => {
             { useNativeDriver: true }
           )}
         >
+
+
           {state.markers.map((marker, index) => (
 
             <View style={styles.card} key={index}>
 
-            <FlipCard
+              <FlipCard
                 // style={styles.cardview}
                 friction={6}
                 perspective={1000}
@@ -813,93 +980,93 @@ const Blood_Request_List_Screen = ({ navigation }) => {
                 // key={index}
                 onFlipEnd={(isFlipEnd) => { console.log('isFlipEnd', isFlipEnd) }}
               >
-              
-              <ScrollView >
-              <View 
-                       style={{alignItems: 'center'}} >
-                      <Click_to_flip_Component cardface={"front"}/>
-                      </View>
-                <View style={styles.textContent}>
-               
-                  <Text style={styles.cardTitle}>Hospital Name: {marker.title}</Text>
-                  <Text style={styles.cardDesc}>Blood Request Id: {marker.bloodrequestid}</Text>
-                  <Text style={styles.cardDesc}>Contact Name: {marker.description}</Text>
-                  <TouchableOpacity
-                      onPress={() => Linking.openURL(`tel:${marker.phoneNumber}`)}
-                    >
-                      <Text style={[styles.cardDesc, { color: 'green' }]}>Contact Number :{marker.phoneNumber}</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.cardDesc}>Blood group: {marker.bloodgroup}</Text>
-                    <Text style={styles.cardDesc}>No of Units: {marker.units}</Text>
-                  {marker.requesttype === "Platelets" ?
-                    <Text style={styles.cardDesc}>Replacement Available: {marker.replacement}</Text>
-                    : null}
-                  <Text style={styles.cardDesc}>Request Type: {marker.requesttype}</Text>
-                  
-                  <Text style={styles.cardDesc}>No of Donor Accepted: {marker.donor}</Text>
-                  
 
-                  <Text style={styles.cardDesc}>Address: {marker.address}</Text>                             
-                  
-                </View>
-              </ScrollView>
-            
-              <ScrollView >
-                     <View 
-                       style={{alignItems: 'center',padding:0}} >
-                      <Click_to_flip_Component cardface={"front"}/>
-                      </View>
-                <View style={styles.textContent}>
-               
-                  <Text style={styles.cardTitle}>Hospital Name: {marker.title}</Text>
-                  
-                  <Text style={styles.cardDesc}>Contact Name: {marker.description}</Text>                  
-                  <TouchableOpacity
-                      onPress={() => Linking.openURL(`tel:${marker.phoneNumber}`)}
+
+                <ScrollView >
+                  <View style={styles.textContent}>
+                    <View
+                      style={{ alignItems: 'flex-end' }} >
+                      <Click_to_flip_Component cardface={"front"} />
+                    </View>
+                    <Text style={styles.cardTitle}>Hospital Name: {marker.title}</Text>
+                    <Text style={styles.cardDesc}>Covid Details Id: {marker.CovidAddDetailsId}</Text>
+                    <Text style={styles.cardDesc}>Contact Name: {marker.contactname}</Text>
+                    <TouchableOpacity
+                      onPress={() => Linking.openURL(`tel:${marker.contactnumber}`)}
                     >
-                      <Text style={[styles.cardDesc, { color: 'green' }]}>Contact Number :{marker.phoneNumber}</Text>
+                      <Text style={[styles.cardDesc, { color: 'green' }]}>Contact Number :{marker.contactnumber}</Text>
                     </TouchableOpacity>
+
+                    <Text style={styles.cardDesc}>Address: {marker.address}</Text>
+
+                    {marker.BedCount > 0 && marker.BedCount !== "" ?
+                      <Text style={styles.cardDesc}>Normal Bed Count {marker.BedCount}</Text>
+                      : null}
+
+                    {marker.O2BedCount > 0 && marker.O2BedCount !== "" ?
+                      <Text style={styles.cardDesc}>Oxygen Bed Count {marker.O2BedCount}</Text>
+                      : null}
+
+                    {marker.ICUBedCount > 0 && marker.ICUBedCount !== "" ?
+                      <Text style={styles.cardDesc}>ICU Bed Count {marker.ICUBedCount}</Text>
+                      : null}
+
+                    {marker.O2SupplyCount > 0 && marker.O2SupplyCount !== "" ?
+                      <Text style={styles.cardDesc}>Normal Bed Count {marker.O2SupplyCount}</Text>
+                      : null}
+
+
+
+                  </View>
+                </ScrollView>
+
+
+
+                <ScrollView >
+                  <View
+                    style={{ alignItems: 'center', }} >
+                    <Click_to_flip_Component cardface={"back"} />
+                  </View>
                   <View style={styles.action}>
                     <View style={styles.button}>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate('Requester_Details', {
-                          phoneNumber: marker.phoneNumber,
-                          bloodgroup: marker.bloodgroup,
-                          hospital: marker.title,
-                          bloodrequestid: marker.bloodrequestid,
-                          contact_name: marker.description,
-                          replacement: marker.replacement,
-                          requesttype: marker.requesttype,
-                          address: marker.address,
-                          pincode: marker.pincode,
-                          noofunits: marker.noofunits,
-                          status: marker.status,
-                          userid: marker.userid,
-                          noofdonoraccepted: marker.noofdonoraccepted,
-                          contactnumber: marker.phoneNumber,
-                        })}
+                        onPress={() =>
+                          acceptHandler(marker)
+                          //   navigation.navigate('CovidDataSingleDisplayScreen', {
+                          //   markerdata: marker.phoneNumber,
+                          //   // bloodgroup: marker.bloodgroup,
+                          //   // hospital: marker.title,
+                          //   // bloodrequestid: marker.bloodrequestid,
+                          //   // contact_name: marker.description,
+                          //   // replacement: marker.replacement,
+                          //   // requesttype: marker.requesttype,
+                          //   // address: marker.address,
+                          //   // pincode: marker.pincode,
+                          //   // noofunits: marker.noofunits,
+                          //   // status: marker.status,
+                          //   // userid: marker.userid,
+                          //   // noofdonoraccepted: marker.noofdonoraccepted,
+                          //   // contactnumber: marker.phoneNumber,
+                          // })
+                        }
                         style={[styles.signIn, {
-                          borderTopColor: "#FF6347",
-                          borderWidth: 1,
+
                         }]}
                       >
 
                         <Text style={[styles.textSign, {
                           color: '#FF6347'
-                        }]}>Donate</Text>
+                        }]}>Accept</Text>
                       </TouchableOpacity>
                     </View>
                     <View >
                       <TouchableOpacity
                         onPress={
-                          () => { messagehandle(marker.title, marker.description, marker.bloodgroup, marker.phoneNumber) }
+                          () => { messagehandle(marker) }
                           //onOpen
 
                         }
-                        style={[styles.signIn, {
-                          borderTopColor: "#FF6347",
-                          borderWidth: 1
-                        }]}                 >
+                        style={[styles.signIn]} >
 
                         <Text style={[styles.textSign, {
                           color: '#009387'
@@ -907,8 +1074,10 @@ const Blood_Request_List_Screen = ({ navigation }) => {
                       </TouchableOpacity>
                     </View>
                   </View>
-                </View>
-              </ScrollView>
+
+
+                </ScrollView>
+
               </FlipCard>
             </View>
 
@@ -919,136 +1088,46 @@ const Blood_Request_List_Screen = ({ navigation }) => {
 
       <View style={styles.refreshbox}>
         <TouchableOpacity onPress={() =>
-         //loadProducts()
-        requestLocationPermission()
+          //loadProducts()
+          requestLocationPermission()
         }>
-          <Ionics name="md-locate" size={60} />
-          {/* <Animated.Image
-                          source={require('../assets/target1.png')}
-                          resizeMode='cover'
-                          style={[styles.makerWrap]}
-                          /> */}
+          <Ionics name="md-locate" size={45} />
+
         </TouchableOpacity>
       </View>
 
-      {/* <ShareSheet style={styles.messageContainer} visible={shareText.visible} onCancel={onCancel}>
-        <TouchableHighlight underlayColor='none' activeOpacity = { .55 }       
-        onPress={()=>{
-            try {  
-            //onCancel();
-              setTimeout(() => {
-                //Share.shareSingle(Object.assign(shareOptions, {
-                //messagehandle(marker.title,marker.description,marker.bloodgroup,marker.phoneNumber)}
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "facebook"
-                }));
-              },300)}
-              catch(error) {
-                  alert(error.message);
-                }
-            }}>
-          <View style={styles.messageBox}>
-          <MaterialCommunityIcon style={styles.chipsIcon} name ="facebook" size = {25}/>
-          <Text style= { styles.messageText}>Facebook</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight underlayColor='none' activeOpacity = { .55 } onPress={()=>{
-              try{ 
-              //onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "twitter"
-                }));
-              },300)}
-              catch(error) {
-                  alert(error.message);
-                }
-            }}>
-          <View style={styles.messageBox}>
-          <MaterialCommunityIcon style={styles.chipsIcon} name ="twitter" size = {25}/>
-          <Text style= { styles.messageText}>twitter</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight underlayColor='none' activeOpacity = { .55 } onPress={()=>{
-              try{
-              //onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "whatsapp"
-                }));
-              },300)}
-              catch(error) {
-                  alert(error.message);
-                }
-            }}>
-          <View style={styles.messageBox}>
-          <MaterialCommunityIcon style={styles.chipsIcon} name ="whatsapp" size = {25}/>
-          <Text style= { styles.messageText}>Whatsapp</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight underlayColor='none' activeOpacity = { .55 } onPress={()=>{
-              try{ 
-              //onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "googleplus"
-                }));
-              },300)}
-              catch(error) {
-                  alert(error.message);
-                }
-            }}>
-          <View style={styles.messageBox}>
-          <MaterialCommunityIcon style={styles.chipsIcon} name ="google-plus" size = {25}/>
-          <Text style= { styles.messageText}>Google +</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight underlayColor='none' activeOpacity = { .55 } onPress={()=>{
-              try{ 
-              //onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "email"
-                }));
-              },300)}
-              catch(error) {
-                  alert(error.message);
-                }
-            }}>
-          <View style={styles.messageBox}>
-          <MaterialCommunityIcon style={styles.chipsIcon} name ="email" size = {25}/>
-          <Text style= { styles.messageText}>Email</Text>
-          </View>
-        </TouchableHighlight>
-       
-        <TouchableHighlight underlayColor='none' activeOpacity = { .55 }
-         onPress={()=>{
-           try{
-              //onCancel();
-              setTimeout(() => {
-                Share.open(shareOptions) 
-              },300)}
-              catch(error) {
-                  alert(error.message);
-                }
 
-            }}>
-          <View style={styles.messageBox}>
-          <MaterialCommunityIcon style={styles.chipsIcon} name ="more" size = {25}/>
-          <Text style= { styles.messageText}>More</Text>
-          </View>
-        </TouchableHighlight>
-        </ShareSheet>
-     */}
+      {state.acceptflag ?
+        <Animatable.View
+          animation="fadeInUpBig"
+          style={[styles.acceptstyle,styles.scrollView]}
+          >   
+         
+          <TouchableOpacity
+            onPress={
+              () => { closeaccept() }
+              //onOpen
+
+            }
+            //style={[styles.signIn]} 
+            style ={{alignSelf:"center"}}
+            >
+
+            <MaterialCommunityIcon
+                      color='red'
+                      name="close-circle" size={30} />
+                
+          </TouchableOpacity>
+          <Covid_Data_Single_Display_Screen marker={state.marksprops} screen={"Accept"} databack={handleCallback}/>
+        </Animatable.View>
+        : null
+      }
     </View>
-
-
-
 
   );
 };
 
-export default Blood_Request_List_Screen;
+export default Covid_Data_Display_List_Screen;
 
 export const styles = StyleSheet.create({
 
@@ -1076,6 +1155,29 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: -32
   },
+  acceptstyle: {
+    elevation: 2,
+    backgroundColor: "#fff",
+    // backgroundColor: "transparent",
+    // borderTopLeftRadius:5,
+    // borderTopRightRadius:5,
+    marginHorizontal: 10,
+    shadowColor: "#000",
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    shadowOffset: { x: 2, y: -2 },
+    height: screen_height * 0.80,
+    width: screen_width*0.95 ,
+    opacity: 0.5,
+    // overflow: "hidden",
+    borderRadius: 50,
+    borderColor: 'gold',
+    borderWidth: 1,
+    // marginBottom:'2%',
+    // marginRight:'10%',
+    margin:"2%",
+    //paddingLeft:'1%',
+  },
   arrowBorder: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
@@ -1099,12 +1201,11 @@ export const styles = StyleSheet.create({
   },
   refreshbox: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? '5%' : '10%',
+    top: Platform.OS === 'ios' ? '3.5%' : '1.5%',
     width: '3%',
     alignSelf: 'flex-end',
-    marginLeft: '9%',
+    marginLeft: '12%',
     padding: '4%',
-    marginBottom:'10%'
   },
   messageBox: {
     flexDirection: 'row',
@@ -1147,17 +1248,44 @@ export const styles = StyleSheet.create({
     height: 30
   },
   chipsScrollView: {
+    alignSelf: 'flex-start',
     position: 'absolute',
     top: Platform.OS === 'ios' ? '10%' : '3%',
-    paddingHorizontal: 4
+    marginLeft: '6%',
+    // padding: '4%',
+    // top: Platform.OS === 'ios' ? '10%' : '3%',
+
+
   },
   chipsIcon: {
-    margin: 5
+    // margin: 5,
+    // position: "absolute",
+    marginHorizontal: 10,
+    paddingHorizontal: 20,
+    padding: '5%',
+  },
+  filterselect: {
+    // flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    //paddingTop:'3%',
+    padding: '7%',
+    //margin:'1%',
+    paddingLeft: '10%',
+    paddingRight: '10%',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+    // height: 100,   
+    opacity: 0.8,
+  },
+  bedstyles: {
+    flexDirection: 'row', justifyContent: 'space-between',
+
   },
   chipsItem: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    opacity:0.8,
+    backgroundColor: "transparent",
     borderRadius: 20,
     //paddingTop:'3%',
     padding: '5%',
@@ -1178,8 +1306,6 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
-    marginBottom: '20%',
-    // marginTop:'15%'
   },
   endPading: {
     paddingRight: screen_width - CARD_WIDTH,
@@ -1204,7 +1330,7 @@ export const styles = StyleSheet.create({
   },
   textContent: {
     flex: 1,
-    padding: 10,
+    padding: '5%',
     borderRadius: 3,
     // backgroundColor:'green',
   },
@@ -1228,14 +1354,22 @@ export const styles = StyleSheet.create({
     height: 30,
   },
   button: {
-    alignItems: "center",
+    // alignItems: "center",
+    // alignSelf:'center',
+
+    // justifyContent:'space-evenly',
   },
   action: {
     flexDirection: 'row',
-    marginTop: '2%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 1
+    // marginTop: '2%',
+    // borderBottomWidth: 1,
+    // paddingBottom: 1
+    // borderBottomColor: '#f2f2f2',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: CARD_WIDTH * 0.25,
+    // alignItems:'center',
+    // flex:1
   },
   signIn: {
     marginRight: '3%',

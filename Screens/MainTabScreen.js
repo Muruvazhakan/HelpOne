@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Image,Platform,Alert,TouchableOpacity } from 'react-native';
+import { View, Image,Platform,Alert,StyleSheet,TouchableOpacity } from 'react-native';
 import Icon from  'react-native-vector-icons/Ionicons';
 import Fontisto from  'react-native-vector-icons/Fontisto';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -23,6 +23,7 @@ import Here_Map from '../HERE_Component/Here_Map';
 import SOSScreen from './SOS_Componet/SOSScreen';
 import { screen_width } from '../components/Parameter';
 import {styles as MainScreenStyles} from '../Main_Screen/MainScreen';
+import * as ColorsCode from '../components/Color_Code';
 const HomeStack = createStackNavigator();
 const Blood_Request_Screen_Stack = createStackNavigator();
 const ProfileStack = createStackNavigator();
@@ -37,14 +38,17 @@ const CARD_WIDTH = screen_width * 0.1;
 const MainTabScreen = () => (
     <Tab.Navigator
       initialRouteName="Home"
-      activeColor="#F5B041"
+      activeColor="#3ED7B5"
+      inactiveColor='#EFC753'
+      barStyle={styles.bottombarstyles}
     >
       <Tab.Screen
         name="Home"
         component={HomeStackScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarColor: '#009387',
+          backgroundColor: 'transparent',
+         // tabBarColor: '#009387',
           tabBarIcon: ({ color }) => (
             <Icon name="ios-home" color={color} size={26} />
           ),
@@ -56,9 +60,11 @@ const MainTabScreen = () => (
         options={{
         //  tabBarLabel: 'Donate',
           tabBarLabel: 'Request',
-          tabBarColor: '#d02860',
+          // tabBarColor: '#d02860',
           tabBarIcon: ({ color }) => (
+            <View style={{marginBottom:'-10%'}}>
             <Fontisto name="blood-drop" color={color} size={26} />
+            </View>
           ),
         }}
       />
@@ -66,8 +72,8 @@ const MainTabScreen = () => (
         name="Detail"
         component={Blood_Request_StackScreen}
         options={{
-          tabBarLabel: 'Blood Request',
-          tabBarColor: '#8a0303',
+          tabBarLabel: 'Add Request',
+          // tabBarColor: '#8a0303',
           tabBarIcon: ({ color }) => (
             <Icon name="md-add-circle-outline" color={color} size={26} />
           ),
@@ -77,10 +83,14 @@ const MainTabScreen = () => (
         name="Profile"
         component={ProfileStackScreen}
         options={{
-          tabBarLabel: 'Profile',
-          tabBarColor: '#000000',
+          backgroundColor: 'transparent',
+          tabBarLabel: 'Profile',          
+          // tabBarColor: '#483D8B',
           tabBarIcon: ({ color }) => (
-            <Icon name="ios-person" color={color} size={26} />
+            <Icon name="ios-person"
+             color={color}
+            //  color={ColorsCode.blue_primary}
+              size={26} />
           ),
         }}
       />
@@ -92,40 +102,56 @@ const MainTabScreen = () => (
 
 export default MainTabScreen;
 
-const HomeStackScreen = ({navigation}) =>(
- 
+  const HomeStackScreen = ({navigation}) =>{
+      const {colors} = useTheme();
+    return(
+      
     <HomeStack.Navigator screenOptions = {{
+      headerTransparent:true,
       headerStyle:{
-        backgroundColor :"#009387"
+        backgroundColor : "transparent",
+        //backgroundColor :"white"
+        // elevation: 0,        
       },
-      headerTintColor : "#fff",
-      headerTintStyle : "#fff",
+      headerTintColor : ColorsCode.blue_primary,
+      headerTintStyle : "black",     
       fontweight:'bold',
       headerTitleAlign:'center',
     }}>
     <HomeStack.Screen name="Home" component={HomeScreen} 
     options={{ title:"Blood Home Screen",
     headerLeft:() => (
-      <Icon.Button name="ios-menu" size={25}
-        backgroundColor = "#009387"
-         onPress={() => {navigation.openDrawer();}}></Icon.Button>
+     
+      <TouchableOpacity         
+        onPress={() => {navigation.openDrawer();}}>
+		 <Icon name="ios-menu" size={30}
+        backgroundColor = "transparent"
+        style={{marginLeft:15}}          
+        color={ColorsCode.blue_primary}
+         />
+		 </TouchableOpacity>
+       
     ),
     headerRight:()=>(
       <View style={{paddingRight:'50%'}}>
       <SOSScreen navigation={navigation} />
       </View>
-    )
+    ),
+
+
     }} />
-    
+
   </HomeStack.Navigator>
-  );
+  )};
   
-  const Blood_Request_StackScreen = ({navigation}) =>(
+  const Blood_Request_StackScreen = ({navigation}) =>{
+  return (
     <Blood_Request_Screen_Stack.Navigator screenOptions = {{
+		headerTransparent:true,
       headerStyle:{
-        backgroundColor :"#8a0303"
+        backgroundColor : "transparent",
       },
-      headerTintColor : "#fff",
+      headerTintColor : ColorsCode.blue_primary,
       headerTintStyle : "#fff",
       fontweight:'bold',      
       headerTitleAlign:'center',
@@ -133,9 +159,14 @@ const HomeStackScreen = ({navigation}) =>(
     <Blood_Request_Screen_Stack.Screen name="Details" component={Blood_Request_Screen} //screen name navigation
     options={{ title:"Blood Request Details",
     headerLeft:() => (
-      <Icon.Button name="ios-menu" size={25}
-        backgroundColor = "#8a0303"
-         onPress={() => {navigation.openDrawer();}}></Icon.Button>
+      <TouchableOpacity         
+        onPress={() => {navigation.openDrawer();}}>
+		 <Icon name="ios-menu" size={30}
+        backgroundColor = "transparent"        
+        color={ColorsCode.blue_primary}
+        style={{marginLeft:15}}  
+         />
+		 </TouchableOpacity>
     ),
     headerRight:()=>(
       <View style={{paddingRight:'50%'}}>
@@ -153,7 +184,7 @@ const HomeStackScreen = ({navigation}) =>(
     /> */}
 
   </Blood_Request_Screen_Stack.Navigator>
-  );
+    )};
 
 
     const ProfileStackScreen = ({navigation}) =>{
@@ -161,36 +192,47 @@ const HomeStackScreen = ({navigation}) =>(
     return(
       
     <ProfileStack.Navigator screenOptions = {{
-      
+      headerTransparent:true,
       headerStyle:{
-        backgroundColor :"#000000",
-        shadowColor:"#000080",
+        backgroundColor : "transparent",
+        // shadowColor:"black", 
         elevation: 0,
-
+        
       },
-      headerTintColor : "#fff",
+      headerTintColor : ColorsCode.blue_primary,
       headerTintStyle : "#fff",
+      
       fontweight:'bold',
       headerTitleAlign:'center',
     }}>
     <ProfileStack.Screen name="Explore" component={ProfileScreen} 
     options={{ title:"User Profile",
+    
     headerLeft:() => (
      
-      <Icon.Button name="ios-menu" size={25}
-        backgroundColor = "#000000"
-         onPress={() => {navigation.openDrawer();}}/>
+      <TouchableOpacity         
+        onPress={() => {navigation.openDrawer();}}>
+		 <Icon name="ios-menu" size={30}
+        backgroundColor = "transparent"
+        style={{marginLeft:15}}          
+        color={ColorsCode.blue_primary}
+         />
+		 </TouchableOpacity>
        
     ),
     headerRight: () => (
-      <View style={{marginRight:10}}>
-        <MaterialCommunityIcons.Button
+      <View style={{marginRight:15}}>
+        <TouchableOpacity         
+        onPress={() => navigation.navigate('EditProfile')}>
+        <MaterialCommunityIcons
           name="account-edit"
-          size={25}
-          backgroundColor= "#000000"
-          color="#fff"
-          onPress={() => navigation.navigate('EditProfile')}
+          size={30}
+          backgroundColor= "transparent"
+          style={{marginLeft:15}}  
+          // color="#191970"      
+          color={ColorsCode.blue_primary}
         />
+        </TouchableOpacity>
       </View>
     ),
 
@@ -214,31 +256,35 @@ const HomeStackScreen = ({navigation}) =>(
   return(
     
   <Requester_Detail_Stack.Navigator screenOptions = {{
-    headerStyle:{
-      backgroundColor :"#d02860",
-      shadowColor:"#d02860",
-      elevation: 0,      
-    },
-    headerTintColor : "#fff",
-    headerTintStyle : "#fff",
-    fontweight:'bold',
-    headerTitleAlign:'center',
+    headerTransparent:true,
+    // headerStyle:{
+    //  backgroundColor : "transparent",
+    //   shadowColor:"#d02860",
+    //   elevation: 0,      
+    // },
+    // headerTintColor : "#fff",
+    // headerTintStyle : "#fff",
+    // fontweight:'bold',
+    // headerTitleAlign:'center',
   }}>
   <Requester_Detail_Stack.Screen name="Blood_Request_List" component={Blood_Request_List_Screen} 
    options={{
+    headerShown: false,
     title: 'Requester',
-    headerLeft:() => (
+    headerBackTitleVisible:true,
+    headerTransparent:true,
+    // headerLeft:() => (
      
-      <Icon.Button name="ios-menu" size={25}
-        backgroundColor = "#d02860"
-         onPress={() => {navigation.openDrawer();}}/>
+    //   <Icon.Button name="ios-menu" size={25}
+    //    backgroundColor = "transparent"
+    //      onPress={() => {navigation.openDrawer();}}/>
        
-    ),
-    headerRight:()=>(
-      <View style={{paddingRight:'50%'}}>
-      <SOSScreen navigation={navigation} />
-      </View>
-    )
+    // ),
+    // headerRight:()=>(
+    //   <View style={{paddingRight:'50%'}}>
+    //   <SOSScreen navigation={navigation} />
+    //   </View>
+    // )
   }}  
   />
 
@@ -265,9 +311,9 @@ export const RequestDisplayStackScreen = ({navigation}) =>{
 return(
   
 <RequestDisplayStack.Navigator screenOptions = {{
-  
+  headerTransparent:true,
   headerStyle:{
-    backgroundColor :"#009387",
+    backgroundColor : "transparent",
     shadowColor:"#000080",
     elevation: 0,
 
@@ -283,14 +329,19 @@ options={{ title:"My Blood Requests List",
 // headerLeft:() => (
  
 //   <Icon.Button name="ios-menu" size={25}
-//     backgroundColor = "#009387"
+//     //backgroundColor = "#009387"
 //      onPress={() => {navigation.openDrawer();}}
 
 headerLeft:() => (
  
-  <Icon.Button name="ios-menu" size={25}
-    backgroundColor = "#009387"
-     onPress={() => {navigation.openDrawer();}}/>
+  <TouchableOpacity         
+  onPress={() => {navigation.openDrawer();}}>
+<Icon name="ios-menu" size={30}
+  backgroundColor = "transparent"    
+  style={{marginLeft:15}}    
+  color={ColorsCode.blue_primary}
+   />
+</TouchableOpacity>
    
 ),
 headerRight:()=>(
@@ -335,9 +386,9 @@ export const DonatedDisplayStackScreen = ({navigation}) =>{
 return(
   
 <DonatedDisplayStack.Navigator screenOptions = {{
-  
+  headerTransparent:true,
   headerStyle:{
-    backgroundColor :"#000000",
+    backgroundColor : "transparent",
     shadowColor:"#000080",
     elevation: 0,
 
@@ -351,10 +402,17 @@ return(
 options={{ title:"My Donation List",
 headerLeft:() => (
  
-  <Icon.Button name="ios-menu" size={25}
-    backgroundColor = "#000000"
-     onPress={() => {navigation.openDrawer();}}/>
-   
+  // <Icon.Button name="ios-menu" size={25}
+  //   backgroundColor = "transparent"
+  //    onPress={() => {navigation.openDrawer();}}/>
+  <TouchableOpacity         
+  onPress={() => {navigation.openDrawer();}}>
+<Icon name="ios-menu" size={30}
+  backgroundColor = "transparent"  
+  style={{marginLeft:15}}      
+  color={ColorsCode.blue_primary}
+   />
+</TouchableOpacity>
 ),
 headerRight:()=>(
   <View style={{paddingRight:'50%'}}>
@@ -384,8 +442,9 @@ export const OTPStackScreen = ({navigation}) =>{
   const {colors} = useTheme();
 return(  
 <OTPScreenStack.Navigator screenOptions = {{  
+  headerTransparent:true,
   headerStyle:{
-    backgroundColor :"#000000",
+    backgroundColor : "transparent",
     shadowColor:"#000080",
     elevation: 0,
   },
@@ -406,9 +465,9 @@ export const HereMapDisplayStackScreen = ({navigation}) =>{
 return(
   
 <MapDisplayStack.Navigator screenOptions = {{
-  
+  headerTransparent:true,
   headerStyle:{
-    backgroundColor :"#000000",
+    backgroundColor : "transparent",
     shadowColor:"#000080",
     elevation: 0,
 
@@ -443,12 +502,13 @@ export const SOSStackScreen = ({navigation}) =>{
   const {colors} = useTheme();
 return(  
 <SOSScreenStack.Navigator screenOptions = {{  
+  headerTransparent:true,
   headerStyle:{
-    backgroundColor :"#000000",
+     backgroundColor : "transparent",
     shadowColor:"#000080",
     elevation: 0,
   },
-  headerTintColor : "#fff",
+  headerTintColor : ColorsCode.blue_primary,
   headerTintStyle : "#fff",
   fontweight:'bold',
   headerTitleAlign:'center',
@@ -469,12 +529,36 @@ headerLeft:() => (
 //         />
 // </TouchableOpacity>
  
-  <Icon.Button name="ios-menu" size={25}
-    backgroundColor = "#000000"
-     onPress={() => {navigation.openDrawer();}}/>
+  <TouchableOpacity         
+        onPress={() => {navigation.openDrawer();}}>
+		 <Icon name="ios-menu" size={30}
+        backgroundColor = "transparent"  
+        style={{marginLeft:15}}        
+        color={ColorsCode.blue_primary}
+         />
+		 </TouchableOpacity>
    
 ),
 }} 
 /> 
 </SOSScreenStack.Navigator>
 )};
+
+
+export const styles = StyleSheet.create({
+  bottombarstyles:{ 
+    padding: '1%',
+    position:'absolute',
+    // bottom:25,
+    backgroundColor:'transparent',
+    // backgroundColor:'white',
+    // height:50,
+    shadowOpacity:0.2,
+    borderRadius:25,
+    // shadowRadius:70,
+    borderColor:'black',
+    // paddingBottom:'10%',      
+    borderWidth:1,
+    margin:'3%',     
+  },
+});

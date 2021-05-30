@@ -1,8 +1,7 @@
 import React, { useEffect,useState } from 'react';
-import { View, Text,SafeAreaView,
-   Button, StyleSheet,StatusBar,ToastAndroid,FlatList,
+import { View, SafeAreaView,
+   StyleSheet,ToastAndroid,FlatList,
    TouchableOpacity,Linking } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 //import Toaster from 'react-native-toaster';
 import {useSelector,useDispatch} from 'react-redux';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -14,6 +13,9 @@ import Covid_Global_Chart from '../Covid_Global_Component/Covid_Global_Chart';
 import Covid_Cause_Screen from '../Covid_Home_Screen/Covid_Cause_Screen';
 import { styles as ProfileScreenStyles } from '../../Screens/ProfileScreen/ProfileScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {commonstyles} from '../../components/Styles';
+import { useTheme, Text, ActivityIndicator } from 'react-native-paper';
+
 const Covid_India_Contacts_Screen = (props) => {
   const themes = useTheme();
   const user_data_user_first_name=useSelector(state =>
@@ -25,7 +27,7 @@ const Covid_India_Contacts_Screen = (props) => {
         location: "",  
         refreshing: false,      
     }
-    let newData={};
+    let newData=null;
     const [state, setState] = useState(initialState);
    
     useEffect(() => {      
@@ -184,7 +186,9 @@ const Covid_India_Contacts_Screen = (props) => {
       </View>
       
       </View> 
-      :null} 
+      :
+      null
+      } 
           </View>
       )
   }
@@ -235,7 +239,10 @@ const Covid_India_Contacts_Screen = (props) => {
               :null} */}
 
             </FlatList>
-          : null}  
+          : 
+          <View style={[commonstyles.activityIndicatorStyle]}>
+          <ActivityIndicator size="large"/>
+          </View>}  
           </View>
         </SafeAreaView>
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Button, StyleSheet, TouchableOpacity,Alert,ToastAndroid, } from 'react-native';
+import { View, Button, StyleSheet, TouchableOpacity,Alert,ToastAndroid,Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -13,6 +13,10 @@ import {
 import RetriveData from '../Store/Datafromstorage/RetriveData';
 import Main_Screen_Top_Donor from './Main_Screen_Top_Donor';
 import { ScrollView } from 'react-native-gesture-handler';
+import { styles as MainScreenStyles } from './MainScreen';
+import { styles as CovidHomeStyle } from '../Covid_Screen/Covid_Home_Screen/Covid_Home';
+import {covid_img} from '../components/Covid_Parameter';
+import * as Color_Code from '../components/Color_Code';
 const Main_Screen_Icons = (props) => {
   let navigation = props.props.navigation;
 
@@ -33,23 +37,25 @@ const Main_Screen_Icons = (props) => {
 
        
         <View  
-        style={{marginLeft:'2%',marginRight:'2%',justifyContent:'space-evenly'}}
+        style={{margin:'3%',justifyContent:'center'}}
         >
  <ScrollView 
       horizontal={true}
         showsHorizontalScrollIndicator={false}   
         // style={[styles.categoryContainer]}     
       >
-        <View  style={[styles.categoryContainer,styles.icon_styles]}>
+        {/* <View 
+         style={[styles.categoryContainer,styles.icon_styles]}
+         > */}
           <TouchableOpacity
             style={styles.categoryBtn}
             onPress={() =>
               navigation.navigate('BloodHome', { title: 'Blood Home' })
             }>
             <View style={styles.categoryIcon}>
-              <Fontisto name="blood-drop" size={35} color="#bb0a1e" />
+              <Fontisto name="blood-drop" size={35} color={Color_Code.blood_color} />
             </View>
-            <Text style={styles.categoryBtnTxt}>Blood</Text>
+            <Text style={styles.categoryBtnTxt}>  Blood Home  </Text>
           </TouchableOpacity>
          
           <TouchableOpacity
@@ -65,23 +71,31 @@ const Main_Screen_Icons = (props) => {
               // navigation.navigate('AmbulanceHomeDrawer', { title: 'Ambulance Home' })
             }>
             <View style={styles.categoryIcon}>
-              <Fontisto name="ambulance" size={35} color="#bb0a1e" />
+              <Fontisto name="ambulance" size={35} color={Color_Code.blue_primary} />
             </View>
-            <Text style={styles.categoryBtnTxt}>Ambulance</Text>
+            <Text style={styles.categoryBtnTxt}>  Ambulance  </Text>
           </TouchableOpacity>
           
            
           <TouchableOpacity
             style={styles.categoryBtn}
             onPress={() =>
-              navigation.navigate('CovidHomeDrawer', { title: 'Covid Home' })
+              // navigation.navigate('CovidHomeDrawer', { title: 'Covid Home' })
+              navigation.navigate('CovidHome', { title: 'Covid Home' })
             }>
             <View style={styles.categoryIcon}>
-              <FontAwesome5 name="virus-slash" size={35} color="#bb0a1e" />
+              {/* <FontAwesome5 name="virus-slash" size={35} color="#bb0a1e" /> */}
+              <Image
+                  // source={require('../../assets/Covid_Icons/Glyph/Warning.png')}    
+                  source={covid_img.EarthCorona.uri}                       
+                        resizeMode="cover"                        
+                        style={[CovidHomeStyle.image_icon_style]}                       
+                         />
             </View>
-            <Text style={styles.categoryBtnTxt}>Covid</Text>
+            <Text style={styles.categoryBtnTxt}>  Covid Screen  </Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          
+          {/* <TouchableOpacity
             style={styles.categoryBtn}
             onPress={() =>
               navigation.navigate('BloodHome', { title: 'Blood Home' })
@@ -89,10 +103,10 @@ const Main_Screen_Icons = (props) => {
             <View style={styles.categoryIcon}>
               <Fontisto name="blood-drop" size={35} color="#bb0a1e" />
             </View>
-            <Text style={styles.categoryBtnTxt}>Oxygen</Text>
-          </TouchableOpacity>
+            <Text style={styles.categoryBtnTxt}>  Oxygen  </Text>
+          </TouchableOpacity> */}
           
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.categoryBtn}
             onPress={() =>
               navigation.navigate('BloodHome', { title: 'Blood Home' })
@@ -100,10 +114,10 @@ const Main_Screen_Icons = (props) => {
             <View style={styles.categoryIcon}>
               <FontAwesome5 name="virus-slash" size={35} color="#bb0a1e" />
             </View>
-            <Text style={styles.categoryBtnTxt}>Covid</Text>
-          </TouchableOpacity>
+            <Text style={styles.categoryBtnTxt}>  Covid  </Text>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.categoryBtn}
             onPress={() =>
               navigation.navigate('BloodHome', { title: 'Blood Home' })
@@ -111,9 +125,9 @@ const Main_Screen_Icons = (props) => {
             <View style={styles.categoryIcon}>
               <FontAwesome5 name="virus-slash" size={35} color="#bb0a1e" />
             </View>
-            <Text style={styles.categoryBtnTxt}>Covid</Text>
-          </TouchableOpacity>
-          </View>
+            <Text style={styles.categoryBtnTxt}>  Covid Screen  </Text>
+          </TouchableOpacity> */}
+          {/* </View> */}
           </ScrollView>
            </View>
 
@@ -137,12 +151,12 @@ export const styles = StyleSheet.create({
   },
   categoryContainer: {
     flexDirection: 'row',
-    width: '80%',
-    alignSelf: 'stretch',
+    // width: '80%',
+    // alignSelf: 'stretch',
     marginTop: '4%',
     paddingBottom:'2%',
     // paddingLeft:'2%',
-    // justifyContent:'space-between'
+    justifyContent:'space-between'
     // marginBottom: '5%',
   },
   row: {
@@ -176,10 +190,12 @@ export const styles = StyleSheet.create({
   },
   categoryBtn: {
     flex: 1,
-    width: '30%',
+    width: '80%',
     marginHorizontal: 0,
+    // paddingTop:'3%'
     // alignSelf: 'center',
     // paddingLeft: '2%',
+    // marginLeft :'2%'
   },
   categoryIcon: {
     borderWidth: 0,
@@ -194,6 +210,6 @@ export const styles = StyleSheet.create({
   categoryBtnTxt: {
     alignSelf: 'center',
     marginTop: 5,
-    color: '#bb0a1e',
+    color: Color_Code.light_blue_primary,
   },
 });

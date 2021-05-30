@@ -7,7 +7,8 @@ import {
 import {
   Text,
   TouchableRipple,
-  Switch
+  Switch,
+  ActivityIndicator,useTheme
 } from 'react-native-paper';
 import { View } from 'react-native-animatable';
 import * as fetchCovid from '../Covid_Status/Covid_Fetch_Datas';
@@ -23,6 +24,8 @@ import {
   Dimensions
 } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
+import {commonstyles} from '../../components/Styles';
+
 const { width, height } = Dimensions.get('window');
 const Covid_Global_Chart = (props) => {
   const [dailyData, setDailyData] = useState({});
@@ -157,7 +160,10 @@ const Covid_Global_Chart = (props) => {
                 
         </View>
 
-        : null}
+        : 
+        <View style={[commonstyles.activityIndicatorStyle,{flex:1}]}>
+        {/* <ActivityIndicator size="large"/> */}
+        </View>}
 
     </View>
   );

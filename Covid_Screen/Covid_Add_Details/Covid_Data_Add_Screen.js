@@ -1,12 +1,14 @@
-import React, { useState, useEffect,useRef } from 'react';
-import { View, Button, StyleSheet, Switch, TextInput, 
-  TouchableOpacity, Alert, ToastAndroid } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View, Button, StyleSheet, Switch, TextInput,
+  TouchableOpacity, Alert, ToastAndroid
+} from 'react-native';
 import {
   Avatar,
   Title,
   Caption,
   Text,
-  TouchableRipple, useTheme
+  TouchableRipple, useTheme, Checkbox
 } from 'react-native-paper';
 import NetInfo from "@react-native-community/netinfo";
 import { RadioButton } from 'react-native-paper';
@@ -24,16 +26,19 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { styles as Editprofilestyle } from '../ProfileScreen/EditProfileScreen';
+import { styles as Editprofilestyle } from '../../Screens/ProfileScreen/EditProfileScreen';
 import { useSelector } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { styles as signupstyles } from '../SignIn/SignUpScreen';
+import { styles as signupstyles } from '../../Screens/SignIn/SignUpScreen';
 import * as Animatable from 'react-native-animatable';
 import * as toggledata from '../../Store/actions/HelpOne';
-
-import {Server_URL} from '../../components/Parameter';
-import * as condition from '../../ConditionHandler/Condition'
-const Blood_Request_Screen = ({ navigation, route }) => {
+import { styles as BloodRequestScreenStyle } from '../../Screens/Blood_Request/Blood_Request_Screen';
+import * as Server_Url from '../../components/Covid_Parameter';
+import { Server_URL } from '../../components/Parameter';
+import * as condition from '../../ConditionHandler/Condition';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+const Covid_Data_Add_Screen = ({ navigation, route }) => {
 
 
   const user_data_user_latitude = useSelector(state =>
@@ -104,22 +109,23 @@ const Blood_Request_Screen = ({ navigation, route }) => {
   const user_data_user_request_user_latitude = useSelector(state =>
     state.helpone.user_request_user_latitude,
   );
-  
+
   const { colors } = useTheme();
 
   const dispatch = useDispatch();
 
   const initialBloodRequest = {
-    selectedBloodGroup: null,
-    otherBloodGroup: null,
-    loactionAddress: {
-      address: null,
-      city: null,
-      area: null,
-      statename: null,
-      latitude: null,
-      longitude: null,
-    },
+
+    Normal_Bed: false,
+    O2_Bed: false,
+    O2_Supply: false,
+    ICU_Bed: false,
+
+    Normal_Bed_Count: 0,
+    O2_Bed_Count: 0,
+    O2_Supply_Count: 0,
+    ICU_Bed_Count: 0,
+
     user_name: user_data_user_name,
     user_number: user_data_user_number,
     check_textInput_user_name: true,
@@ -128,15 +134,12 @@ const Blood_Request_Screen = ({ navigation, route }) => {
     pincode: null,
     check_textInput_hospita_name: false,
     check_textInput_pincode: false,
-    check_textInput_noofunits: false,
-    noofunits: 0,
-    requestno: null,
   }
   const [state, setState] = useState(initialBloodRequest);
   const [isRequiredTypes, setisRequiredTypes] = useState({ Required: "Blood" });
   const [isReplacementAvailables, setisReplacementAvailables] = useState({ Replacement: "No" });
 
-var offline = 0;
+  var offline = 0;
   let connectstate = "";
   const [error, setError] = useState();
   const [offlinemsgflag, setOfflinemsgflag] = useState(false);
@@ -188,7 +191,7 @@ var offline = 0;
         //Alert.alert("You are online!");
         console.log("You are online!", state.isConnected);
         //onRetrivemydonordata();
-		user_data_upload();
+        user_data_upload();
         if (offline === 1) {
           ToastAndroid.show("Back to online!", ToastAndroid.SHORT);
         }
@@ -196,39 +199,73 @@ var offline = 0;
       }
 
     });
-	}
-	
+  }
+
   const errorAlerthandler = () => {
     console.log("errorAlerthandler");
     setOfflinemsgflag(false);
     checkConnectivity();
   }
 
-  const otherBloodHandler = (val) => {
-    console.log("val  " + val);
-    if (state.selectedBloodGroup === "Other") {
-      setState({
-        ...state,
-        otherBloodGroup: val,
-      })
-    }
-  }
 
   const submitHandle = () => {
-    console.log("after "+ user_data_user_request_address_line1 );
-    if (state.check_textInput_user_name &&
-      state.check_textInput_user_number &&
-      isRequiredTypes &&
-      state.check_textInput_hospita_name &&
-      state.check_textInput_pincode &&
-      // state.loactionAddress.latitude!==null  &&
-      state.selectedBloodGroup !== "" &&
-      state.check_textInput_noofunits
-    ) {
+    console.log("submitHandle " + user_data_user_request_user_latitude + " user_data_user_longitude" + user_data_user_request_user_longitude);
+    console.log(state);
+
+    if (state.Normal_Bed && (state.Normal_Bed_Count <= 0 || state.Normal_Bed_Count == null)) {
+      Alert.alert("Error in Bed Count", 'Please Enter valid Normal Bed Count!', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (state.O2_Bed && (state.O2_Bed_Count <= 0 || state.O2_Bed_Count == null)) {
+      Alert.alert("Error in Bed Count", 'Please Enter valid Oxygen Bed Count!', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (state.ICU_Bed && (state.ICU_Bed_Count <= 0 || state.ICU_Bed_Count == null)) {
+      Alert.alert("Error in Bed Count", 'Please Enter valid ICU Bed Count!', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (state.O2_Supply && (state.O2_Supply_Count <= 0 || state.O2_Supply_Count == null)) {
+      Alert.alert("Error in Oxygen Supply", 'Please Enter valid Oxygen Cylinder Count!', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (!state.O2_Supply && !state.O2_Bed && !state.Normal_Bed && !state.ICU_Bed) {
+      Alert.alert("Error", 'Please enter Atlest one Details!', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (!state.check_textInput_user_name || !state.check_textInput_user_number) {
+      Alert.alert("Error", 'Please complete the Contact details', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (user_data_user_request_user_latitude == '' && user_data_user_request_user_longitude == '') {
+      Alert.alert("Error", 'Please select the location', [
+        { text: 'Okay' }
+      ]);
+      return false;
+    }
+
+    if (state.check_textInput_hospita_name && state.check_textInput_hospita_name) {
       console.log("submited  ");
 
-       //user_data_upload();
-	   loadProducts();
+      // user_data_upload();
+      loadProducts();
     }
     else {
       ToastAndroid.show("Please Complete the form!", ToastAndroid.LONG);
@@ -241,16 +278,16 @@ var offline = 0;
     // console.log("user_data_user_address_line1  "+user_data_user_address_line1);
   }
 
-const clear_Dispatch=()=>{
-  dispatch(toggledata.toggleuser_request_address_line1(null));    
-  dispatch(toggledata.toggleuser_request_user_city(null));
-  dispatch(toggledata.toggleuser_request_user_countryName(null));
-  dispatch(toggledata.toggleuser_request_user_pincode(null));
-  dispatch(toggledata.toggleuser_request_user_longitude(null));
-  dispatch(toggledata.toggleuser_request_user_latitude(null));
-  dispatch(toggledata.toggleuser_request_user_state_name(null));
-  dispatch(toggledata.toggleuser_request_user_district(null));
-}
+  const clear_Dispatch = () => {
+    dispatch(toggledata.toggleuser_request_address_line1(null));
+    dispatch(toggledata.toggleuser_request_user_city(null));
+    dispatch(toggledata.toggleuser_request_user_countryName(null));
+    dispatch(toggledata.toggleuser_request_user_pincode(null));
+    dispatch(toggledata.toggleuser_request_user_longitude(null));
+    dispatch(toggledata.toggleuser_request_user_latitude(null));
+    dispatch(toggledata.toggleuser_request_user_state_name(null));
+    dispatch(toggledata.toggleuser_request_user_district(null));
+  }
 
   const clearall = () => {
 
@@ -260,42 +297,50 @@ const clear_Dispatch=()=>{
       pincode: null,
       check_textInput_hospita_name: false,
       check_textInput_pincode: false,
-      check_textInput_noofunits: false,
-      noofunits: 0,
+      Normal_Bed: false,
+      O2_Bed: false,
+      O2_Supply: false,
+      ICU_Bed: false,
+      Normal_Bed_Count: 0,
+      O2_Bed_Count: 0,
+      O2_Supply_Count: 0,
+      ICU_Bed_Count: 0,
+
     }),
-      setisRequiredTypes(null);
-    setisReplacementAvailables(null);
-    clear_Dispatch();
+      // setState(null),
+      // setisRequiredTypes(null);   
+      clear_Dispatch();
   }
   var reqno;
   const user_data_upload = async () => {
-    console.log("isReplacementAvailables:" + isReplacementAvailables);
-    console.log("selectedBloodGroup:" + state.selectedBloodGroup);
-	let API_URL = `${Server_URL}/Blood_Request_Component/user_blood_request.php`;
-    fetch(API_URL,{
-    method:'post',
-    header:{
+    // console.log("isReplacementAvailables:" + isReplacementAvailables);
+    // console.log("selectedBloodGroup:" + state.selectedBloodGroup);
+    let API_URL =  `${Server_URL}/Covid_Components/Covid_Add_Details_Components/Covid_Add_Details.php`;
+    // Server_Url.Covid_Add_Details_URL;
+    fetch(API_URL, {
+      method: 'post',
+      header: {
         'Accept': 'application/json',
         'Content-type': 'application/json'
-    },
+      },
       body: JSON.stringify({
         // we will pass our input data to server
         mobile: user_data_user_number,
         username: state.user_name,
         contactnumber: state.user_number,
-        requesttype: isRequiredTypes,
-        bloodgroup: ((state.otherBloodGroup !== null && state.selectedBloodGroup === "Other") ? state.otherBloodGroup : state.selectedBloodGroup),
-        address:user_data_user_request_address_line1,
+        BedCount: state.Normal_Bed_Count,
+        O2BedCount: state.O2_Bed_Count,
+        ICUBedCount: state.ICU_Bed_Count,
+        O2SupplyCount: state.O2_Supply_Count,
+        address: user_data_user_request_address_line1,
         latitude: user_data_user_request_user_latitude,
         longitude: user_data_user_request_user_longitude,
-        city:user_data_user_request_user_city,        
-        state:user_data_user_request_user_state_name,
-        district:user_data_user_request_user_district,       
+        city: user_data_user_request_user_city,
+        state: user_data_user_request_user_state_name,
+        district: user_data_user_request_user_district,
         pincode: user_data_user_request_user_pincode,
-        country:user_data_user_request_user_countryName,
+        country: user_data_user_request_user_countryName,
         hospitalname: state.hospitalname,
-        replacementavailables: ((isRequiredTypes === "Platelets") ? '' : isReplacementAvailables),
-        units: state.noofunits,
       })
 
     })
@@ -315,7 +360,7 @@ const clear_Dispatch=()=>{
           ]);
           console.log("fail");
         }
-        else {
+        else if (responseJson === "Recorded") {
           console.log("Recorded");
           reqno = responseJson.toString();
           setState({
@@ -323,12 +368,12 @@ const clear_Dispatch=()=>{
             requestno: responseJson,
           }),
 
-            Alert.alert("Recorded", 'Your Blood requeste is recorded', [
+            Alert.alert("Recorded", 'Your Details are recorded', [
               { text: 'Okay' }
             ]);
-          navigation.navigate('Home');
-          UpdateRequestNohandler();
-          clearall();
+         navigation.navigate('CovidHomeDrawer');
+          // UpdateRequestNohandler();
+         clearall();
 
         };
       })
@@ -340,19 +385,19 @@ const clear_Dispatch=()=>{
 
   let screenname = "Blood_Request_Screen";
 
-  const UpdateRequestNohandler = async () => {
+  // const UpdateRequestNohandler = async () => {
 
 
-    console.log(" aynsc storgae in Blood request screen " + reqno);
-    try {
-      dispatch(toggledata.toggleuser_bood_request_raised(reqno));
-      let status = await AsyncStorage.setItem('user_bood_request_raised', reqno);
+  //   console.log(" aynsc storgae in Blood request screen " + reqno);
+  //   try {
+  //     dispatch(toggledata.toggleuser_bood_request_raised(reqno));
+  //     let status = await AsyncStorage.setItem('user_bood_request_raised', reqno);
 
-      console.log("user_bood_request_raised  status " + status);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  //     console.log("user_bood_request_raised  status " + status);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   const handleusername = (val) => {
     const reshospitalname = condition.profilename(val);
@@ -363,10 +408,10 @@ const clear_Dispatch=()=>{
     });
   }
 
-  const handleaddress=(val) =>{
-    console.log("before user_data_user_request_address_line1"+ user_data_user_request_address_line1 );
+  const handleaddress = (val) => {
+    console.log("before user_data_user_request_address_line1" + user_data_user_request_address_line1);
     dispatch(toggledata.toggleuser_request_address_line1(val));
-    console.log("after user_data_user_request_address_line1"+ user_data_user_request_address_line1 );
+    console.log("after user_data_user_request_address_line1" + user_data_user_request_address_line1);
   }
 
   const handleHospitalname = (val) => {
@@ -429,29 +474,94 @@ const clear_Dispatch=()=>{
 
 
   const OnPress_Pick_Location_Handler = () => {
-    navigation.navigate('Here_Map', {     
+    navigation.navigate('Here_Map', {
       screenName: 'Blood_Request_Screen'
     });
-    dispatch(toggledata.togglemap_screen_name('Blood_Request_Screen'));    
+    dispatch(toggledata.togglemap_screen_name('Blood_Request_Screen'));
 
   }
 
-  const handlenoofUnits = (val) => {
+
+
+  const handlenormalbedcount = (val) => {
 
     if (val > 0) {
       setState({
-        ...state, check_textInput_noofunits: true,
-        noofunits: val,
+        ...state,
+        // check_textInput_noofunits: true,
+        Normal_Bed_Count: val,
       });
     }
     else {
       setState({
-        ...state, check_textInput_noofunits: false,
-        noofunits: val,
+        ...state,
+        // check_textInput_noofunits: false,
+        Normal_Bed_Count: val,
       });
     }
 
   }
+
+  const handleO2bedcount = (val) => {
+
+    if (val > 0) {
+      setState({
+        ...state,
+        // check_textInput_noofunits: true,
+        O2_Bed_Count: val,
+      });
+    }
+    else {
+      setState({
+        ...state,
+        // check_textInput_noofunits: false,
+        O2_Bed_Count: val,
+      });
+    }
+
+  }
+
+
+  const handleICUbedcount = (val) => {
+
+    if (val > 0) {
+      setState({
+        ...state,
+        // check_textInput_noofunits: true,
+        ICU_Bed_Count: val,
+      });
+    }
+    else {
+      setState({
+        ...state,
+        // check_textInput_noofunits: false,
+        ICU_Bed_Count: val,
+      });
+    }
+
+  }
+
+  const handleO2Supplycount = (val) => {
+
+    if (val > 0) {
+      setState({
+        ...state,
+        // check_textInput_noofunits: true,
+        O2_Supply_Count: val,
+      });
+    }
+    else {
+      setState({
+        ...state,
+        // check_textInput_noofunits: false,
+        O2_Supply_Count: val,
+      });
+    }
+
+  }
+
+
+
 
   useEffect(() => {
     if (route) {
@@ -466,160 +576,204 @@ const clear_Dispatch=()=>{
 
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <View style={BloodRequestScreenStyle.container}>
 
-        <View style={styles.cardview} >
-          <RadioButton.Group
-            key="Required"
-            onValueChange={value => setisRequiredTypes(value)
-            }
-            value={isRequiredTypes}
+        <View style={BloodRequestScreenStyle.cardview} >
+        
+          <Text style={BloodRequestScreenStyle.title}>Please select the Details you want to record</Text>
 
-          >
-            <Text style={styles.title}>Required Type</Text>
-            <View style={[styles.radioButtonstyle, styles.content]}>
-              <Text>Blood</Text>
-              <RadioButton
-                value="Blood"
+          <View style={[styles.bed_space_style
+            // { padding: '2%', marginTop: 0, paddingBottom: '4%' }
+          ]}>
+            <Text style={{ paddingTop: '3%' }}>Normal Bed</Text>
+            <Checkbox
+              status={state.Normal_Bed ? 'checked' : 'unchecked'}
+              onPress={() => {
+                console.log(state.Normal_Bed + " state.Normal_Bed");
+                setState({
+                  ...state,
+                  Normal_Bed: !state.Normal_Bed,
+                })
 
-              // status={isRequiredTypes === 'Blood' ? 'checked' : 'unchecked' }
-              //checked={state.isRequiredType === 'Blood'}              
-              // onPress={() => setState({isRequiredType:'Blood'})}
-              />
-
-              <Text>Platelets</Text>
-
-              <RadioButton
-                value="Platelets"
-              // status={ state.isRequiredType === 'Platelets' ? 'checked' : 'unchecked' }
-              //checked={state.isRequiredType === 'Platelets'}
-              // onPress={() => setState({isRequiredTypes:'Platelets'},              
-
-              // )}
-              />
-            </View>
-          </RadioButton.Group>
-        </View>
-        {isRequiredTypes === 'Blood' ?
-          <View style={styles.cardview}>
-            <RadioButton.Group key="Replacement" onValueChange={value => setisReplacementAvailables(value)} value={isReplacementAvailables}  >
-              <Text style={styles.title}> Replacement Available</Text>
-              <View style={[styles.radioButtonstyle, styles.content]}>
-
-                <Text style={styles.content}>Yes</Text>
-                <RadioButton
-                  value="Yes"
-                // status={ isReplacementAvailables === 'Yes' ? 'checked' : 'unchecked' }
-                // onPress={() => setisReplacementAvailables({isReplacementAvailables:'Yes'})}              
-                />
-                <Text style={styles.content}>No</Text>
-                <RadioButton
-                  value="No"
-                // status={ isReplacementAvailables === 'No' ? 'checked' : 'unchecked' }
-                // onPress={() => setisReplacementAvailables({isReplacementAvailables:'No'})}
-                />
-              </View>
-            </RadioButton.Group>
+              }}
+            />
           </View>
+
+          <View style={[styles.bed_space_style
+          ]}>
+            <Text style={{ paddingTop: '3%' }}>Oxygen Bed</Text>
+            <Checkbox
+              status={state.O2_Bed ? 'checked' : 'unchecked'}
+              onPress={() => {
+                console.log(state.O2_Bed + " state.O2_Bed");
+                setState({
+                  ...state,
+                  O2_Bed: !state.O2_Bed,
+                })
+
+              }}
+            />
+          </View>
+
+          <View style={[styles.bed_space_style
+          ]}>
+            <Text style={{ paddingTop: '3%' }}>ICU Bed</Text>
+            <Checkbox
+              status={state.ICU_Bed ? 'checked' : 'unchecked'}
+              onPress={() => {
+                console.log(state.ICU_Bed + " state.ICU_Bed");
+                setState({
+                  ...state,
+                  ICU_Bed: !state.ICU_Bed,
+                })
+
+              }}
+            />
+          </View>
+
+          <View style={[styles.bed_space_style
+          ]}>
+            <Text style={{ paddingTop: '3%' }}>Oxygen Cylinder</Text>
+            <Checkbox
+              status={state.O2_Supply ? 'checked' : 'unchecked'}
+              onPress={() => {
+                console.log(state.O2_Supply + " state.O2_Supply");
+                setState({
+                  ...state,
+                  O2_Supply: !state.O2_Supply,
+                })
+
+              }}
+            />
+          </View>
+
+        </View>
+
+
+        {state.Normal_Bed ?
+
+          <Animatable.View style={[BloodRequestScreenStyle.cardview,]} animation="bounceInRight">
+            <Text style={BloodRequestScreenStyle.title}>No of Normal Beds Available</Text>
+
+            <View style={[signupstyles.action,]}
+
+            >
+              <Fontisto name="bed-patient" color='black' size={30} />
+              <TextInput placeholder="Units"
+                keyboardType="phone-pad"
+                style={[signupstyles.textInput, { color: colors.text, paddingLeft: '5%' }]} autoCapitalize="none"
+                onChangeText={(val) => handlenormalbedcount(val)}
+              >{state.Normal_Bed_Count}
+              </TextInput>
+              {state.Normal_Bed_Count > 0 && state.Normal_Bed_Count ?
+                <Animatable.View
+                  animation="bounceIn">
+                  <Feather
+                    name="check-circle"
+                    color="green"
+                    size={20}
+                  />
+                </Animatable.View>
+                : null}
+              <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
+            </View>
+          </Animatable.View>
+
           : null}
 
-        <View style={styles.cardview}>
-          <Text style={styles.title}>Blood Group</Text>
-          <View style={styles.content} >
-            <Picker
-              selectedValue={state.selectedBloodGroup}
-              style={{ height: 50, width: 150, color: colors.text, }}
-              onValueChange={(itemValue, itemIndex) => setState({ ...state, selectedBloodGroup: itemValue })
-              }>
-              <Picker.Item label="Select" value="" />
-              <Picker.Item label="A+" value="A+" />
-              <Picker.Item label="A-" value="A-" />
-              <Picker.Item label="B+" value="B+" />
-              <Picker.Item label="B-" value="B-" />
-              <Picker.Item label="A1+" value="A1+" />
-              <Picker.Item label="A1-" value="A1-" />
-              <Picker.Item label="A2-" value="A2-" />
-              <Picker.Item label="A2+" value="A2+" />
-              <Picker.Item label="AB+" value="AB+" />
-              <Picker.Item label="AB-" value="AB-" />
-              <Picker.Item label="A1B+" value="A1B+" />
-              <Picker.Item label="A1B-" value="A1B-" />
-              <Picker.Item label="A2B+" value="A2B+" />
-              <Picker.Item label="A2B-" value="A2B-" />
-              <Picker.Item label="O+" value="O+" />
-              <Picker.Item label="O-" value="O-" />
-              <Picker.Item label="INRA" value="INRA" />
-              <Picker.Item label="Other" value="Other" />
 
-            </Picker>
-          </View>
-          {state.selectedBloodGroup === "Other" ?
-            <TextInput
-              style={[styles.textInput,
-              { color: colors.text }
-              ]}
-              onChangeText={(val) => otherBloodHandler(val)}
-              placeholder="Enter Blood Group"></TextInput>
-            : null}
-        </View>
+        {state.O2_Bed ?
 
-        <View style={[, styles.cardview,]}>
-          <Text style={styles.title}>No of Units</Text>
+          <Animatable.View style={[BloodRequestScreenStyle.cardview,]} animation="bounceInRight">
+            <Text style={BloodRequestScreenStyle.title}>No of Oxygen Beds Available</Text>
 
-          <View style={[signupstyles.action,]}>
-            <Icon name="blood-bag" color={colors.text} size={20} />
-            <TextInput placeholder="Units"
-              keyboardType="phone-pad"
-              style={[signupstyles.textInput, { color: colors.text }]} autoCapitalize="none"
-              onChangeText={(val) => handlenoofUnits(val)}
-            >{state.noofunits}
-            </TextInput>
-            {state.check_textInput_noofunits ?
-              <Animatable.View
-                animation="bounceIn">
-                <Feather
-                  name="check-circle"
-                  color="green"
-                  size={20}
-                />
-              </Animatable.View>
-              : null}
-            <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
-          </View>
-        </View>
+            <View style={[signupstyles.action,]}>
+              <Fontisto name="bed-patient" color='black' size={30} />
+              <TextInput placeholder="Units"
+                keyboardType="phone-pad"
+                style={[signupstyles.textInput, { color: colors.text, paddingLeft: '5%' }]} autoCapitalize="none"
+                onChangeText={(val) => handleO2bedcount(val)}
+              >{state.O2_Bed_Count}
+              </TextInput>
+              {state.O2_Bed_Count > 0 && state.O2_Bed_Count ?
+                <Animatable.View
+                  animation="bounceIn">
+                  <Feather
+                    name="check-circle"
+                    color="green"
+                    size={20}
+                  />
+                </Animatable.View>
+                : null}
+              <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
+            </View>
+          </Animatable.View>
 
+          : null}
 
+        {state.ICU_Bed ?
 
-        <View style={styles.cardview}>
-          {/* <GooglePlacesAutocomplete
-              placeholder='Search'
-              minLength={2}
-              autoFocus={true}
-              fetchDetails={true}
-              nearbyPlacesAPI='GooglePlacesSearch'
-              renderDescription={row => row.description}
-              listViewDisplayed={false}
-              returnKeyType={'search'}
-              debounce={200}
-              onPress={(data, details = null) => {
-                console.log("run");
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-              }}
-              query={{
-                key: 'AIzaSyDGe5vjL8wBmilLzoJ0jNIwe9SAuH2xS_0',
-                language: 'en',
-              }}
-              
-              // currentLocation={true}
-              // currentLocationLabel='Current location'
-            
-            /> */}
+          <Animatable.View style={[BloodRequestScreenStyle.cardview,]} animation="bounceInRight">
+            <Text style={BloodRequestScreenStyle.title}>No of ICU Beds Available</Text>
+
+            <View style={[signupstyles.action,]}>
+              <Fontisto name="bed-patient" color='black' size={30} />
+              <TextInput placeholder="Units"
+                keyboardType="phone-pad"
+                style={[signupstyles.textInput, { color: colors.text, paddingLeft: '5%' }]} autoCapitalize="none"
+                onChangeText={(val) => handleICUbedcount(val)}
+              >{state.ICU_Bed_Count}
+              </TextInput>
+              {state.ICU_Bed_Count > 0 && state.ICU_Bed_Count ?
+                <Animatable.View
+                  animation="bounceIn">
+                  <Feather
+                    name="check-circle"
+                    color="green"
+                    size={20}
+                  />
+                </Animatable.View>
+                : null}
+              <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
+            </View>
+          </Animatable.View>
+
+          : null}
+
+        {state.O2_Supply ?
+
+          <Animatable.View style={[BloodRequestScreenStyle.cardview,]} animation="bounceInRight">
+            <Text style={BloodRequestScreenStyle.title}>No of Oxygen Cylinder Available</Text>
+
+            <View style={[signupstyles.action,]}>
+              <MaterialCommunityIcons name="gas-cylinder" color='black' size={30} />
+              <TextInput placeholder="Units"
+                keyboardType="phone-pad"
+                style={[signupstyles.textInput, { color: colors.text, paddingLeft: '5%' }]} autoCapitalize="none"
+                onChangeText={(val) => handleO2Supplycount(val)}
+              >{state.O2_Supply_Count}
+              </TextInput>
+              {state.O2_Supply_Count > 0 && state.O2_Supply_Count ?
+                <Animatable.View
+                  animation="fadeInUpBig">
+                  <Feather
+                    name="check-circle"
+                    color="green"
+                    size={20}
+                  />
+                </Animatable.View>
+                : null}
+              <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
+            </View>
+          </Animatable.View>
+
+          : null}
 
 
+        <View style={BloodRequestScreenStyle.cardview}>
 
           <View>
-            <Text style={styles.title}>Hospital Address</Text>
+            <Text style={BloodRequestScreenStyle.title}>Hospital Address</Text>
 
             <View style={[signupstyles.action, { paddingTop: "2%" }]}>
               <FontAwesome name="hospital-o" color={colors.text} size={20} />
@@ -666,11 +820,11 @@ const clear_Dispatch=()=>{
 
               <View style={[Editprofilestyle.rowview, { padding: '2%', marginTop: 0, paddingBottom: '4%' }]}>
                 <TouchableOpacity onPress={() => OnPress_Pick_Location_Handler()}
-                  style={[styles.buttonSign, Editprofilestyle.rowview,]}
+                  style={[BloodRequestScreenStyle.buttonSign, Editprofilestyle.rowview,]}
                   activeOpacity={.55}
                 >
                   <Entypo name="location-pin" color={colors.text} size={30} />
-                  <Text style={[styles.textSign, { color: "#009387", marginLeft: '20%', fontSize: 20 }]}>Pick Location</Text>
+                  <Text style={[BloodRequestScreenStyle.textSign, { color: "#009387", marginLeft: '20%', fontSize: 20 }]}>Pick Location</Text>
                 </TouchableOpacity>
               </View>
 
@@ -679,21 +833,21 @@ const clear_Dispatch=()=>{
               <View   >
                 <View style={[signupstyles.action]}>
                   <FontAwesome5 style={{ paddingTop: '1%', color: 'green' }} name="address-card" size={30} />
-                  <TextInput  multiline={true} 
-                  style={[signupstyles.textInput, { color: colors.text }]}
-                  onChangeText={(val) => handleaddress(val)}
+                  <TextInput multiline={true}
+                    style={[signupstyles.textInput, { color: colors.text }]}
+                    onChangeText={(val) => handleaddress(val)}
                   >{user_data_user_request_address_line1}</TextInput>
-                  {user_data_user_request_address_line1!==null ?
-                <Animatable.View
-                  animation="bounceIn">
-                  <Feather
-                    name="check-circle"
-                    color="green"
-                    size={20}
-                  />
-                </Animatable.View>
-                : null}
-              <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
+                  {user_data_user_request_address_line1 !== null ?
+                    <Animatable.View
+                      animation="bounceIn">
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                  <Feather style={Editprofilestyle.editicon} name="edit-2" color={colors.text} size={20} />
                 </View>
               </View>
               : null
@@ -768,8 +922,8 @@ const clear_Dispatch=()=>{
 
 
 
-        <View style={[, styles.cardview,]}>
-          <Text style={styles.title}>Contact details</Text>
+        <View style={[, BloodRequestScreenStyle.cardview,]}>
+          <Text style={BloodRequestScreenStyle.title}>Contact details</Text>
 
           <View style={[signupstyles.action,]}>
             <FontAwesome name="user-o" color={colors.text} size={20} />
@@ -827,48 +981,13 @@ const clear_Dispatch=()=>{
   );
 };
 
-export default Blood_Request_Screen;
+export default Covid_Data_Add_Screen;
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginBottom: '20%',
-    marginTop:'15%'
-  },
-  radioButtonstyle: {
+  bed_space_style: {
     flexDirection: 'row',
-    // alignItems: 'center', 
-    // justifyContent: 'center',
-    marginRight: '2%',
-
-  },
-  textInputs: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
-  },
-  title: {
-    fontWeight: 'bold',
-    // marginBottom:'3%',
-  },
-  content: {
-    marginLeft: '3%',
-    marginTop: '1%',
-
-  },
-
-  cardview: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 7,
-    shadowOpacity: 0.25,
-    elevation: 5,
-    backgroundColor: 'white',
-    padding: '4%',
-    paddingLeft: '6%',
-    borderRadius: 20,
-    margin: '2%',
-
+    justifyContent: 'space-between',
+    marginLeft: '5%',
+    marginRight: '5%'
   }
 });

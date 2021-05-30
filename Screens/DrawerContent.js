@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, ImageBackground } from 'react-native';
 import {
     useTheme,
     Avatar,
@@ -67,118 +67,127 @@ export function DrawerContent(props) {
 
     return (
         <View style={{ flex: 1 }}>
+            {/* <ImageBackground
+                source={require("../assets/bg/profile.png")}
+                style={{ width: "100%", height: "100%" }}
+            > */}
+                <DrawerContentScrollView {...props}>
 
-            <DrawerContentScrollView {...props}>
+                    <View>
+                        <View style={styles.drawerContent}>
+                            <View style={styles.userInfoSection}>
+                                <View style={{ flexDirection: 'row', marginTop: '3%', alignSelf: 'center', paddingRight: '25%' }}>
 
-                <View>
-                    <View style={styles.drawerContent}>
-                        <View style={styles.userInfoSection}>
-                            <View style={{ flexDirection: 'row', marginTop: '3%', alignSelf: 'center', paddingRight: '25%' }}>
-
-                                {user_data_isUserImageAvailable ?
-                                    <Image
-                                        source={{ uri: user_data_isUserImageAvailable }}
-                                        style={[ProfileStyles.profileImg, { height: screen_width / 2.5, width: screen_width / 2.5, borderColor: 'black', borderWidth: 1, }]}
-                                        imageStyle={[{ borderRadius: screen_width / 10, }]} />
-                                    :
-                                    <FontAwesome name="user-circle-o" color={paperTheme.colors.text} size={screen_width / 2.5} />
-                                }
-                            </View>
-
-                            <View style={{ 
-                                justifyContent:'center'
-                                // alignItems: 'flex-start'
-                                 }}>
-                                <Title style={[ProfileStyles.title]}>{user_data_user_name}</Title>
-                                {user_data_user_first_name !== '' && user_data_user_first_name !== null ?
-                                    <Caption style={[styles.caption]}>{user_data_user_first_name} {user_data_user_last_name}</Caption>
-                                    : null}
-                                {user_data_user_email !== '' && user_data_user_email !== null ?
-                                    <Caption style={[styles.caption, { paddingBottom: '2%' }]}>{user_data_user_email}</Caption>
-                                    : null}
-                            </View>
-
-
-                            <View style={styles.row}>
-                                <View style={styles.section}>
-                                    <Paragraph style={[styles.paragraph, styles.caption]}>{((user_data_user_bood_donated === null || user_data_user_bood_donated === '') ? 0 : user_data_user_bood_donated)}</Paragraph>
-                                    <Caption style={styles.caption}> Donated</Caption>
+                                    {user_data_isUserImageAvailable ?
+                                        <Image
+                                            source={{ uri: user_data_isUserImageAvailable }}
+                                            style={[ProfileStyles.profileImg,ProfileStyles.cardview,
+                                                 { height: screen_width / 2.5, width: screen_width / 2.5, 
+                                                 
+                                                  borderRadius: 200
+                                                }]}
+                                            imageStyle={[{ borderRadius: screen_width / 10, }]} />
+                                        :
+                                        <View style={[ProfileStyles.cardview,{borderRadius: 200,} ]}>
+                                        <FontAwesome name="user-circle-o" color={paperTheme.colors.text} size={screen_width / 2.5} />
+                                        </View>
+                                    }
                                 </View>
-                                <View style={styles.section}>
-                                    <Paragraph style={[styles.paragraph, styles.caption]}>{((user_data_user_bood_request_raised === null || user_data_user_bood_request_raised === '') ? 0 : user_data_user_bood_request_raised)}</Paragraph>
-                                    <Caption style={styles.caption}> Raised</Caption>
+
+                                <View style={{
+                                    justifyContent: 'center'
+                                    // alignItems: 'flex-start'
+                                }}>
+                                    <Title style={[ProfileStyles.title]}>{user_data_user_name}</Title>
+                                    {user_data_user_first_name !== '' && user_data_user_first_name !== null ?
+                                        <Caption style={[styles.caption]}>{user_data_user_first_name} {user_data_user_last_name}</Caption>
+                                        : null}
+                                    {user_data_user_email !== '' && user_data_user_email !== null ?
+                                        <Caption style={[styles.caption, { paddingBottom: '2%' }]}>{user_data_user_email}</Caption>
+                                        : null}
+                                </View>
+
+
+                                <View style={styles.row}>
+                                    <View style={styles.section}>
+                                        <Paragraph style={[styles.paragraph, styles.caption]}>{((user_data_user_bood_donated === null || user_data_user_bood_donated === '') ? 0 : user_data_user_bood_donated)}</Paragraph>
+                                        <Caption style={styles.caption}> Donated</Caption>
+                                    </View>
+                                    <View style={styles.section}>
+                                        <Paragraph style={[styles.paragraph, styles.caption]}>{((user_data_user_bood_request_raised === null || user_data_user_bood_request_raised === '') ? 0 : user_data_user_bood_request_raised)}</Paragraph>
+                                        <Caption style={styles.caption}> Raised</Caption>
+                                    </View>
                                 </View>
                             </View>
+
                         </View>
 
-                    </View>
 
+                        <Drawer.Section style={styles.drawerSection}>
+                            <DrawerItem
+                                icon={({ color, size }) => (
+                                    <Icon
+                                        name="home-outline"
+                                        color={color}
+                                        size={size}
+                                    />
+                                )}
+                                label="Main Home"
+                                onPress={() => { props.navigation.navigate('MainHome') }}
+                            />
 
-                    <Drawer.Section style={styles.drawerSection}>
+                        </Drawer.Section>
+
+                        <Drawer.Section style={styles.drawerSection}>
+                            <DrawerItem
+                                icon={({ color, size }) => (
+                                    <Icon
+                                        name="home-outline"
+                                        color={color}
+                                        size={size}
+                                    />
+                                )}
+                                label="Blood Home"
+                                onPress={() => { props.navigation.navigate('BloodHome') }}
+                            />
+
+                        </Drawer.Section>
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <Fontisto name="blood-drop" color={color}
+                                    size={size} />
+                            )}
+                            label="My Blood Request"
+                            onPress={() => { props.navigation.navigate('My_Request_Raised_Screen') }}
+                        />
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                // <Icon 
+                                // name="bookmark-outline" 
+                                // color={color}
+                                // size={size}
+                                // />
+                                <Fontisto name="blood-drop" color={color}
+                                    size={size} />
+
+                            )}
+
+                            label="My Blood Donation"
+                            onPress={() => { props.navigation.navigate('My_Blood_Donated_Screen') }}
+                        />
                         <DrawerItem
                             icon={({ color, size }) => (
                                 <Icon
-                                    name="home-outline"
+                                    name="settings-outline"
                                     color={color}
                                     size={size}
                                 />
+
                             )}
-                            label="Main Home"
-                            onPress={() => { props.navigation.navigate('MainHome') }}
+                            label="SOS Screen Setting"
+                            onPress={() => { props.navigation.navigate('SOSScreen') }}
                         />
-
-                    </Drawer.Section>
-
-                    <Drawer.Section style={styles.drawerSection}>
-                        <DrawerItem
-                            icon={({ color, size }) => (
-                                <Icon
-                                    name="home-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Blood Home"
-                            onPress={() => { props.navigation.navigate('BloodHome') }}
-                        />
-
-                    </Drawer.Section>
-                    <DrawerItem
-                        icon={({ color, size }) => (
-                            <Fontisto name="blood-drop" color={color}
-                                size={size} />
-                        )}
-                        label="My Blood Request"
-                        onPress={() => { props.navigation.navigate('My_Request_Raised_Screen') }}
-                    />
-                    <DrawerItem
-                        icon={({ color, size }) => (
-                            // <Icon 
-                            // name="bookmark-outline" 
-                            // color={color}
-                            // size={size}
-                            // />
-                            <Fontisto name="blood-drop" color={color}
-                                size={size} />
-
-                        )}
-
-                        label="My Blood Donation"
-                        onPress={() => { props.navigation.navigate('My_Blood_Donated_Screen') }}
-                    />
-                    <DrawerItem
-                        icon={({ color, size }) => (                            
-                            <Icon
-                            name="settings-outline"
-                            color={color}
-                            size={size}
-                        />
-
-                        )}
-                        label="SOS Screen Setting"
-                        onPress={() => { props.navigation.navigate('SOSScreen') }}
-                    />
-                    {/* <DrawerItem
+                        {/* <DrawerItem
                         icon={({ color, size }) => (
                             <Icon
                                 name="bookmark-outline"
@@ -189,7 +198,7 @@ export function DrawerContent(props) {
                         label="Bookmarks"
                         onPress={() => { props.navigation.navigate('BookmarkScreen') }}
                     /> */}
-                    {/* <DrawerItem 
+                        {/* <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="settings-outline" 
@@ -200,7 +209,7 @@ export function DrawerContent(props) {
                             label="Settings"
                             onPress={() => {props.navigation.navigate('SettingScreen')}}
                         /> */}
-                    {/* <DrawerItem
+                        {/* <DrawerItem
                         icon={({ color, size }) => (
                             <Icon
                                 name="account-check-outline"
@@ -211,7 +220,7 @@ export function DrawerContent(props) {
                         label="Support"
                         onPress={() => { props.navigation.navigate('SupportScreen') }}
                     /> */}
-                     {/*  Theme is disabled
+                        {/*  Theme is disabled
                     {/* <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => { toggleTheme() }}>
                             <View style={styles.preference}>
@@ -222,12 +231,12 @@ export function DrawerContent(props) {
                             </View>
                         </TouchableRipple>
                     </Drawer.Section> */}
-                </View>
+                    </View>
 
-            </DrawerContentScrollView>
+                </DrawerContentScrollView>
 
-            <Drawer.Section style={styles.bottomDrawerSection}>
-                {/* <DrawerItem
+                <Drawer.Section style={styles.bottomDrawerSection}>
+                    {/* <DrawerItem
                     icon={({ color, size }) => (
                         <Icon
                             name="settings-outline"
@@ -239,20 +248,22 @@ export function DrawerContent(props) {
                     onPress={() => { props.navigation.navigate('SettingsScreen') }}
                 /> */}
 
-                <DrawerItem
+                    <DrawerItem
 
-                    icon={({ color, size }) => (
-                        <Icon
-                            name="exit-to-app"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="Sign Out"
-                    onPress={() => { signOut() }}
-                />
-            </Drawer.Section>
-            {/* <RetriveData userData={props} /> */}
+                        icon={({ color, size }) => (
+                            <Icon
+                                name="exit-to-app"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Sign Out"
+                        onPress={() => { signOut() }}
+                    />
+                </Drawer.Section>
+                {/* <RetriveData userData={props} /> */}
+
+            {/* </ImageBackground> */}
         </View>
     );
 

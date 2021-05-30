@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, Button, StyleSheet,StatusBar,ToastAndroid,TouchableOpacity } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { View, StyleSheet,StatusBar,ToastAndroid,TouchableOpacity } from 'react-native';
 //import Toaster from 'react-native-toaster';
 import {Currentlocation} from '../../components/context';
 import {useSelector,useDispatch} from 'react-redux';
@@ -10,6 +9,9 @@ import Covid_Screen from './Covid_Main_Screen';
 import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 import AnimateNumber from 'react-native-countup';
 import { width, height } from '../../components/Parameter';
+import {commonstyles} from '../../components/Styles';
+import { useTheme, Text, ActivityIndicator } from 'react-native-paper';
+import Click_to_flip_Component from '../../components/Click_to_flip_Component';
 const Covid_Cause_Screen = (props) => {
   const themes = useTheme();
   let datas=''
@@ -34,12 +36,25 @@ const Covid_Cause_Screen = (props) => {
   const { colors } = useTheme();
     return (
       <View style={styles.container}>   
-        <StatusBar  barStyle= {themes.dark ?"light-content":"default-content" } />        
+        <StatusBar  barStyle= {themes.dark ?"light-content":"default-content" } />  
+             
+        {props.countrty ?   
             <View style={[MainScreenStyles.cardview,
-            { padding: 0,paddingTop:'3%'}
+            { padding: 0}
           ]}>
-            <View style={[{alignItems:'center',              
-            }]}>
+            <View 
+              style={{alignItems: 'center'}} >
+                {props.countrty ===" India"
+                ?<Click_to_flip_Component cardface={"back"}/>
+                :
+                <Click_to_flip_Component cardface={"front"}/>
+              }
+           
+            </View>
+            <View>   
+            <View style={[{ padding: 0,
+            paddingTop:'3%',alignItems: 'center'}
+          ]}>
               <Text style={styles.fontstyles}>Covid Causes in {props.countrty}</Text>
             </View>
             <View style={[MainScreenStyles.row,{justifyContent:'space-evenly',
@@ -104,15 +119,20 @@ const Covid_Cause_Screen = (props) => {
               </View>                     
           </View>
           </View>
-          
+          </View>
         </View>  
         
+      :
+      <View style={[commonstyles.activityIndicatorStyle,{flex:1}]}>
+		{/* <ActivityIndicator size="large"/> */}
+		</View>
+      }
       </View>
     );
 };
 export default Covid_Cause_Screen;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1, 
     alignItems: 'center', 

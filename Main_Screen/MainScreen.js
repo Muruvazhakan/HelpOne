@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Button, StyleSheet, TouchableOpacity,ImageBackground } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -13,6 +13,7 @@ import Main_Screen_Top_Donor from './Main_Screen_Top_Donor';
 import Swiper from 'react-native-swiper';
 import { ScrollView } from 'react-native-gesture-handler';
 import Main_Covid_Screen_Navigation from '../Screen_Navigation/Covid_Screen_Navigation';
+import Covid_Details_List_Limt_Screen from '../Covid_Screen/Covid_Home_Screen/Covid_Details_List_Limt_Screen';
 const MainScreen = (props) => {
   let navigation = props.navigation;
 
@@ -55,9 +56,16 @@ const MainScreen = (props) => {
       </View> */}
      
       {/* <FCM_Screen /> */}
-      {/* <RetriveData userData={props} /> */}      
+      {/* <RetriveData userData={props} /> */}  
+      <ImageBackground
+        source={require("../assets/bg/normal.png")}
+        style={{ width: "100%", height: "100%" }}
+        
+      >  
+      
       <Main_Screen_Top_Donor props={props}/>
       <Main_Covid_Screen_Navigation />
+      </ImageBackground>  
     </View>
   );
 };
@@ -83,7 +91,8 @@ export const styles = StyleSheet.create({
     marginBottom: '3%',
   },
   component: {
-    paddingLeft: '3%'
+    paddingLeft: '1%',
+    justifyContent:'center'
   },
   touchspacing: {
     paddingLeft: '2%',

@@ -1457,8 +1457,14 @@ const EditProfileScreen = ({ navigation }) => {
   }
   return (
     <ScrollView>
+      <ImageBackground
+        source={require("../../assets/bg/normal.png")}
+        style={{ width: "100%", height: "100%" }}
+      >
+      <SafeAreaView style={[styles.container, 
+        // styles.cardview
+        ]}>
 
-      <SafeAreaView style={[styles.container, styles.cardview]}>
 
         <BottomSheet
           ref={bs}
@@ -1900,7 +1906,7 @@ const EditProfileScreen = ({ navigation }) => {
         </TouchableOpacity>
 
       </SafeAreaView>
-
+      </ImageBackground>
     </ScrollView>
   )
 };
@@ -1930,6 +1936,9 @@ export default EditProfileScreen;
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop:'12%',
+    marginBottom: '20%',
+    // marginTop:'15%'
   },
   editicon: {
     marginRight: '1%',

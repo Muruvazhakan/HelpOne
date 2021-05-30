@@ -135,8 +135,8 @@ const SOSScreen = ({ navigation }) => {
     
   }
   return (
-    <View style={[MainScreenStyles.categoryBtn,{ paddingTop:'50%'}]} >
-      <View >
+    <View style={[MainScreenStyles.categoryBtn,]} >
+      <View style={[MainScreenStyles.container,]} >
        <TouchableOpacity onPress={() => handleSOSPress()}>
         
       <Image
@@ -158,10 +158,3 @@ const SOSScreen = ({ navigation }) => {
 
 export default SOSScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-});

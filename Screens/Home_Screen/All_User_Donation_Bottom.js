@@ -26,6 +26,7 @@ import SOSScreen from '../SOS_Componet/SOSScreen';
 import NetInfo from "@react-native-community/netinfo";
 import {Server_URL,Image_URL} from '../../components/Parameter';
 import {No_Image_Component} from './No_Image_Component';
+import Click_to_flip_Component from '../../components/Click_to_flip_Component';
 const All_User_Donation_Bottom = (props) => {
 
   const { colors } = useTheme();
@@ -460,7 +461,11 @@ const All_User_Donation_Bottom = (props) => {
   let proplen = 2;
   const renderFooter = () => {
     if (!state.checkserverdata) return (
-      <View>
+      <View style={[{
+        // paddingLeft:'5%'
+        marginBottom: '20%',
+        // marginTop:'15%'
+      }]}>
         <TouchableRipple style={EditProfileStyles.submit} onPress={() => handleRefresh()}>
           <Text style={EditProfileStyles.panelButtonTitle}>Refresh</Text>
         </TouchableRipple>
@@ -489,9 +494,11 @@ const All_User_Donation_Bottom = (props) => {
 
 
   return (
-    <SafeAreaView style={[ProfileScreenStyles.container, { margin: '2%', marginBottom: 0 }]}>
+    <SafeAreaView style={[ProfileScreenStyles.container, { margin: '2%', marginBottom: 0,
+    marginTop:0, 
+    }]}>
       {/* <SOSScreen navigation={props.navigation} /> */}
-      <View containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+      <View style={{ borderTopWidth: 0, borderBottomWidth: 0,  }}>
 
         {state.checkdataavailable ?
           <View>
@@ -503,7 +510,11 @@ const All_User_Donation_Bottom = (props) => {
               maxToRenderPerBatch={5}
               renderItem={({ item,index }) => (
                 <View
-                // style={[{paddingLeft:'5%'}]}
+                // style={[{
+                //   // paddingLeft:'5%'
+                //   marginBottom: '20%',
+                //   marginTop:'15%'
+                // }]}
                 >
                   <FlipCard
                     // style={styles.cardview}
@@ -525,12 +536,20 @@ const All_User_Donation_Bottom = (props) => {
                     onPress={() => handlepress(item)}> */}
                     <View style={[ProfileScreenStyles.cardview,
                     {
-                      alignItems: 'center', marginTop: '2%',
-                      borderRadius: 25, paddingTop: '4%'
+                      // alignItems: 'center',
+                      //  marginTop: '2%',
+                      borderRadius: 25,
+                       paddingTop: 0,
                     }]
                     }>
+                      <View style={{alignItems: 'flex-end'}} >
+                      <Click_to_flip_Component cardface={"front"}/>
+                      </View>
+                      
+                      <View style={{alignItems: 'center', marginTop: '2%', paddingTop: '4%'}} >
                       <View style={{ alignItems: 'center' }}>
 
+                           
                         <View style={[ProfileScreenStyles.row]}>
                           <FontAwesome name="id-badge" color={colors.text} size={20} />
                           <Text style={{ fontWeight: 'bold', marginLeft: '3%' }}>Blood Donation Id: {item.BloodDonationId}</Text>
@@ -616,15 +635,24 @@ const All_User_Donation_Bottom = (props) => {
 
                         </View>
                       </View>
-
+                      </View>
                     </View>
                     {/* back screen */}
                     <View style={[ProfileScreenStyles.cardview,
                     {
-                      alignItems: 'center', marginTop: '2%',
-                      borderRadius: 25, paddingTop: '4%'
+                      // alignItems: 'center', 
+                      // marginTop: '2%',
+                      borderRadius: 25, 
+                      paddingTop: 0
                     }]
                     }>
+                       <View 
+                       style={{alignItems: 'flex-end'}} >
+                      <Click_to_flip_Component cardface={"back"}/>
+                      </View>
+
+                      <View style={{alignItems: 'center', marginTop: '2%', paddingTop: '4%'}} >
+
                       <View style={{ alignItems: 'center' }}>
 
                         <View style={[ProfileScreenStyles.row]}>
@@ -719,7 +747,7 @@ const All_User_Donation_Bottom = (props) => {
                           </View>
                         </View>
                       </View>
-
+                      </View>
                     </View>
 
 

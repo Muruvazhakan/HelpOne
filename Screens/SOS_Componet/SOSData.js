@@ -530,8 +530,8 @@ const SOSData = ({ navigation }) => {
       <View style={[
         EditProfileScreenStyles.cardview,
          { alignItems: 'center' }]}>
-        <Text>SOS Data</Text>
-        <Text>Enter User Detail to Notify them!</Text>
+        {/* <Text>SOS Data</Text> */}
+        <Text style={styles.sos_user,{color:'#aad',fontWeight:'bold'}} >Enter User Detail to Notify them!</Text>
       </View>
       <View style={EditProfileScreenStyles.cardview} >
         <Text  style={styles.sos_user}>Enter Your Help Message</Text>
@@ -713,6 +713,7 @@ export default SOSData;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop:'12%',
   },
   sos_user: {
     alignSelf:'center',

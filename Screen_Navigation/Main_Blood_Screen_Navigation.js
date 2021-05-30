@@ -9,6 +9,7 @@ import SettingsScreen from '../Screens/SettingsScreen';
 import SupportScreen from '../Screens/SupportScreen';
 import GetLocationmap from '../Screens/Blood_Request/GetLocationmap';
 import * as Screens from '../Screens/MainTabScreen';
+import * as ColorsCode from '../components/Color_Code';
 // import {RequestDisplayStackScreen,
 //     DonatedDisplayStackScreen,
 //     OTPStackScreen,
@@ -22,6 +23,7 @@ import Main_Ambulance_Screen_Navigation from './Ambulance_Screen_Navigation';
 import RetriveData from '../Store/Datafromstorage/RetriveData';
 import SOSScreen from '../Screens/SOS_Componet/SOSScreen';
 import * as CovidScreen from './Covid_Screen_Navigation';
+import Main_Covid_Screen_Tab_Navigation from './Tab_Navigation/Covid_Tab_Navigation'
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 let { username } = ' ';
@@ -61,12 +63,20 @@ const Main_Blood_Screen_Navigation = (props) => {
       
       {/* <Main_Covid_Screen_Navigation /> */}
       {/* Covid Screens */}
+      
+      <Drawer.Screen name="CovidHome" component={Main_Covid_Screen_Tab_Navigation} /> 
       <Drawer.Screen name="CovidHomeDrawer" component={CovidScreen.MainCovidStackScreen} /> 
       <Drawer.Screen name="CovidGlobalScreen" component={CovidScreen.CovidGlobalStackScreen} /> 
       <Drawer.Screen name="CovidIndiaScreen" component={CovidScreen.CovidIndiaStackScreen} /> 
       <Drawer.Screen name="CovidIndiaContactScreen" component={CovidScreen.CovidIndiaContactStackScreen} /> 
 
       <Drawer.Screen name="CovidIndiaBedScreen" component={CovidScreen.CovidIndiaBedStackScreen} /> 
+      <Drawer.Screen name="CovidIndiaMedicalCollegesScreen" component={CovidScreen.CovidIndiaMedicalCollegesStackScreen} /> 
+      <Drawer.Screen name="CovidIndiaTestScreen" component={CovidScreen.CovidIndiaTestStackScreen} /> 
+      <Drawer.Screen name="CovidIndiaGuidelinesScreen" component={CovidScreen.CovidIndiaGuidelinesStackScreen} /> 
+      <Drawer.Screen name="CovidDataAddScreen" component={CovidScreen.Covid_Data_Add_StackScreen} /> 
+      <Drawer.Screen name="CovidDataListScreen" component={CovidScreen.Covid_Data_Display_List_StackScreen} /> 
+      <Drawer.Screen name="CovidDataSingleDisplayScreen" component={CovidScreen.Covid_Data_Single_Display_Screen_StackScreen} /> 
       {/* <Drawer.Screen name="SearchMap" component={SearchMap} /> */} 
       
     </Drawer.Navigator>
@@ -81,10 +91,11 @@ const MainHomeStackScreen = ({ navigation }) => (
 
   <MainStack.Navigator
     screenOptions={{
+      headerTransparent:true,
       headerStyle: {
-        backgroundColor: "white"
+        backgroundColor : "transparent",       
       },
-      headerTintColor: "black",
+      headerTintColor : ColorsCode.blue_primary,
       headerTintStyle: "black",
       fontweight: 'bold',
       headerTitleAlign: 'center',
@@ -99,10 +110,11 @@ const MainHomeStackScreen = ({ navigation }) => (
           return (
             <View style={{ flexDirection: 'row' }}>
               <Ionicons.Button name="ios-menu" size={25}
-                backgroundColor="white" color='black'
+                backgroundColor="transparent"
+                 color={ColorsCode.blue_primary}
                 onPress={() => { navigation.openDrawer(); }}></Ionicons.Button>
 
-              <FontAwesome backgroundColor="white" color='black' name="user-circle-o" size={screen_width / 10}>
+              <FontAwesome backgroundColor="transparent" color={ColorsCode.blue_primary} name="user-circle-o" size={screen_width / 10}>
               </FontAwesome>
               <RetriveData userData={globalprops} />
             </View>

@@ -2,9 +2,12 @@ import React from 'react';
 import * as fetchCovid from '../Covid_Status/Covid_Fetch_Datas';
 // import Covid_Cause_Screen from '../Covid_Home_Screen/Covid_Cause_Screen';
 import FlipCard from 'react-native-flip-card';
+import { View } from 'react-native';
+import {commonstyles} from '../../components/Styles';
+import { useTheme, Text, ActivityIndicator } from 'react-native-paper';
 class Covid_Screen_India extends React.Component {
     state = {
-      data: {},
+      data: null,
       indiadata:{},
       country: '',
     }
@@ -33,7 +36,9 @@ class Covid_Screen_India extends React.Component {
     render() {
       const { data,indiadata, country } = this.state;
   
-      return (       
+      return (     
+        <View>
+          {data ?
         <FlipCard
                     // style={styles.cardview}
                     friction={6}
@@ -49,6 +54,13 @@ class Covid_Screen_India extends React.Component {
         <Covid_Cause_Screen data={indiadata} countrty="in India" countupstate="No"/>       
         */}
         </FlipCard>   
+      :
+<View style={commonstyles.activityIndicatorStyle}>
+		<ActivityIndicator size="large"/>
+		</View>
+    }
+      
+      </View> 
       );
     }
   }

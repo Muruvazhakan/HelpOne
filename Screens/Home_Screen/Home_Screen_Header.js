@@ -152,8 +152,14 @@ const Home_Screen_Header = (props) => {
             
            </View>
             */}
-      <View style={{ margin: 0, padding: 0 }}>
+      <View style={{ margin: 0, padding: 0,
+                  // paddingLeft:'5%'
+                  // marginBottom: '20%',
+                  marginTop:'15%'
+                 }}>
         <Swiper
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
           autoplay
           // horizontal={false}
           height={200}

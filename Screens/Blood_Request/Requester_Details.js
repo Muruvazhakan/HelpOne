@@ -23,6 +23,7 @@ import Share, {
 }
   // as ShareButton
   from 'react-native-share';
+
 const Requester_Details = (props) => {
   const { colors } = useTheme();
 
@@ -292,9 +293,11 @@ const Requester_Details = (props) => {
 
 
   return (
-    <ScrollView>
+    <ScrollView
+    showsVerticalScrollIndicator={false}
+    >
 
-      <SafeAreaView style={[{ paddingTop: '7%' }]} >
+      <SafeAreaView style={[EditProfileStyles.container]} >
         <View style={[ProfileScreenStyles.cardview, { alignSelf: 'stretch', fontSize: 30, fontWeight: 'bold' }]}>
           <Text style={[{ alignSelf: 'center', fontSize: 30, fontWeight: 'bold' }]} >Details</Text>
         </View>

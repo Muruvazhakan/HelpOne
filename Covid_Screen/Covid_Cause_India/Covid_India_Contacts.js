@@ -14,10 +14,12 @@ import FlipCard from 'react-native-flip-card';
 import Covid_Statewise_Data_Screen from './Covid_Statewise_Data_Screen';
 import { Picker } from '@react-native-community/picker';
 import Covid_India_Contacts_Screen from './Covid_India_Contacts_Screen';
+import {commonstyles} from '../../components/Styles';
+import { ActivityIndicator } from 'react-native-paper';
 class Covid_India_Contacts extends React.Component {
    var = {};
     state = {
-      contact: {}, 
+      contact: null, 
       new:{},
       primarycontacts:{
         number: null,
@@ -87,7 +89,13 @@ class Covid_India_Contacts extends React.Component {
       
       return (   
         <View>
+          {contact ?
         <Covid_India_Contacts_Screen props ={contact} primarycontacts={primarycontacts}  />   
+        : 
+        <View style={commonstyles.activityIndicatorStyle}>
+		<ActivityIndicator size="large"/>
+		</View>
+        }
         </View> 
       );
     }

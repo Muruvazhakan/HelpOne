@@ -196,3 +196,185 @@ export const fetchCovidBedData = async () => {
     return error;
   }
 };
+
+export const fetchCovidMedicalCollegesData = async () => {
+  let changeableUrl = Covid.Covid_Medical_Colleges_Stats_URL,
+  allbed=[],allcontactsplit="",finalbed={},lastupdate=[];
+  // location,confirmed;
+  
+  // console.log('[Covid_India_Contacts_Screen] changeableUrl ' +changeableUrl);
+  
+  try {     
+    // console.log("1 [Covid_India_Contacts_Screen] response ");             
+   await fetch(changeableUrl, {
+      method: 'post',
+    }).then(res => res.json()).then(res => {
+      console.log("[Covid_India_Fetch_Datas] fetchCovidBedData response");
+      // console.log( res);    
+      // console.log(res.data.contacts);              
+      
+      allbed=res.data;
+      // console.log(allbed); 
+      // console.log(allbed.summary); 
+      
+      // console.log("[Covid_India_Fetch_Datas] allcontact.regional response");
+      // console.log(allcontact.contacts); 
+      // allcontactsplit= allcontact.contacts.regional.map((contacts) => ({        
+      //   location:contacts.loc	 ,
+      //   number:contacts.number	,                 
+      // }))
+      // console.log( "[Covid_India_Fetch_Datas] allcontact contact");    
+      //  console.log(allcontactsplit);    
+      //  finalcontact = {allcontact , allcontactsplit}
+      //  console.log(finalcontact); 
+
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+   
+    // console.log("[Covid_India_Fetch_Datas] region datas");
+    // console.log(region);   
+    return allbed;
+    // return regiondata;
+  } catch (error) {
+    return error;
+  }
+};
+
+
+export const fetchCovidTestData = async () => {
+  let changeableUrl = Covid.Covid_Testing_Stats_URL,
+  alldata=[],allcontactsplit="",finalbed={},lastupdate=[];
+  // location,confirmed;
+  
+  // console.log('[Covid_India_Contacts_Screen] changeableUrl ' +changeableUrl);
+  
+  try {     
+    // console.log("1 [Covid_India_Contacts_Screen] response ");             
+   await fetch(changeableUrl, {
+      method: 'post',
+    }).then(res => res.json()).then(res => {
+      console.log("[Covid_India_Fetch_Datas] fetchCovidTestData ");
+      // console.log( res);    
+      // console.log(res.data.contacts);              
+      
+      alldata=res.data;
+      console.log(alldata); 
+      // console.log(allbed.summary); 
+      
+      // console.log("[Covid_India_Fetch_Datas] allcontact.regional response");
+      // console.log(allcontact.contacts); 
+      // allcontactsplit= allcontact.contacts.regional.map((contacts) => ({        
+      //   location:contacts.loc	 ,
+      //   number:contacts.number	,                 
+      // }))
+      // console.log( "[Covid_India_Fetch_Datas] allcontact contact");    
+      //  console.log(allcontactsplit);    
+      //  finalcontact = {allcontact , allcontactsplit}
+      //  console.log(finalcontact); 
+
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+   
+    // console.log("[Covid_India_Fetch_Datas] region datas");
+    // console.log(region);   
+    return alldata;
+    // return regiondata;
+  } catch (error) {
+    return error;
+  }
+};
+
+
+export const fetchCovidTestHistoryData = async () => {
+  let changeableUrl = Covid.Covid_Testing_History_Stats_URL,
+  alldata=[],allcontactsplit="",finalbed={},lastupdate=[];
+  // location,confirmed;
+  
+  // console.log('[Covid_India_Contacts_Screen] changeableUrl ' +changeableUrl);
+  
+  try {     
+    // console.log("1 [Covid_India_Contacts_Screen] response ");             
+   await fetch(changeableUrl, {
+      method: 'post',
+    }).then(res => res.json()).then(res => {
+      // console.log("[Covid_India_Fetch_Datas] fetchCovidTestData ");
+      // console.log( res);    
+      // console.log(res.data.contacts);              
+      
+      alldata=res.data;
+      // console.log(alldata); 
+      // console.log(allbed.summary); 
+      
+      // console.log("[Covid_India_Fetch_Datas] allcontact.regional response");
+      // console.log(allcontact.contacts); 
+      // allcontactsplit= allcontact.contacts.regional.map((contacts) => ({        
+      //   location:contacts.loc	 ,
+      //   number:contacts.number	,                 
+      // }))
+      // console.log( "[Covid_India_Fetch_Datas] allcontact contact");    
+      //  console.log(allcontactsplit);    
+      //  finalcontact = {allcontact , allcontactsplit}
+      //  console.log(finalcontact); 
+
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+   
+    // console.log("[Covid_India_Fetch_Datas] region datas");
+    // console.log(region);   
+    return alldata;
+    // return regiondata;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchCovidGuidelinesData = async () => {
+  let changeableUrl = Covid.Covid_Notifications_URL,
+  alldata=[],allcontactsplit="",finalbed={},lastupdate=[];
+  // location,confirmed;
+  
+  // console.log('[Covid_India_Contacts_Screen] changeableUrl ' +changeableUrl);
+  
+  try {     
+    // console.log("1 [Covid_India_Contacts_Screen] response ");             
+   await fetch(changeableUrl, {
+      method: 'post',
+    }).then(res => res.json()).then(res => {
+      console.log("[Covid_India_Fetch_Datas] fetchCovidGuidelinesData ");
+      // console.log( res);    
+      // console.log(res.data.contacts);              
+      
+      alldata=res.data;
+      console.log(alldata); 
+      console.log("[Covid_India_Fetch_Datas] fetchCovidGuidelinesData over ");
+      
+      // console.log("[Covid_India_Fetch_Datas] allcontact.regional response");
+      // console.log(allcontact.contacts); 
+      // allcontactsplit= allcontact.contacts.regional.map((contacts) => ({        
+      //   location:contacts.loc	 ,
+      //   number:contacts.number	,                 
+      // }))
+      // console.log( "[Covid_India_Fetch_Datas] allcontact contact");    
+      //  console.log(allcontactsplit);    
+      //  finalcontact = {allcontact , allcontactsplit}
+      //  console.log(finalcontact); 
+
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+   
+    // console.log("[Covid_India_Fetch_Datas] region datas");
+    // console.log(region);   
+    return alldata;
+    // return regiondata;
+  } catch (error) {
+    return error;
+  }
+};

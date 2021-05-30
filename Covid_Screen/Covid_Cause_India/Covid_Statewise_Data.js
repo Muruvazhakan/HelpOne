@@ -11,11 +11,13 @@ import * as fetchCovid from './Covid_India_Fetch_Datas';
 // import Covid_Cause_Screen from '../Covid_Home_Screen/Covid_Cause_Screen';
 import FlipCard from 'react-native-flip-card';
 import Covid_Statewise_Data_Screen from './Covid_Statewise_Data_Screen';
+import { ActivityIndicator } from 'react-native-paper';
 class Covid_Screen_India extends React.Component {
     state = {
       data: {},
       indiadata:[],
       country: '',
+      isLoading:true,
     }
   
     async componentDidMount() {
@@ -30,7 +32,8 @@ class Covid_Screen_India extends React.Component {
     //  const  indiadatasj= JSON.parse(indiadatas);
       // console.log("datass");
       this.setState({        
-       indiadata:indiadatas });
+       indiadata:indiadatas,
+       isLoading:false });
       //  console.log(this.state.indiadata);
 
       //  {this.state.indiadata.map((regiondata, index) => {
@@ -48,8 +51,21 @@ class Covid_Screen_India extends React.Component {
     }
   
     render() {
-      const { data,indiadata, country } = this.state;
-      
+      const { data,indiadata, country,isLoading } = this.state;
+      if( isLoading ) {
+        return(
+          <View style={{
+            //  flex:1,
+            justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large"/>
+            {/* <Text  style={{ 
+              flex:1,     
+            justifyContent:'center',alignItems:'center'}}>Donate Blood</Text>        */}
+            
+            
+          </View>
+        );
+      }
       return (        
         <View style={styles.container}> 
         <Covid_Statewise_Data_Screen data={indiadata}  countupstate="No" />

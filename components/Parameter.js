@@ -2,7 +2,7 @@ import {
       Dimensions
 } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
-const { width, height } = Dimensions.get('window');
+export const { width, height } = Dimensions.get('window');
 export const screen_width = width;
 export const screen_height = height; 
 import { Alert,ToastAndroid,ActivityIndicator,View } from 'react-native';
@@ -75,4 +75,5 @@ fetch(Ip_Address_URL,
       })
         .catch((error) => {
           console.error(error);
-        });        
+        });      
+      

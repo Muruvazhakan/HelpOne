@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text,
    Button, StyleSheet,StatusBar,ToastAndroid,
-   TouchableOpacity,Linking,ActivityIndicator } from 'react-native';
+   TouchableOpacity,Linking } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 //import Toaster from 'react-native-toaster';
 import {useSelector,useDispatch} from 'react-redux';
@@ -10,15 +10,15 @@ import {styles as MainScreenStyles} from '../../../Main_Screen/MainScreen';
 import * as fetchCovid from '../Covid_India_Fetch_Datas';
 import { ScrollView } from 'react-native-gesture-handler';
 import FlipCard from 'react-native-flip-card';
-
+import { ActivityIndicator } from 'react-native-paper';
 import { Picker } from '@react-native-community/picker';
 import Covid_Bed_Details_Screen from './Covid_Bed_Details_Screen';
 class Covid_Bed_Details extends React.Component {   
     state = {
-      bed: {}, 
+      bed: null, 
       summary:{},     
       selectedbedloc:null,
-      isLoading:false, 
+      isLoading:true, 
     }
  
     async componentDidMount() {
@@ -77,20 +77,16 @@ class Covid_Bed_Details extends React.Component {
   
     render() {
       const { bed,summary } = this.state;
-      if( this.state.isLoading ) {
-        return(
-          <View style={{
-             flex:1,
-            justifyContent:'center',alignItems:'center'}}>
-            <ActivityIndicator size="large"/>
-            {/* <Text  style={{ 
-              flex:1,     
-            justifyContent:'center',alignItems:'center'}}>Donate Blood</Text>        */}
+      // if( bed ) {
+      //   return(
+      //     <View style={{
+      //       //  flex:1,
+      //       justifyContent:'center',alignItems:'center'}}>
+      //       <ActivityIndicator size="large"/>         
             
-            
-          </View>
-        );
-      }
+      //     </View>
+      //   );
+      // }
       return (   
         <View>
         <Covid_Bed_Details_Screen props ={bed} summary={summary}  />   

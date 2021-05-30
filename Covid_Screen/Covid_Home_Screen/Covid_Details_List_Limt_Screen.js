@@ -8,30 +8,29 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { styles as ProfileScreenStyles } from '../Screens/ProfileScreen/ProfileScreen';
+import { styles as ProfileScreenStyles } from '../../Screens/ProfileScreen/ProfileScreen';
 import { useSelector } from 'react-redux';
 import { List, ListItem, SearchBar } from "react-native-elements";
 import { TouchableRipple, useTheme, Text } from 'react-native-paper';
-import { styles as EditProfileStyles } from '../Screens/ProfileScreen/EditProfileScreen';
+import { styles as EditProfileStyles } from '../../Screens/ProfileScreen/EditProfileScreen';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { styles as signupstyles } from '../Screens/SignIn/SignUpScreen';
-import { styles as BloodRequestScreenStyles } from '../Screens/Blood_Request/Blood_Request_Screen';
-import { styles as MainScreenStyles } from './MainScreen';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { styles as signupstyles } from '../../Screens/SignIn/SignUpScreen';
+import { styles as BloodRequestScreenStyles } from '../../Screens/Blood_Request/Blood_Request_Screen';
+import { styles as MainScreenStyles } from '../../Main_Screen/Main_Screen_Icons';
 // import { styles as Home_Screen_Header } from '../Screens/Home_Screen/Home_Screen_Header';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { color } from 'react-native-reanimated';
 import FlipCard from 'react-native-flip-card';
-import * as gcp from '../components/GCP_component';
-import SOSScreen from '../Screens/SOS_Componet/SOSScreen';
+import SOSScreen from '../../Screens/SOS_Componet/SOSScreen';
 import NetInfo from "@react-native-community/netinfo";
-import * as URL from '../components/Parameter';
-import { screen_width, screen_height } from '../components/Parameter';
+import * as URL from '../../components/Parameter';
+import { screen_width, screen_height } from '../../components/Parameter';
 import Swiper from 'react-native-swiper';
-import Main_Screen_Icons from './Main_Screen_Icons';
-import * as Color_Code from '../components/Color_Code';
-import Covid_Details_List_Limt_Screen from '../Covid_Screen/Covid_Home_Screen/Covid_Details_List_Limt_Screen';
-const Main_Screen_Top_Donor = (props) => {
+import Main_Screen_Icons from '../../Main_Screen/Main_Screen_Icons';
+import * as Color_Code from '../../components/Color_Code';
+const Covid_Details_List_Limt_Screen = (props) => {
   var setupretrivedata = [];
   const { colors } = useTheme();
   var image_width = screen_width * 0.70;
@@ -45,36 +44,21 @@ const Main_Screen_Top_Donor = (props) => {
   const initialState = {
     isHorizontal: true,
     imageLoading: true,
-    retrivedonor: [],
     page: 0,
     checkserverdata: true,
     refreshing: false,
     checkdataavailable: false,
     contact_name: "",
     user_number: user_data_user_number,
-    contact_number: "",
-    hospitalname: null,
-    pincode: null,
-    noofunits: 0,
-    BloodGroup: null,
-    status: null,
-    requiredtype: '',
-    replacementavailable: '',
-    loactionAddress: {
-      address: ' test address',
-      city: 'test city',
-      area: ' test area',
-      statename: 'test state ',
-      latitude: 37.425998333,
-      longitude: -110.125100000,
-    },
+
+
     noofdonoraccepted: 0,
     bloodrequesttime: '',
     isLoading: true,
     checkdiplayselected: false,
     selectedvalue: [],
     fulldata: [],
-    search: '',
+
     network_flag: false,
   };
   var test = false;
@@ -207,7 +191,7 @@ const Main_Screen_Top_Donor = (props) => {
   }
 
   const onRetrive_Donor_Data = () => {
-    let API_URL = `${URL.Server_URL}/Main_Screen/Main_Screen_Top_Donor.php`;
+    let API_URL = `${URL.Server_URL}/Covid_Components/Covid_Home_Components/Covid_Details_List_Limt.php`;
 
     fetch(API_URL, {
       method: 'post',
@@ -231,15 +215,15 @@ const Main_Screen_Top_Donor = (props) => {
         isLoading: false,
         refreshing: false,
       });
-      console.log("[Main_Screen_Top_Donor] isLoading & checkdataavailable:  " + state.isLoading + state.checkdataavailable);
+      console.log("[Covid_Details_List_Limt_Screen] isLoading & checkdataavailable:  " + state.isLoading + state.checkdataavailable);
       if (res == "No") {
-        console.log("[Main_Screen_Top_Donor] No");
+        console.log("[Covid_Details_List_Limt_Screen] No");
         setState({
           ...state,
           checkdataavailable: false,
           isLoading: false,
         });
-        ToastAndroid.show("No Blood  Request is Available, Please try after some time", ToastAndroid.LONG);
+        //ToastAndroid.show("No is Available, Please try after some time", ToastAndroid.LONG);
         // console.log(state.isBoodRequestAvailable);
         // console.log(" onMapget2 state.isRequestCompleted");
         // console.log(state.isRequestCompleted);
@@ -247,7 +231,7 @@ const Main_Screen_Top_Donor = (props) => {
       else {
 
         setupretrivedata = JSON.parse(res);
-        console.log("[Main_Screen_Top_Donor] retriveserverdata before");
+        console.log("[Covid_Details_List_Limt_Screen] retriveserverdata before");
         console.log(setupretrivedata);
 
         setState({
@@ -266,7 +250,7 @@ const Main_Screen_Top_Donor = (props) => {
 
         }
         //addRecords(0);
-        //console.log("[Main_Screen_Top_Donor] isLoading & checkdataavailable: done  " + state.isLoading + state.checkdataavailable);
+        //console.log("[Covid_Details_List_Limt_Screen] isLoading & checkdataavailable: done  " + state.isLoading + state.checkdataavailable);
       }
       //console.log("retriveserverdata after"+state.retrivedonor);  
     })
@@ -276,21 +260,14 @@ const Main_Screen_Top_Donor = (props) => {
   }
 
   useEffect(() => {
-  //  console.log("[Main_Screen_Top_Donor] props: ", props.props);
-    // console.log("[Main_Screen_Top_Donor] props:props.navigation ", props.props.navigation);
-    // console.log("[Main_Screen_Top_Donor] props:navigation. ", props.navigation);
+    console.log("[Covid_Details_List_Limt_Screen] props: ", props);
+    // console.log("[Covid_Details_List_Limt_Screen] props:props.navigation ", props.props.navigation);
+    // console.log("[Covid_Details_List_Limt_Screen] props:navigation. ", props.navigation);
     loadProducts();
 
   }, []);
 
-  const renderHeader = () => {
-    return (
-      <View>
-        <Main_Screen_Icons props={props.props} />
-        <Text style={styles.donation_header}>Top Donors</Text>
-      </View>
-    )
-  };
+
 
   if (state.isLoading) {
     return (
@@ -301,7 +278,7 @@ const Main_Screen_Top_Donor = (props) => {
   }
 
   const handleRefresh = () => {
-    console.log("[Main_Screen_Top_Donor] refresh");
+    console.log("[Covid_Details_List_Limt_Screen] refresh");
     ToastAndroid.show("Refreshed", 200, ToastAndroid.LONG);
 
     setState(
@@ -319,76 +296,108 @@ const Main_Screen_Top_Donor = (props) => {
   return (
 
     <SafeAreaView>
-      <ScrollView       
-      showsHorizontalScrollIndicator={false}
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
       >
-        <View style={{ margin: 0, padding: 0,  marginTop:'12%',
-         }}>
-          <Main_Screen_Icons props={props.props} />
-          <Covid_Details_List_Limt_Screen navigation={props.props.navigation}/>
+        <View style={{
+          margin: 0, padding: 0,
+          // marginTop: '3%',
+        }}>
+
           {state.checkdataavailable ?
             <View>
-              <Text style={[styles.donation_header, { color: Color_Code.silver_primary }]}>Top Blood Donors</Text>
+              <Text style={[styles.donation_header,
+              { color: Color_Code.silver_primary }]}>Latest Details</Text>
               <Swiper
                 autoplay
                 // horizontal={false}
-                height={image_height}
-                activeDotColor="#bb0a1e">
+                height={CARD_WIDTH * 0.85}
+
+                activeDotColor="#76D7C4">
                 {state.fulldata.map((item, index) => (
                   <View>
                     <View>
                       <ScrollView key={index}
                         style={MainScreenStyles.touchspacing}>
-                        <View key={index} style={[ProfileScreenStyles.cardview,
-                        {
-                          alignItems: 'stretch', marginTop: '2%',
-                          borderRadius: 25, paddingTop: '4%', borderColor: '#14ded7',
-                        }]
-                        }>
-                          <View style={styles.rowalign}>
-                            <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                              <Image
-                                source={item.UserPhoto.trim() === "Yes"
-                                  ?
-                                  { uri: `${URL.Image_URL}${item.UserMobileNumber.trim()}.png` }
-                                  :
-                                  require('../assets/donor_img.png')}
-                                style={[styles.profileImg,
-                                {
-                                  height: image_width, width: image_width,
-                                  borderColor: 'green', borderWidth: 1, borderRadius: image_width * 0.25
-                                }]}
-                                imageStyle={[{ borderRadius: image_width * 0.2 }]} />
+                        <TouchableOpacity
+                          onPress={() => props.navigation.navigate('CovidDataListScreen')}
+                        >
+                          <View key={index} style={[ProfileScreenStyles.cardview,
+                          {
+                            alignItems: 'stretch', marginTop: '2%',
+                            borderRadius: 25, paddingTop: '4%', borderColor: '#14ded7',
+                          }]
+                          }>
+                            <View style={styles.rowalign}>
 
-                              <View style={{ marginTop: '5%', alignContent: 'space-around' }}>
-                                <View style={[ProfileScreenStyles.row,]}>
-                                  <View style={[ProfileScreenStyles.row, { marginRight: '5%' }]}>
-                                    <FontAwesome name="user-o" color={colors.text} size={20} />
-                                    <Text style={{ fontWeight: 'bold', marginLeft: '3%', alignItems: 'flex-start' }}>{item.UserFirstName}{item.UserLastName}</Text>
-                                  </View>
-                                  <View style={[ProfileScreenStyles.row]}>
-                                    <Fontisto style={{ marginLeft: '1%',
-                                     color: '#bb0a1e'                                    
-                                      }} name="blood-drop" color={colors.text} size={20} />
-                                    <Text style={{ marginLeft: '3%',}}>{item.UserBloodGroup}</Text>
+                              <View style={[ProfileScreenStyles.row, { marginRight: '5%', alignSelf: 'center' }]}>
+                                <Entypo name="location" color={colors.text} size={20} />
+                                <Text
+                                  style={styles.iconstyles}
+
+                                >{item.title}</Text>
+                              </View>
+                              {item.BedCount > 0 || item.O2BedCount > 0 || item.ICUBedCount > 0 ?
+                                <View>
+                                  <Text style={styles.textheaderstyle}>Bed Availablity</Text>
+
+                                  <View style={[styles.columncontentstyle, { justifyContent: 'center' }]}>
+
+                                    <View style={styles.columnalignstyle}>
+                                      <View style={[ProfileScreenStyles.row]}>
+                                        <Text style={{ marginLeft: '3%', }}>Normal Bed</Text>
+                                        <Text style={{ marginLeft: '3%', }}>Oxygen Bed</Text>
+                                        <Text style={{ marginLeft: '3%', }}>ICU Bed</Text>
+                                      </View>
+                                    </View>
+
+                                    <View style={styles.columnalignstyle}>
+                                      <View style={[ProfileScreenStyles.row]}>
+
+                                        <Text >{item.BedCount}</Text>
+                                        <Text style={styles.itemmiddlestyle}>{item.O2BedCount}</Text>
+                                        <Text >{item.ICUBedCount}</Text>
+                                      </View>
+                                    </View>
+
                                   </View>
                                 </View>
+                                : null}
+
+                              {item.O2SupplyCount > 0 ?
+                                <View style={[ProfileScreenStyles.row, { margin: '3%', alignSelf: 'center', marginTop: 0 }]}>
+                                  <Icon name="gas-cylinder" color={colors.text} size={20} />
+                                  <Text
+                                    style={styles.iconstyles}
+
+                                  >Oxygen Cylinder Available Count:  {item.O2SupplyCount}</Text>
+                                </View>
+                                : null}
+
+                              <View style={[ProfileScreenStyles.row, { margin: '3%', alignSelf: 'center' }]}>
+                                <FontAwesome name="address-card" color={colors.text} size={20} />
+                                <Text
+                                  style={styles.iconstyles}
+
+                                >{item.address}</Text>
                               </View>
+
+
+
                             </View>
                           </View>
-                        </View>
+                        </TouchableOpacity>
                       </ScrollView>
                     </View>
                   </View>
                 ))}
               </Swiper>
             </View>
-            :
-            <View>
-              <Text style={styles.donation_header}>Be the First Donor</Text>
-            </View>
+            : null
+            // <View>
+            //   <Text style={styles.donation_header}>Be the First Donor</Text>
+            // </View>
           }
-         
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -396,9 +405,9 @@ const Main_Screen_Top_Donor = (props) => {
   );
 };
 
-export default Main_Screen_Top_Donor;
+export default Covid_Details_List_Limt_Screen;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     // flex: 1,
     // alignItems: 'center',
@@ -426,4 +435,33 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     //paddingLeft:'1%',
   },
+  columnalignstyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '1%'
+    // justifyContent:'flex-start'
+  },
+  textheaderstyle: {
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  iconstyles: {
+    textAlign: 'center',
+    // fontWeight: 'bold',
+    paddingLeft: '4%'
+  },
+  columncontentstyle: {
+    marginTop: '1%',
+    borderWidth: 2,
+    borderRightWidth: 2,
+    paddingTop: '1%',
+    // borderBottomWidth:0,
+    borderColor: '#76D7C4',
+    borderRadius: 20,
+  },
+  itemmiddlestyle: {
+    marginLeft: '20%',
+    marginRight: '25%'
+  }
 });

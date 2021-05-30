@@ -1,10 +1,10 @@
 import React, { useEffect,useState } from 'react';
-import { View, Text,SafeAreaView,
+import { View, SafeAreaView,
    Button, StyleSheet,StatusBar,ToastAndroid,FlatList,
    TouchableOpacity,Linking } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 //import Toaster from 'react-native-toaster';
 import {useSelector,useDispatch} from 'react-redux';
+import { useTheme, Text, ActivityIndicator } from 'react-native-paper';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import {styles as MainScreenStyles} from '../../../Main_Screen/MainScreen';
 import AnimateNumber from 'react-native-countup';
@@ -12,6 +12,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Picker } from '@react-native-community/picker';
 import { styles as ProfileScreenStyles } from '../../../Screens/ProfileScreen/ProfileScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {commonstyles} from '../../../components/Styles';
+
+
 const Covid_Bed_Details_Screen = (props) => {
   const themes = useTheme();
   const user_data_user_first_name=useSelector(state =>
@@ -106,22 +109,26 @@ const Covid_Bed_Details_Screen = (props) => {
         <Text style={[styles.textStyle,{color:'#1DA1F2'}]}>Summary</Text>
         
         </View>
+        <View style={[{alignItems:'center'}]} > 
+
         <Text 
-        style={[styles.textStyle,{color:'#1DA1F2'}]}
-        >ruralHospitals {props.summary.ruralHospitals}</Text>
+        style={[styles.textStyle,]}
+        >Total Hospitals: {props.summary.totalHospitals}</Text>
         <Text 
-        style={[styles.textStyle,{color:'#1DA1F2'}]}
-        >ruralBeds {props.summary.ruralBeds}</Text>
+        style={[styles.textStyle]}
+        >Total Beds: {props.summary.totalBeds}</Text>
+
         <Text 
-        style={[styles.textStyle,{color:'#1DA1F2'}]}
-        >urbanBeds {props.summary.urbanBeds}</Text>
+        style={[styles.textStyle,]}
+        >Rural Hospitals: {props.summary.ruralHospitals}</Text>
         <Text 
-        style={[styles.textStyle,{color:'#1DA1F2'}]}
-        >totalHospitals {props.summary.totalHospitals}</Text>
+        style={[styles.textStyle,]}
+        >Rural Beds: {props.summary.ruralBeds}</Text>
         <Text 
-        style={[styles.textStyle,{color:'#1DA1F2'}]}
-        >totalBeds {props.summary.totalBeds}</Text>
+        style={[styles.textStyle,]}
+        >Urban Beds: {props.summary.urbanBeds}</Text>
        
+       </View>
 
 
             </View>
@@ -161,14 +168,15 @@ const Covid_Bed_Details_Screen = (props) => {
             style={[ProfileScreenStyles.cardview,styles.buttonstyle,{}]}
             
             >
-               <Text  style={styles.textStyle}>Total Hospitals: {state.totalHospitals}</Text>  
-                <Text  style={styles.textStyle}>Total Beds: {state.totalBeds}</Text> 
-                <Text  style={styles.textStyle}>Rural Hospitals: {state.ruralHospitals}</Text>                      
-                <Text  style={styles.textStyle}>Rural Beds: {state.ruralBeds}</Text>  
+              <Text  style={styles.textStyle}>State: {state.state}</Text>  
+              <Text  >Total Hospitals: {state.totalHospitals}</Text>  
+                <Text  >Total Beds: {state.totalBeds}</Text> 
+                <Text  >Rural Hospitals: {state.ruralHospitals}</Text>                      
+                <Text  >Rural Beds: {state.ruralBeds}</Text>  
                 
-                <Text  style={styles.textStyle}>Urban Hospitals: {state.urbanHospitals}</Text>  
-                <Text  style={styles.textStyle}>Urban Beds: {state.urbanBeds}</Text>  
-                <Text  style={styles.textStyle}>As On: {new Date(state.asOn).toDateString()}</Text>           
+                <Text  >Urban Hospitals: {state.urbanHospitals}</Text>  
+                <Text  >Urban Beds: {state.urbanBeds}</Text>  
+                <Text  >As On: {new Date(state.asOn).toDateString()}</Text>           
                
             </View>
             :null }
@@ -180,7 +188,9 @@ const Covid_Bed_Details_Screen = (props) => {
       </View>
       
       </View> 
-      :null} 
+      :<View style={[commonstyles.activityIndicatorStyle,{flex:1}]}>
+      <ActivityIndicator size="large"/>
+      </View>} 
           </View>
       )
   }
@@ -200,19 +210,19 @@ const Covid_Bed_Details_Screen = (props) => {
                 <View
                 style={[ProfileScreenStyles.cardview,{alignItems:'center',}]}
                 >
-                   
-                   <Text  style={styles.textStyle}>Total Hospitals: {item.totalHospitals}</Text>  
-                <Text  style={styles.textStyle}>Total Beds: {item.totalBeds}</Text> 
-                <Text  style={styles.textStyle}>Rural Hospitals: {item.ruralHospitals}</Text>                      
-                <Text  style={styles.textStyle}>Rural Beds: {item.ruralBeds}</Text>  
+                    <Text  style={styles.textStyle}>State: {item.state}</Text>
+                    <Text  >Total Hospitals: {item.totalHospitals}</Text>  
+                <Text  >Total Beds: {item.totalBeds}</Text> 
+                <Text  >Rural Hospitals: {item.ruralHospitals}</Text>                      
+                <Text  >Rural Beds: {item.ruralBeds}</Text>  
                 
-                <Text  style={styles.textStyle}>Urban Hospitals: {item.urbanHospitals}</Text>  
-                <Text  style={styles.textStyle}>Urban Beds: {item.urbanBeds}</Text>  
-                <Text  style={styles.textStyle}>As On: {new Date(item.asOn).toDateString()}</Text>    
+                <Text  >Urban Hospitals: {item.urbanHospitals}</Text>  
+                <Text  >Urban Beds: {item.urbanBeds}</Text>  
+                <Text  >As On: {new Date(item.asOn).toDateString()}</Text>    
                     
                 </View>
               )}
-              keyExtractor={item => item.location}
+              keyExtractor={item => item.state}
               // ItemSeparatorComponent={renderSeparator}
               ListHeaderComponent={renderHeader}
             //   ListFooterComponent={renderFooter}
@@ -227,7 +237,10 @@ const Covid_Bed_Details_Screen = (props) => {
               :null} */}
 
             </FlatList>
-          : null}  
+          : 
+          <View style={[commonstyles.activityIndicatorStyle]}>
+          <ActivityIndicator size="large"/>
+          </View>}  
           </View>
         </SafeAreaView>
 

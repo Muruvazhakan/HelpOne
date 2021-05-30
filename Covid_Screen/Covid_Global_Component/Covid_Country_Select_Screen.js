@@ -5,9 +5,11 @@ import * as fetchCovid from '../Covid_Status/Covid_Fetch_Datas';
 import { View } from 'react-native-animatable';
 import { Picker } from '@react-native-community/picker';
 import { width, height } from '../../components/Parameter';
-import {  Text,
+import {  
   Button, StyleSheet,StatusBar,ToastAndroid,FlatList,
   TouchableOpacity,Linking } from 'react-native';
+  import {Text, ActivityIndicator } from 'react-native-paper';
+  import { styles as ProfileScreenStyles } from '../../Screens/ProfileScreen/ProfileScreen';
 const Covid_Country_Select_Screen = ({ handleCountryChange }) => {
   const [countries, setCountries] = useState([]);
   const [selectedcountries, setselectedCountries] = useState(null);
@@ -31,7 +33,14 @@ const Covid_Country_Select_Screen = ({ handleCountryChange }) => {
     //     {countries.map((country, i) => <option key={i} value={country}>{country}</option>)}
     //   </NativeSelect>
     // </FormControl>
-    <View style={styles.container}>
+    <View 
+    
+    // style={styles.container}
+    style={[ProfileScreenStyles.cardview, { alignItems: 'center',marginTop:'3%' }]} 
+    >
+ 
+            <View style={[{ justifyContent: 'center', }]}>
+            <Text style={[styles.textStyle, { color: '#1DA1F2', fontSize: 15, textAlign: 'center' }]}>Pick the Country</Text>
         <Picker
               selectedValue={selectedcountries}
               style={[{ height: 50, width:200,alignSelf: 'center', color: colors.text, }]}
@@ -46,7 +55,7 @@ const Covid_Country_Select_Screen = ({ handleCountryChange }) => {
                )}
 
             </Picker>
-
+            </View>
     </View>
   );
 };
@@ -54,9 +63,13 @@ const Covid_Country_Select_Screen = ({ handleCountryChange }) => {
 export default Covid_Country_Select_Screen;
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    // flex: 1, 
     alignItems: 'center', 
     justifyContent: 'center',
     width: '100%',
   }, 
+  textStyle: {
+    fontWeight: 'bold',
+    paddingBottom: '1%'
+  }
 });

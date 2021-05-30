@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, SafeAreaView, StyleSheet,
-  TouchableOpacity,
+  TouchableOpacity,ImageBackground,
    Image, ToastAndroid } from 'react-native';
 import {
   Avatar,
@@ -191,7 +191,13 @@ const ProfileScreen = ({ navigation }) => {
   const { colors } = useTheme();
    return (
     <ScrollView>
-      <SafeAreaView style={[styles.container, styles.cardview]}>
+       <ImageBackground
+        source={require("../../assets/bg/normal.png")}
+        style={{ width: "100%", height: "100%" }}
+      >
+      <SafeAreaView style={[styles.container, 
+        // styles.cardview
+        ]}>
 
         <View style={[styles.userInfoSection], { paddingHorizontal: 10, alignItems: 'center', }}>
           <View style={{
@@ -202,10 +208,13 @@ const ProfileScreen = ({ navigation }) => {
             {user_data_isUserImageAvailable ?
               <Image
                 source={{ uri: user_data_isUserImageAvailable }}
-                style={[styles.profileImg, { height: 150, width: 150, borderColor: 'green', borderWidth: 1 }]}
+                style={[styles.profileImg,styles.cardview, { height: 150, width: 150, borderColor: 'green',
+                borderRadius: 300,  }]}
               />
               :
+              <View style={[styles.cardview,{borderRadius: 300,} ]}>
               <FontAwesome name="user-circle-o" color={colors.text} size={150} />
+              </View>
             }
             {user_data_user_name !== null ?
             <View>
@@ -485,6 +494,7 @@ const ProfileScreen = ({ navigation }) => {
 
 
       </SafeAreaView>
+      </ImageBackground>
     </ScrollView>
   );
 };
@@ -495,6 +505,9 @@ export const styles = StyleSheet.create({
 
   container: {
     flex: 1,
+    marginTop:'12%',
+    marginBottom: '20%',
+    // marginTop:'15%'
   },
 
   userInfoSection: {
@@ -574,6 +587,7 @@ export const styles = StyleSheet.create({
 
   profileImg: {
     borderRadius: 75,
+    
   },
 
 });
